@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ButtonTextStyle">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/black_russian</item>
+        <item name="android:textSize">@dimen/main_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+    </style>
+</resources>
