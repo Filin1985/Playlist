@@ -38,7 +38,7 @@
             android:id="@+id/textSearch"
             style="@style/TextSearchStyle"
             android:autofillHints="Song name"
-            android:hint="@string/search_hint" />
+            android:hint="@string/search" />
 
             <ImageView
                 android:id="@+id/clearIcon"

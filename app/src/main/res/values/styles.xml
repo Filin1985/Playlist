@@ -3,7 +3,7 @@
     <style name="ContainerStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_marginTop">@dimen/settings_margin_top</item>
+        <item name="android:layout_marginTop">@dimen/main_padding_top</item>
         <item name="android:paddingLeft">@dimen/main_padding_sides</item>
         <item name="android:paddingRight">@dimen/main_padding_sides</item>
         <item name="android:paddingBottom">@dimen/main_padding_bottom</item>

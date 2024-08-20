@@ -24,23 +24,23 @@ class SettingsActivity : AppCompatActivity() {
 
         val shareButton = findViewById<ImageView>(R.id.share)
         shareButton.setOnClickListener {
-            val messageIntent = Intent(Intent.ACTION_SEND).apply {
-                putExtra(Intent.EXTRA_TEXT, R.string.share_link)
+            Intent(Intent.ACTION_SEND).apply {
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.share_link))
                 type = "text/plain"
-                Intent.createChooser(this, null)
+                startActivity(Intent.createChooser(this, null))
             }
-            startActivity(messageIntent)
         }
 
         val support = findViewById<ImageView>(R.id.support)
         support.setOnClickListener {
-            val supportIntent = Intent(Intent.ACTION_SENDTO).apply {
+            Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse("mailto:")
-                putExtra(Intent.EXTRA_EMAIL, R.string.support_email)
-                putExtra(Intent.EXTRA_SUBJECT, R.string.support_subject)
-                putExtra(Intent.EXTRA_TEXT, R.string.support_text)
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.support_email)))
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.support_subject))
+                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.support_subject))
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.support_text))
+                startActivity(Intent.createChooser(this, null))
             }
-            startActivity(supportIntent)
         }
 
         val agreement = findViewById<ImageView>(R.id.agreement)

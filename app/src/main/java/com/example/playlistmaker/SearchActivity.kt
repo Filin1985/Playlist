@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -17,6 +18,8 @@ import androidx.core.view.WindowInsetsCompat
 
 class SearchActivity : AppCompatActivity() {
     private var searchInput: String = ""
+    private lateinit var inputEditText: EditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -34,23 +37,15 @@ class SearchActivity : AppCompatActivity() {
         }
 
         val linearLayout = findViewById<FrameLayout>(R.id.container)
-        val inputEditText = findViewById<EditText>(R.id.textSearch)
+        inputEditText = findViewById(R.id.textSearch)
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
 
         clearButton.setOnClickListener {
-            inputEditText.setText("")
+            clearSearchForm()
         }
 
         if(savedInstanceState != null) {
             inputEditText.setText(INPUT_SEARCH)
-        }
-
-        fun clearButtonVisibility(inputString: CharSequence?): Int {
-            return if(inputString.isNullOrEmpty()) {
-                View.GONE
-            } else {
-                View.VISIBLE
-            }
         }
 
         val simpleTextWatcher = object : TextWatcher {
@@ -59,9 +54,8 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // empty
-                searchInput = s.toString()
                 clearButton.visibility = clearButtonVisibility(s)
+                searchInput = s.toString()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -81,6 +75,25 @@ class SearchActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         searchInput = savedInstanceState.getString(INPUT_SEARCH, "")
     }
+
+    private fun clearButtonVisibility(inputString: CharSequence?): Int {
+        return if(inputString.isNullOrEmpty()) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
+    }
+
+    private fun clearSearchForm() {
+        inputEditText.setText("")
+
+        val view = this.currentFocus
+        if (view != null) {
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
     companion object {
         private const val INPUT_SEARCH = "INPUT_SEARCH"
     }
