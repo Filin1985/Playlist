@@ -3,39 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/settings"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/settings_margin_top"
-    android:paddingLeft="@dimen/main_padding_sides"
-    android:paddingRight="@dimen/main_padding_sides"
-    android:paddingBottom="@dimen/main_padding_bottom">
+    tools:context=".MainActivity"
+    style="@style/ContainerStyle" >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:background="@drawable/shape"
-        android:gravity="center_vertical">
+        android:layout_height="wrap_content"
+        >
 
         <ImageView
             android:id="@+id/arrow_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:contentDescription="@string/settings"
-            android:layout_gravity="start"
-            android:gravity="center_vertical"
-            android:scaleType="center"
-            android:src="@drawable/ic_arrow"
-            android:paddingTop="@dimen/icon_padding"/>
+            style="@style/NavigationArrowIcon"/>
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:text="@string/settings"
-            android:textColor="@color/black_russian"
-            android:textSize="@dimen/main_text_size"
-            android:layout_gravity="start"
-            android:layout_marginStart="44dp"/>
+            style="@style/NavigationText" />
     </LinearLayout>
 
     <LinearLayout
@@ -43,7 +26,6 @@
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/settings_margin_top"
         android:orientation="vertical"
-        android:background="@drawable/shape"
         android:gravity="start">
 
         <androidx.appcompat.widget.SwitchCompat
@@ -52,94 +34,51 @@
             android:text="@string/theme"
             android:textSize="@dimen/second_text_size"
             android:paddingTop="@dimen/list_item_padding"
-            android:paddingBottom="@dimen/list_item_padding"/>
-
+            android:paddingBottom="@dimen/list_item_padding"
+            app:thumbTint="?attr/thumbTint"
+            app:trackTint="?attr/trackTint"/>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shape"
-            android:orientation="horizontal"
-            android:paddingTop="@dimen/list_item_padding"
-            android:paddingBottom="@dimen/list_item_padding">
+            style="@style/LayoutSettingsStyle"
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:text="@string/share"
-                android:textColor="@color/black_russian"
-                android:textSize="@dimen/second_text_size"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:gravity="start" />
+                style="@style/TextSettingsStyle"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/settings"
-                android:layout_gravity="center"
-                android:gravity="end"
-                android:scaleType="center"
-                android:src="@drawable/ic_share"
-                android:paddingEnd="@dimen/icon_padding_right"/>
+                android:id="@+id/share"
+                style="@style/ImageSettingsStyle"
+                android:contentDescription="@string/share"
+                android:src="@drawable/ic_share" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shape"
-            android:orientation="horizontal"
-            android:paddingTop="@dimen/list_item_padding"
-            android:paddingBottom="@dimen/list_item_padding">
+            style="@style/LayoutSettingsStyle">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/support"
-                android:textColor="@color/black_russian"
-                android:textSize="@dimen/second_text_size"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:gravity="start" />
+                style="@style/TextSettingsStyle"
+                android:text="@string/support" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/settings"
-                android:layout_gravity="center"
-                android:gravity="end"
-                android:scaleType="center"
-                android:src="@drawable/ic_support"
-                android:paddingEnd="@dimen/icon_padding_right"/>
+                android:id="@+id/support"
+                style="@style/ImageSettingsStyle"
+                android:contentDescription="@string/share"
+                android:src="@drawable/ic_support" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shape"
-            android:orientation="horizontal"
-            android:paddingTop="@dimen/list_item_padding"
-            android:paddingBottom="@dimen/list_item_padding">
+            style="@style/LayoutSettingsStyle">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/agreement"
-                android:textColor="@color/black_russian"
-                android:textSize="@dimen/second_text_size"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:gravity="start" />
+                style="@style/TextSettingsStyle"
+                android:text="@string/agreement" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/settings"
-                android:layout_gravity="center"
-                android:gravity="end"
-                android:scaleType="center"
-                android:src="@drawable/ic_agreement"
-                android:paddingEnd="@dimen/icon_padding_right"/>
+                android:id="@+id/agreement"
+                style="@style/ImageSettingsStyle"
+                android:contentDescription="@string/agreement"
+                android:src="@drawable/ic_agreement" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
