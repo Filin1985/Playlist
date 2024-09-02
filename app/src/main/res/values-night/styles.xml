@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ArtistTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/artist_text_size</item>
+        <item name="android:textColor">@color/yp_white</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
+    </style>
+
+    <style name="ImageSettingsStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:gravity">end</item>
+        <item name="android:paddingEnd">@dimen/icon_padding_right</item>
+        <item name="tint">@color/yp_white</item>
+    </style>
+</resources>

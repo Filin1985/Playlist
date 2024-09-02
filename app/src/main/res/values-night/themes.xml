@@ -9,6 +9,7 @@
         <item name="android:navigationBarColor">@color/yp_black</item>
         <item name="android:textColorPrimary">@color/yp_white</item>
         <item name="android:textColorHintInverse">@color/black</item>
+        <item name="android:textColor">@color/yp_white</item>
         <item name="android:statusBarColor">@color/yp_black</item>
         <item name="thumbTint">@color/yp_blue</item>
         <item name="trackTint">@color/yp_blue_light</item>

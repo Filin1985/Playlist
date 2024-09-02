@@ -15,6 +15,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
 class SearchActivity : AppCompatActivity() {
     private var searchInput: String = ""
@@ -29,6 +32,11 @@ class SearchActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        val trackRecycleView = findViewById<RecyclerView>(R.id.trackSearchRecyclerView)
+        trackRecycleView.layoutManager = LinearLayoutManager(this)
+        val trackAdapter = TracksAdapter(MockSongsData.getSongsData())
+        trackRecycleView.adapter = trackAdapter
 
         val arrowBack = findViewById<ImageView>(R.id.arrow_back)
         arrowBack.setOnClickListener {
