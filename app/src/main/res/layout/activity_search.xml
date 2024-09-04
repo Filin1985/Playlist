@@ -49,7 +49,6 @@
                 android:id="@+id/clearIcon"
                 style="@style/IconSearchStyle"
                 android:contentDescription="@string/search"
-                android:src="@drawable/ic_clear"
                 android:visibility="gone" />
         </FrameLayout>
 
