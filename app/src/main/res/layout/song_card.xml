@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/artworkUrl"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center"
+            tools:src="@drawable/default_art_work"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingVertical="14dp"
+            android:paddingStart="8dp">
+
+            <TextView
+                android:id="@+id/trackName"
+                style="@style/TextSettingsStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                tools:text="Yesterday (Remastered 2009)" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/artistName"
+                    android:ellipsize="end"
+                    android:gravity="end"
+                    android:maxLines="1"
+                    tools:text="The Beatles"
+                    style="@style/ArtistTextStyle"/>
+
+                <ImageView
+                    android:id="@+id/dot"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:src="@drawable/ic_dot"
+                    style="@style/ImageSettingsStyle"/>
+
+                <TextView
+                    android:id="@+id/trackTime"
+                    tools:text="2:55"
+                    style="@style/ArtistTextStyle"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/songArrow"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_song_arrow"
+            style="@style/ImageSettingsStyle"/>
+    </LinearLayout>
