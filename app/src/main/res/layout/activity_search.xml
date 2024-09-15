@@ -43,7 +43,9 @@
                 android:id="@+id/textSearch"
                 style="@style/TextSearchStyle"
                 android:autofillHints="Song name"
-                android:hint="@string/search" />
+                android:hint="@string/search"
+                android:imeOptions="actionDone"
+                android:singleLine="true" />
 
             <ImageView
                 android:id="@+id/clearIcon"
@@ -57,6 +59,42 @@
             android:id="@+id/trackSearchRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:id="@+id/searchNotification"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone"
+            >
+
+            <ImageView
+                android:id="@+id/notFound"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/not_found_error"
+                android:src="@drawable/ic_not_found_light"/>
+
+            <TextView
+                android:id="@+id/errorText"
+                android:layout_marginTop="16dp"
+                android:text="@string/not_found_error"
+                style="@style/TextErrorSearchStyle" />
+
+            <TextView
+                android:id="@+id/errorConnectionText"
+                android:text="@string/error_connection_title"
+                android:textAlignment="center"
+                style="@style/TextErrorSearchStyle"/>
+
+            <Button
+                android:id="@+id/refreshButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/refresh"
+                style="@style/RefreshButton"/>
+        </LinearLayout>
     </LinearLayout>
 
 
