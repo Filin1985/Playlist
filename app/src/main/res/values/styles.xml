@@ -97,8 +97,6 @@
     </style>
 
     <style name="ArtistTextStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/artist_text_size</item>
         <item name="android:textColor">?android:attr/textColor</item>
         <item name="fontFamily">@font/ys_display_regular</item>

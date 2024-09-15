@@ -37,7 +37,7 @@ class SearchActivity : AppCompatActivity() {
         CONNECTION_ERROR, NOT_FOUND, SUCCESS
     }
 
-    private val searchTrackList = ArrayList<TrackData>()
+    private val searchTrackList = mutableListOf<TrackData>()
     private var searchInput: String = ""
     private lateinit var inputEditText: EditText
     private val itunesBaseUrl = "https://itunes.apple.com"
@@ -176,6 +176,8 @@ class SearchActivity : AppCompatActivity() {
                 trackRecycleView.visibility = View.GONE
                 searchNotification.visibility = View.VISIBLE
                 errorText.setText(R.string.error_connection_subtitle)
+                errorConnectionText.visibility = View.VISIBLE
+                refreshButton.visibility = View.VISIBLE
                 errorImage.setImageResource(
                     if (isDarkModeOn()) R.drawable.ic_connection_err_dark else R.drawable.ic_connection_err_light
                 )
@@ -193,10 +195,11 @@ class SearchActivity : AppCompatActivity() {
         if(inputEditText.text.isNotEmpty()) {
             itunesService.search(inputEditText.text.toString()).enqueue(object : Callback<TrackResponse> {
                     override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
-                        if(response.code() == 200) {
+                        if(response.isSuccessful) {
                             searchTrackList.clear()
-                            if(response.body()?.results?.isNotEmpty() == true) {
-                                searchTrackList.addAll(response.body()?.results!!)
+                            val resBody = response.body()?.results
+                            if(resBody?.isNotEmpty() == true) {
+                                searchTrackList.addAll(resBody)
                                 trackAdapter.notifyDataSetChanged()
                                 showResultNotification(SearchState.SUCCESS)
                             } else {
