@@ -34,17 +34,21 @@
                 tools:text="Yesterday (Remastered 2009)" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_gravity="start">
 
                 <TextView
                     android:id="@+id/artistName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:ellipsize="end"
-                    android:gravity="end"
                     android:maxLines="1"
-                    tools:text="The Beatles"
-                    style="@style/ArtistTextStyle"/>
+                    tools:text="Имя артистаартистаартистаартистаартистаартистаартистаартиста"
+                    style="@style/ArtistTextStyle"
+                    />
 
                 <ImageView
                     android:id="@+id/dot"
@@ -55,7 +59,10 @@
 
                 <TextView
                     android:id="@+id/trackTime"
-                    tools:text="2:55"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    tools:text="56:43"
                     style="@style/ArtistTextStyle"/>
 
             </LinearLayout>
@@ -66,5 +73,6 @@
             android:id="@+id/songArrow"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_song_arrow"
-            style="@style/ImageSettingsStyle"/>
+            style="@style/ImageSettingsStyle"
+            android:paddingStart="10dp"/>
     </LinearLayout>
