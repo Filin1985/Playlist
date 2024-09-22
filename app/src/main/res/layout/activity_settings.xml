@@ -28,15 +28,16 @@
         android:orientation="vertical"
         android:gravity="start">
 
-        <androidx.appcompat.widget.SwitchCompat
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/themeSwitcher"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/theme"
-            android:textSize="@dimen/second_text_size"
             android:paddingTop="@dimen/list_item_padding"
             android:paddingBottom="@dimen/list_item_padding"
+            android:text="@string/theme"
+            android:textSize="@dimen/second_text_size"
             app:thumbTint="?attr/thumbTint"
-            app:trackTint="?attr/trackTint"/>
+            app:trackTint="?attr/trackTint" />
 
         <LinearLayout
             style="@style/LayoutSettingsStyle"

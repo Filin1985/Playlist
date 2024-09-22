@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
@@ -17,6 +18,12 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
 
         val arrowBack = findViewById<ImageView>(R.id.arrow_back)
+        val themeSwitcher = findViewById<SwitchCompat>(R.id.themeSwitcher)
+
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
+        }
+
         arrowBack.setOnClickListener {
             val mainDisplay = Intent(this, MainActivity::class.java)
             startActivity(mainDisplay)
