@@ -135,4 +135,15 @@
         <item name="android:paddingEnd">16dp</item>
         <item name="android:paddingBottom">12dp</item>
     </style>
+
+    <style name="ThemeSwitcher">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">@dimen/list_item_padding</item>
+        <item name="android:paddingBottom">@dimen/list_item_padding</item>
+        <item name="android:text">@string/theme</item>
+        <item name="android:textSize">@dimen/second_text_size</item>
+        <item name="thumbTint">@color/yp_text_gray</item>
+        <item name="trackTint">@color/yp_light_gray</item>
+    </style>
 </resources>

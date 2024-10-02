@@ -45,7 +45,8 @@
                 android:autofillHints="Song name"
                 android:hint="@string/search"
                 android:imeOptions="actionDone"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:textCursorDrawable="@drawable/cursor_shape"/>
 
             <ImageView
                 android:id="@+id/clearIcon"
@@ -63,7 +64,8 @@
                 android:id="@+id/historySearch"
                 style="@style/TextHistorySearchStyle"
                 android:text="@string/history_search"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:visibility="gone"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/trackSearchRecyclerView"
@@ -80,7 +82,8 @@
                 android:paddingStart="14dp"
                 android:paddingEnd="14dp"
                 android:text="@string/history_clear"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:visibility="gone"/>
         </LinearLayout>
 
         <LinearLayout

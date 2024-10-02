@@ -10,23 +10,26 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_settings)
 
         val arrowBack = findViewById<ImageView>(R.id.arrow_back)
-        val themeSwitcher = findViewById<SwitchCompat>(R.id.themeSwitcher)
-
-        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
-            (applicationContext as App).switchTheme(checked)
-        }
 
         arrowBack.setOnClickListener {
             val mainDisplay = Intent(this, MainActivity::class.java)
             startActivity(mainDisplay)
+        }
+
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+        themeSwitcher.isChecked = getSharedPreferences(App.SETTINGS, MODE_PRIVATE)
+            .getBoolean(App.DARK_THEME, false)
+        themeSwitcher.setOnCheckedChangeListener {switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
+            (applicationContext as App).saveTheme(checked)
         }
 
         val shareButton = findViewById<ImageView>(R.id.share)

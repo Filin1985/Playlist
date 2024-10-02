@@ -20,15 +20,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.example.playlistmaker.api.ITunesAPI
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-
-const val SEARCH_PREFERENCE = "search_preferences"
 
 class SearchActivity : AppCompatActivity() {
     companion object {
@@ -41,18 +35,14 @@ class SearchActivity : AppCompatActivity() {
 
     private val searchTrackList = mutableListOf<TrackData>()
     private var searchInput: String = ""
-    private val itunesBaseUrl = "https://itunes.apple.com"
 
-    // Search song from api
-    private val retrofit = Retrofit.Builder().baseUrl(itunesBaseUrl).addConverterFactory(
-        GsonConverterFactory.create()
-    ).build()
-    private val itunesService = retrofit.create(ITunesAPI::class.java)
     private val trackAdapter = TracksAdapter{clickOnTrack(it)}
     private val searchHistoryAdapter = TracksAdapter{clickOnTrack(it)}
 
     private lateinit var inputEditText: EditText
-    private lateinit var searchHistory: SearchHistory
+    private val searchHistory: SearchHistory by lazy {
+        SearchHistory(getSharedPreferences(App.SETTINGS, MODE_PRIVATE))
+    }
     private lateinit var trackRecycleView : RecyclerView
     private lateinit var searchNotification : LinearLayout
     private lateinit var errorImage : ImageView
@@ -91,7 +81,6 @@ class SearchActivity : AppCompatActivity() {
         // SharedPreference
         historyText = findViewById(R.id.historySearch)
         clearSearchButton = findViewById(R.id.clearSearchButton)
-        searchHistory = SearchHistory(getSharedPreferences(SEARCH_PREFERENCE, MODE_PRIVATE))
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -238,7 +227,9 @@ class SearchActivity : AppCompatActivity() {
         return isDarkModeOn
     }
 
+
     private fun searchTrackList() {
+        val itunesService = ITunesService().get()
         if(inputEditText.text.isNotEmpty()) {
             itunesService.search(inputEditText.text.toString()).enqueue(object : Callback<TrackResponse> {
                     override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
