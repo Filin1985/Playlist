@@ -24,12 +24,13 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(mainDisplay)
         }
 
+        val app = (applicationContext as App)
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
         themeSwitcher.isChecked = getSharedPreferences(App.SETTINGS, MODE_PRIVATE)
-            .getBoolean(App.DARK_THEME, false)
+            .getBoolean(DARK_THEME, app.darkTheme)
         themeSwitcher.setOnCheckedChangeListener {switcher, checked ->
-            (applicationContext as App).switchTheme(checked)
-            (applicationContext as App).saveTheme(checked)
+            app.switchTheme(checked)
+            app.saveTheme(checked)
         }
 
         val shareButton = findViewById<ImageView>(R.id.share)
