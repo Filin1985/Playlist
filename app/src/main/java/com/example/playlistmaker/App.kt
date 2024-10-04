@@ -21,7 +21,7 @@ class App : Application() {
         val sharedPrefs = getSharedPreferences(SETTINGS, MODE_PRIVATE)
         Log.d("MY_TAG", "onCreate isDarkTheme(this) ${isDarkTheme(this)}")
 
-        darkTheme = sharedPrefs.getBoolean(DARK_THEME, false)
+        darkTheme = sharedPrefs.getBoolean(DARK_THEME, isDarkTheme(this))
         Log.d("MY_TAG", "onCreate darkTheme ${darkTheme}")
         switchTheme(darkTheme)
     }

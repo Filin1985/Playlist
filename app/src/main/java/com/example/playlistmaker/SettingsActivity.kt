@@ -20,8 +20,7 @@ class SettingsActivity : AppCompatActivity() {
         val arrowBack = findViewById<ImageView>(R.id.arrow_back)
 
         arrowBack.setOnClickListener {
-            val mainDisplay = Intent(this, MainActivity::class.java)
-            startActivity(mainDisplay)
+            finish()
         }
 
         val app = (applicationContext as App)
