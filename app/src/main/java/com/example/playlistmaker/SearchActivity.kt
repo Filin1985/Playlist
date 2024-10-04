@@ -20,13 +20,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.example.playlistmaker.api.ITunesAPI
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
     companion object {
@@ -34,27 +30,27 @@ class SearchActivity : AppCompatActivity() {
     }
 
     enum class SearchState {
-        CONNECTION_ERROR, NOT_FOUND, SUCCESS
+        CONNECTION_ERROR, NOT_FOUND, SUCCESS, HISTORY_LIST
     }
 
     private val searchTrackList = mutableListOf<TrackData>()
     private var searchInput: String = ""
+
+    private val trackAdapter = TracksAdapter{clickOnTrack(it)}
+    private val searchHistoryAdapter = TracksAdapter{clickOnTrack(it)}
+
     private lateinit var inputEditText: EditText
-    private val itunesBaseUrl = "https://itunes.apple.com"
-
-    // Search song from api
-    private val retrofit = Retrofit.Builder().baseUrl(itunesBaseUrl).addConverterFactory(
-        GsonConverterFactory.create()
-    ).build()
-    private val itunesService = retrofit.create(ITunesAPI::class.java)
-    private val trackAdapter = TracksAdapter(searchTrackList)
-
+    private val searchHistory: SearchHistory by lazy {
+        SearchHistory(getSharedPreferences(App.SETTINGS, MODE_PRIVATE))
+    }
     private lateinit var trackRecycleView : RecyclerView
     private lateinit var searchNotification : LinearLayout
     private lateinit var errorImage : ImageView
     private lateinit var errorText : TextView
     private lateinit var errorConnectionText : TextView
     private lateinit var refreshButton : Button
+    private lateinit var clearSearchButton : Button
+    private lateinit var historyText : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,25 +62,26 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
+        // RecycleView
         trackRecycleView = findViewById(R.id.trackSearchRecyclerView)
         trackRecycleView.layoutManager = LinearLayoutManager(this)
-
         trackRecycleView.adapter = trackAdapter
 
         val arrowBack = findViewById<ImageView>(R.id.arrow_back)
-        arrowBack.setOnClickListener {
-            val mainDisplay = Intent(this, MainActivity::class.java)
-            startActivity(mainDisplay)
-        }
-
         val linearLayout = findViewById<FrameLayout>(R.id.container)
+        val clearButton = findViewById<ImageView>(R.id.clearIcon)
         searchNotification = findViewById(R.id.searchNotification)
+        refreshButton = findViewById(R.id.refreshButton)
+        inputEditText = findViewById(R.id.textSearch)
+
         errorImage = findViewById(R.id.notFound)
         errorText = findViewById(R.id.errorText)
         errorConnectionText = findViewById(R.id.errorConnectionText)
-        refreshButton = findViewById(R.id.refreshButton)
 
-        inputEditText = findViewById(R.id.textSearch)
+        // SharedPreference
+        historyText = findViewById(R.id.historySearch)
+        clearSearchButton = findViewById(R.id.clearSearchButton)
+
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 searchTrackList()
@@ -93,7 +90,15 @@ class SearchActivity : AppCompatActivity() {
             false
         }
 
-        val clearButton = findViewById<ImageView>(R.id.clearIcon)
+        inputEditText.setOnFocusChangeListener { view, hasFocus ->
+            if(searchHistory.getTrackList().isNotEmpty() && hasFocus)
+                showResultNotification(SearchState.HISTORY_LIST)
+        }
+
+        arrowBack.setOnClickListener {
+            val mainDisplay = Intent(this, MainActivity::class.java)
+            startActivity(mainDisplay)
+        }
 
         clearButton.setOnClickListener {
             clearSearchForm()
@@ -103,9 +108,16 @@ class SearchActivity : AppCompatActivity() {
             searchTrackList()
         }
 
+        clearSearchButton.setOnClickListener {
+            searchHistory.clearTrackList()
+            showResultNotification(SearchState.SUCCESS)
+        }
+
         if(savedInstanceState != null) {
             inputEditText.setText(INPUT_SEARCH)
         }
+
+        inputEditText.requestFocus()
 
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -115,6 +127,13 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 clearButton.visibility = clearButtonVisibility(s)
                 searchInput = s.toString()
+                if(inputEditText.hasFocus()
+                    && s.isNullOrEmpty()
+                    && searchHistory.getTrackList().isNotEmpty()) {
+                    showResultNotification(SearchState.HISTORY_LIST)
+                } else {
+                    showResultNotification(SearchState.SUCCESS)
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -158,11 +177,17 @@ class SearchActivity : AppCompatActivity() {
     private fun showResultNotification(resultType: SearchState) {
         when(resultType) {
             SearchState.SUCCESS -> {
+                trackAdapter.tracks = searchTrackList
+                trackRecycleView.adapter = trackAdapter
                 trackRecycleView.visibility = View.VISIBLE
                 searchNotification.visibility = View.GONE
                 refreshButton.visibility = View.GONE
+                historyText.visibility = View.GONE
+                clearSearchButton.visibility = View.GONE
             }
             SearchState.NOT_FOUND -> {
+                historyText.visibility = View.GONE
+                clearSearchButton.visibility = View.GONE
                 trackRecycleView.visibility = View.GONE
                 searchNotification.visibility = View.VISIBLE
                 errorText.setText(R.string.not_found_error)
@@ -173,6 +198,8 @@ class SearchActivity : AppCompatActivity() {
                 )
             }
             SearchState.CONNECTION_ERROR -> {
+                historyText.visibility = View.GONE
+                clearSearchButton.visibility = View.GONE
                 trackRecycleView.visibility = View.GONE
                 searchNotification.visibility = View.VISIBLE
                 errorText.setText(R.string.error_connection_subtitle)
@@ -182,16 +209,27 @@ class SearchActivity : AppCompatActivity() {
                     if (isDarkModeOn()) R.drawable.ic_connection_err_dark else R.drawable.ic_connection_err_light
                 )
             }
+            SearchState.HISTORY_LIST -> {
+                searchHistoryAdapter.tracks = searchHistory.getTrackList()
+                trackRecycleView.adapter = searchHistoryAdapter
+                trackRecycleView.visibility = View.VISIBLE
+                searchNotification.visibility = View.GONE
+                refreshButton.visibility = View.GONE
+                historyText.visibility = View.VISIBLE
+                clearSearchButton.visibility = View.VISIBLE
+            }
         }
     }
 
-    fun isDarkModeOn(): Boolean {
+    private fun isDarkModeOn(): Boolean {
         val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         val isDarkModeOn = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
         return isDarkModeOn
     }
 
+
     private fun searchTrackList() {
+        val itunesService = ITunesService().get()
         if(inputEditText.text.isNotEmpty()) {
             itunesService.search(inputEditText.text.toString()).enqueue(object : Callback<TrackResponse> {
                     override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
@@ -216,5 +254,9 @@ class SearchActivity : AppCompatActivity() {
                 }
             )
         }
+    }
+
+    private fun clickOnTrack(track: TrackData) {
+        searchHistory.addTrackToList(track)
     }
 }

@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
 <!--        <item name="colorOnPrimary">@color/yp_white</item>-->
         <item name="android:solidColor">@color/yp_text_gray</item>
@@ -11,8 +11,6 @@
         <item name="android:textColorHintInverse">@color/yp_text_gray</item>
         <item name="android:textColor">@color/yp_text_gray</item>
         <item name="android:statusBarColor">@color/yp_black</item>
-        <item name="thumbTint">@color/yp_text_gray</item>
-        <item name="trackTint">@color/yp_light_gray</item>
     </style>
 
     <style name="MainActivity.Theme.PlaylistMaker" parent="Base.Theme.PlaylistMaker">
