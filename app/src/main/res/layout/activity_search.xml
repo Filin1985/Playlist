@@ -2,19 +2,19 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/search"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/search"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity">
 
     <LinearLayout
+        style="@style/ContainerStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="top"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="2dp"
-        style="@style/ContainerStyle">
+        tools:layout_editor_absoluteY="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,7 +45,8 @@
                 android:autofillHints="Song name"
                 android:hint="@string/search"
                 android:imeOptions="actionDone"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:textCursorDrawable="@drawable/cursor_shape"/>
 
             <ImageView
                 android:id="@+id/clearIcon"
@@ -54,46 +55,70 @@
                 android:visibility="gone" />
         </FrameLayout>
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/trackSearchRecyclerView"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/historySearch"
+                style="@style/TextHistorySearchStyle"
+                android:text="@string/history_search"
+                android:layout_weight="1"
+                android:visibility="gone"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/trackSearchRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="100"/>
+
+            <Button
+                android:id="@+id/clearSearchButton"
+                style="@style/RefreshButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:text="@string/history_clear"
+                android:layout_weight="1"
+                android:visibility="gone"/>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/searchNotification"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:gravity="center"
-            android:visibility="gone"
-            >
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/notFound"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/not_found_error"
-                android:src="@drawable/ic_not_found_light"/>
+                android:src="@drawable/ic_not_found_light" />
 
             <TextView
                 android:id="@+id/errorText"
+                style="@style/TextErrorSearchStyle"
                 android:layout_marginTop="16dp"
-                android:text="@string/not_found_error"
-                style="@style/TextErrorSearchStyle" />
+                android:text="@string/not_found_error" />
 
             <TextView
                 android:id="@+id/errorConnectionText"
+                style="@style/TextErrorSearchStyle"
                 android:text="@string/error_connection_title"
-                android:textAlignment="center"
-                style="@style/TextErrorSearchStyle"/>
+                android:textAlignment="center" />
 
             <Button
                 android:id="@+id/refreshButton"
+                style="@style/RefreshButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/refresh"
-                style="@style/RefreshButton"/>
+                android:text="@string/refresh" />
         </LinearLayout>
     </LinearLayout>
 

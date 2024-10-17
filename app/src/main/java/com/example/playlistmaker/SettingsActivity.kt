@@ -7,19 +7,29 @@ import android.view.View
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_settings)
 
         val arrowBack = findViewById<ImageView>(R.id.arrow_back)
+
         arrowBack.setOnClickListener {
-            val mainDisplay = Intent(this, MainActivity::class.java)
-            startActivity(mainDisplay)
+            finish()
+        }
+
+        val app = (applicationContext as App)
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+        themeSwitcher.isChecked = getSharedPreferences(App.SETTINGS, MODE_PRIVATE)
+            .getBoolean(DARK_THEME, app.darkTheme)
+        themeSwitcher.setOnCheckedChangeListener {switcher, checked ->
+            app.switchTheme(checked)
+            app.saveTheme(checked)
         }
 
         val shareButton = findViewById<ImageView>(R.id.share)
