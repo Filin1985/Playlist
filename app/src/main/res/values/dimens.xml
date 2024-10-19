@@ -6,11 +6,15 @@
     <dimen name="icon_padding">5dp</dimen>
     <dimen name="icon_padding_right">6dp</dimen>
     <dimen name="list_item_padding">21dp</dimen>
+    <dimen name="player_outer_guideline">16dp</dimen>
+    <dimen name="player_inner_guideline">24dp</dimen>
+    <dimen name="player_text_margin">17dp</dimen>
 
     <dimen name="main_text_size">22sp</dimen>
     <dimen name="second_text_size">16sp</dimen>
     <dimen name="artist_text_size">11sp</dimen>
     <dimen name="error_text_size">19sp</dimen>
+    <dimen name="player_text_size">14sp</dimen>
 
     <dimen name="settings_margin_top">60dp</dimen>
     <dimen name="error_item_margin">24dp</dimen>
@@ -18,4 +22,5 @@
     <dimen name="corner_radius">16dp</dimen>
     <dimen name="font_weight_400">400</dimen>
     <dimen name="art_work">2dp</dimen>
+    <dimen name="arrow_back">56dp</dimen>
 </resources>
