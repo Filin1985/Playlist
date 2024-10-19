@@ -258,5 +258,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun clickOnTrack(track: TrackData) {
         searchHistory.addTrackToList(track)
+        val intent = Intent(this, PlayerActivity::class.java)
+        startActivity(intent)
     }
 }

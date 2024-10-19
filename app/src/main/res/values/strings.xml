@@ -18,4 +18,5 @@
     <string name="error_connection_subtitle">Проблемы со связью</string>
     <string name="history_search">Вы искали</string>
     <string name="history_clear">Очистить историю</string>
+    <string name="album_cover">Очистить историю</string>
 </resources>
