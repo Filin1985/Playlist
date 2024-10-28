@@ -146,4 +146,40 @@
         <item name="thumbTint">@color/yp_text_gray</item>
         <item name="trackTint">@color/yp_light_gray</item>
     </style>
+
+    <style name="IconPlayerStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">54dp</item>
+    </style>
+
+    <style name="ArrowBackStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/arrow_back</item>
+        <item name="navigationIcon">@drawable/ic_arrow</item>
+    </style>
+
+    <style name="PlayerPlayButtonStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">30dp</item>
+        <item name="android:contentDescription">@string/album_cover</item>
+        <item name="android:src">@drawable/ic_player_play</item>
+    </style>
+
+    <style name="MainTextPlayerStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+    </style>
+
+    <style name="SecondaryTextPlayerStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
 </resources>
