@@ -1,6 +1,6 @@
 package com.example.playlistmaker
 
-data class TrackData(
+data class TrackData (
     val trackId: Int,
     val trackName: String,
     val artistName: String,
@@ -10,4 +10,5 @@ data class TrackData(
     val releaseDate: String,
     val primaryGenreName: String,
     val country: String,
+    val previewUrl: String,
 )
