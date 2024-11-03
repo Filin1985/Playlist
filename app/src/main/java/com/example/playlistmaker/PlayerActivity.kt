@@ -1,10 +1,10 @@
 package com.example.playlistmaker
 
+import android.content.res.Configuration
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -93,7 +93,7 @@ class PlayerActivity : AppCompatActivity() {
             playerState = STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
-            playButton.setImageResource(R.drawable.ic_player_play)
+            playButton.setImageResource(if (isDarkModeOn()) R.drawable.ic_player_play_white else R.drawable.ic_player_play)
             trackTime.text = getText(R.string.default_time)
             playerState = STATE_PREPARED
         }
@@ -101,7 +101,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun startPlayer() {
         mediaPlayer.start()
-        playButton.setImageResource(R.drawable.ic_player_pause)
+        playButton.setImageResource(if (isDarkModeOn()) R.drawable.ic_player_pause_white else R.drawable.ic_player_pause)
         playerState = STATE_PLAYING
         mainThreadHandler?.postDelayed(
             object: Runnable {
@@ -123,7 +123,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun pausePlayer() {
         mediaPlayer.pause()
-        playButton.setImageResource(R.drawable.ic_player_play)
+        playButton.setImageResource(if (isDarkModeOn()) R.drawable.ic_player_play_white else R.drawable.ic_player_play)
         playerState = STATE_PAUSED
     }
 
@@ -147,5 +147,11 @@ class PlayerActivity : AppCompatActivity() {
         super.onDestroy()
         mediaPlayer.release()
         mainThreadHandler?.removeCallbacksAndMessages(null)
+    }
+
+    private fun isDarkModeOn(): Boolean {
+        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val isDarkModeOn = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+        return isDarkModeOn
     }
 }
