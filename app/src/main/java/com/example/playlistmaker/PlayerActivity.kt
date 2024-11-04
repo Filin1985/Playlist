@@ -1,15 +1,15 @@
 package com.example.playlistmaker
 
+import android.content.res.Configuration
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.SearchActivity.Companion.TRACK
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.utils.DateUtils
@@ -18,6 +18,23 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
+    companion object {
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+        private const val DELAY = 500L
+        private const val REFRESH_PLAY_TIME = 29900L
+    }
+
+    private lateinit var track: TrackData
+    private lateinit var trackTime: TextView
+    private lateinit var playButton: ImageView
+    private var playerState = STATE_DEFAULT
+    private var mediaPlayer = MediaPlayer()
+
+    private var mainThreadHandler: Handler? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
@@ -26,7 +43,7 @@ class PlayerActivity : AppCompatActivity() {
             finish()
         }
 
-        val track = Gson().fromJson(intent.getStringExtra(TRACK), TrackData::class.java)
+        track = Gson().fromJson(intent.getStringExtra(TRACK), TrackData::class.java)
 
         val albumCover = findViewById<ImageView>(R.id.album_cover)
         Glide.with(albumCover)
@@ -41,8 +58,8 @@ class PlayerActivity : AppCompatActivity() {
         val artistName = findViewById<TextView>(R.id.player_band)
         artistName.text = track.artistName
 
-        val trackTime = findViewById<TextView>(R.id.player_time)
-        trackTime.text = DateUtils.msToMMSSFormat(track.trackTimeMillis)
+        trackTime = findViewById<TextView>(R.id.player_time)
+        mainThreadHandler = Handler(Looper.getMainLooper())
 
         val albumName = findViewById<TextView>(R.id.player_album_data)
         if(track.collectionName.isEmpty()) {
@@ -60,5 +77,81 @@ class PlayerActivity : AppCompatActivity() {
         val country = findViewById<TextView>(R.id.player_country_data)
         country.text = track.country
 
+        playButton = findViewById(R.id.player_control)
+        preparePlayer()
+        playButton.setOnClickListener {
+            playbackControl()
+        }
+
+    }
+
+    private fun preparePlayer() {
+        mediaPlayer.setDataSource(track.previewUrl)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            playButton.isEnabled = true
+            playerState = STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+            playButton.setImageResource(if (isDarkModeOn()) R.drawable.ic_player_play_white else R.drawable.ic_player_play)
+            trackTime.text = getText(R.string.default_time)
+            playerState = STATE_PREPARED
+        }
+    }
+
+    private fun startPlayer() {
+        mediaPlayer.start()
+        playButton.setImageResource(if (isDarkModeOn()) R.drawable.ic_player_pause_white else R.drawable.ic_player_pause)
+        playerState = STATE_PLAYING
+        mainThreadHandler?.postDelayed(
+            object: Runnable {
+                override fun run() {
+                    trackTime.text = if (mediaPlayer.currentPosition < REFRESH_PLAY_TIME) {
+                        DateUtils.msToMMSSFormat(mediaPlayer.currentPosition)
+                    } else {
+                        getText(R.string.default_time)
+                    }
+                    mainThreadHandler?.postDelayed(
+                        this,
+                        DELAY,
+                    )
+                }
+            },
+            DELAY
+        )
+    }
+
+    private fun pausePlayer() {
+        mediaPlayer.pause()
+        playButton.setImageResource(if (isDarkModeOn()) R.drawable.ic_player_play_white else R.drawable.ic_player_play)
+        playerState = STATE_PAUSED
+    }
+
+    private fun playbackControl() {
+        when(playerState) {
+            STATE_PLAYING -> {
+                pausePlayer()
+            }
+            STATE_PREPARED, STATE_PAUSED -> {
+                startPlayer()
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
+        mainThreadHandler?.removeCallbacksAndMessages(null)
+    }
+
+    private fun isDarkModeOn(): Boolean {
+        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val isDarkModeOn = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+        return isDarkModeOn
     }
 }

@@ -113,7 +113,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:fontFamily="@font/ys_display_medium"
-            android:text="0:30"
+            android:text="0:00"
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="@dimen/player_text_size"
             app:layout_constraintEnd_toEndOf="parent"
