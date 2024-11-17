@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.content.SharedPreferences
 import com.example.playlistmaker.data.NetworkClient
 import com.example.playlistmaker.data.TracksRepositoryImpl
 import com.example.playlistmaker.data.network.ITunesAPI
@@ -14,11 +15,7 @@ object Creator {
         return TracksRepositoryImpl(RetrofitNetworkClient())
     }
 
-    fun provideTracksInteractor(): TracksInteractor {
+    fun provideSearchTrackAndHistoryInteractor(sharedPrefs: SharedPreferences): TracksInteractor {
         return TracksInteractorImpl(getTracksRepository())
     }
-
-//    fun provideGetTracksByApiRequestUseCase() : TracksInteractor {
-//        return TracksInteractorImpl(TracksRepositoryImpl())
-//    }
 }

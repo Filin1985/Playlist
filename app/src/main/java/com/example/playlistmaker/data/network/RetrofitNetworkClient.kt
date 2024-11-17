@@ -1,8 +1,11 @@
 package com.example.playlistmaker.data.network
 
 import com.example.playlistmaker.data.NetworkClient
-import com.example.playlistmaker.data.dto.Response
+import com.example.playlistmaker.data.dto.ApiResponse
 import com.example.playlistmaker.data.dto.TracksSearchRequest
+import com.example.playlistmaker.data.mappers.TrackListMapper
+import com.example.playlistmaker.data.mappers.mapToApiResponse
+import com.example.playlistmaker.domain.models.TrackData
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -17,15 +20,8 @@ class RetrofitNetworkClient : NetworkClient {
 
     private val itunesService = retrofit.create(ITunesAPI::class.java)
 
-    override fun doRequest(dto: Any): Response {
-        if (dto is TracksSearchRequest) {
-            val resp = itunesService.search(dto.text).execute()
-
-            val body = resp.body() ?: Response()
-
-            return body.apply { resultCode = resp.code() }
-        } else {
-            return Response().apply { resultCode = 400 }
-        }
+    override fun doRequest(dto: TracksSearchRequest): ApiResponse<List<TrackData>> {
+        val response = itunesService.search(dto.text).execute()
+        return response.mapToApiResponse{ dto -> TrackListMapper.mapDtoToEntity(dto.results) }
     }
 }

@@ -1,7 +1,7 @@
 package com.example.playlistmaker.domain.models
 
 data class TrackData (
-    val trackId: Int,
+    val trackId: String,
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: Int,

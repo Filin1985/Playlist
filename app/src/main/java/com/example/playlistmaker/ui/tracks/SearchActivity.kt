@@ -1,12 +1,14 @@
 package com.example.playlistmaker.ui.tracks
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -34,9 +36,11 @@ import com.example.playlistmaker.ui.history.SearchHistory
 import com.example.playlistmaker.data.dto.TracksResponse
 import com.example.playlistmaker.data.dto.TracksSearchRequest
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
+import com.example.playlistmaker.domain.Consumer
 import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.domain.impl.TracksInteractorImpl
 import com.example.playlistmaker.domain.models.TrackData
+import com.example.playlistmaker.domain.models.TracksConsumer
 import com.example.playlistmaker.presentation.TracksAdapter
 import com.google.gson.Gson
 import retrofit2.Call
@@ -46,6 +50,7 @@ import retrofit2.Response
 class SearchActivity : AppCompatActivity() {
     companion object {
         private const val INPUT_SEARCH = "INPUT_SEARCH"
+        private const val INPUT_SEARCH_HISTORY = "INPUT_SEARCH_HISTORY"
         private const val NOT_FOUND_CODE = 404
         const val TRACK = "TRACK"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
@@ -82,6 +87,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var arrowBack: ImageView
     private lateinit var clearButton: ImageView
     private lateinit var searchTracksUseCase: TracksInteractor
+    private lateinit var sharedPrefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -264,60 +270,75 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun searchTrackList() {
-
         if (inputEditText.text.isNotEmpty()) {
             showResultNotification(SearchState.SEARCH_PROGRESS)
-            searchTracksUseCase.searchTrack(
+            searchTracksUseCase.searchTracks(
                 inputEditText.text.toString(),
-                consumer = object : TracksInteractor.TracksConsumer {
-                    override fun consume(foundTracks: List<TrackData>) {
+                consumer = object : Consumer<List<TrackData>> {
+                    override fun consume(data: TracksConsumer<List<TrackData>>) {
                         handler.post {
-                            if(foundTracks.isNotEmpty()) {
-                                searchTrackList.addAll(foundTracks)
-                                trackAdapter.notifyDataSetChanged()
-                                showResultNotification(SearchState.SUCCESS)
+                            when (data) {
+                                is TracksConsumer.Data -> {
+                                    searchTrackList.clear()
+                                    searchTrackList.addAll(data.value)
+                                    trackAdapter.notifyDataSetChanged()
+                                    showResultNotification(SearchState.SUCCESS)
+                                }
+
+                                is TracksConsumer.EmptyData -> {
+                                    searchTrackList.clear()
+                                    trackAdapter.notifyDataSetChanged()
+                                    showResultNotification(SearchState.NOT_FOUND)
+                                }
+
+                                is TracksConsumer.Error -> {
+                                    searchTrackList.clear()
+                                    trackAdapter.notifyDataSetChanged()
+                                    showResultNotification(SearchState.CONNECTION_ERROR)
+                                }
                             }
                         }
-                    }
-                })
-        }
-    }
-
-    private fun searchTrackList_old() {
-        val itunesService = ITunesService().get()
-        if (inputEditText.text.isNotEmpty()) {
-            showResultNotification(SearchState.SEARCH_PROGRESS)
-            itunesService.search(inputEditText.text.toString())
-                .enqueue(object : Callback<TracksResponse> {
-                    override fun onResponse(
-                        call: Call<TracksResponse>,
-                        response: Response<TracksResponse>
-                    ) {
-                        if (response.isSuccessful) {
-                            searchTrackList.clear()
-                            val resBody = response.body()?.results
-                            if (resBody?.isNotEmpty() == true) {
-                                searchTrackList.addAll(resBody)
-                                trackAdapter.notifyDataSetChanged()
-                                showResultNotification(SearchState.SUCCESS)
-                            } else {
-                                showResultNotification(SearchState.NOT_FOUND)
-                            }
-                        } else if (response.code() == NOT_FOUND_CODE) {
-                            showResultNotification(SearchState.NOT_FOUND)
-                        } else {
-                            showResultNotification(SearchState.CONNECTION_ERROR)
-                        }
-                    }
-
-                    override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
-                        progressBar.visibility = View.GONE
-                        showResultNotification(SearchState.CONNECTION_ERROR)
                     }
                 }
-                )
+            )
         }
     }
+
+//    private fun searchTrackList_old() {
+//        val itunesService = ITunesService().get()
+//        if (inputEditText.text.isNotEmpty()) {
+//            showResultNotification(SearchState.SEARCH_PROGRESS)
+//            itunesService.search(inputEditText.text.toString())
+//                .enqueue(object : Callback<TracksResponse> {
+//                    override fun onResponse(
+//                        call: Call<TracksResponse>,
+//                        response: Response<TracksResponse>
+//                    ) {
+//                        if (response.isSuccessful) {
+//                            searchTrackList.clear()
+//                            val resBody = response.body()?.results
+//                            if (resBody?.isNotEmpty() == true) {
+//                                searchTrackList.addAll(resBody)
+//                                trackAdapter.notifyDataSetChanged()
+//                                showResultNotification(SearchState.SUCCESS)
+//                            } else {
+//                                showResultNotification(SearchState.NOT_FOUND)
+//                            }
+//                        } else if (response.code() == NOT_FOUND_CODE) {
+//                            showResultNotification(SearchState.NOT_FOUND)
+//                        } else {
+//                            showResultNotification(SearchState.CONNECTION_ERROR)
+//                        }
+//                    }
+//
+//                    override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+//                        progressBar.visibility = View.GONE
+//                        showResultNotification(SearchState.CONNECTION_ERROR)
+//                    }
+//                }
+//                )
+//        }
+//    }
 
     private fun clickOnTrack(track: TrackData) {
         if (clickDebounce()) {
@@ -358,6 +379,7 @@ class SearchActivity : AppCompatActivity() {
 
         historyText = findViewById(R.id.historySearch)
         clearSearchButton = findViewById(R.id.clearSearchButton)
-        searchTracksUseCase = Creator.provideTracksInteractor()
+        sharedPrefs = getSharedPreferences(INPUT_SEARCH_HISTORY, MODE_PRIVATE)
+        searchTracksUseCase = Creator.provideSearchTrackAndHistoryInteractor(sharedPrefs)
     }
 }
