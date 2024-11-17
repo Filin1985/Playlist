@@ -1,21 +1,42 @@
 package com.example.playlistmaker
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.data.NetworkClient
+import com.example.playlistmaker.data.SearchHistory
 import com.example.playlistmaker.data.TracksRepositoryImpl
-import com.example.playlistmaker.data.network.ITunesAPI
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
-import com.example.playlistmaker.domain.api.ITunesService
 import com.example.playlistmaker.domain.api.TracksInteractor
-import com.example.playlistmaker.domain.api.TracksRepository
 import com.example.playlistmaker.domain.impl.TracksInteractorImpl
+import com.example.playlistmaker.data.SearchHistoryImpl
+import com.example.playlistmaker.domain.impl.AddTracksToHistoryListImlp
+import com.example.playlistmaker.domain.impl.ClearTracksHistoryListImpl
+import com.example.playlistmaker.domain.impl.GetTracksHistoryListImpl
+import com.example.playlistmaker.domain.interfaces.AddTracksHistoryListUseCase
+import com.example.playlistmaker.domain.interfaces.ClearTracksHistoryListUseCase
+import com.example.playlistmaker.domain.interfaces.GetTracksHistoryListUseCase
 
 object Creator {
-    private fun getTracksRepository(): TracksRepository {
-        return TracksRepositoryImpl(RetrofitNetworkClient())
+    fun provideSearchTrackInteractor(): TracksInteractor {
+        return TracksInteractorImpl(provideSearchRepository())
     }
 
-    fun provideSearchTrackAndHistoryInteractor(sharedPrefs: SharedPreferences): TracksInteractor {
-        return TracksInteractorImpl(getTracksRepository())
+    fun getSearchHistoryStorage(sharedPreferences: SharedPreferences): GetTracksHistoryListUseCase {
+        return GetTracksHistoryListImpl(provideHistoryTrackList(sharedPreferences))
+    }
+
+    fun addSearchHistoryStorage(sharedPreferences: SharedPreferences): AddTracksHistoryListUseCase {
+        return AddTracksToHistoryListImlp(provideHistoryTrackList(sharedPreferences))
+    }
+
+    fun clearSearchHistoryStorage(sharedPreferences: SharedPreferences): ClearTracksHistoryListUseCase {
+        return ClearTracksHistoryListImpl(provideHistoryTrackList(sharedPreferences))
+    }
+
+    private fun getRetrofitNetworkClient() = RetrofitNetworkClient()
+
+    private fun provideSearchRepository() =
+        TracksRepositoryImpl(getRetrofitNetworkClient())
+
+    private fun provideHistoryTrackList(sharedPreferences: SharedPreferences): SearchHistory {
+        return SearchHistoryImpl(sharedPreferences)
     }
 }
