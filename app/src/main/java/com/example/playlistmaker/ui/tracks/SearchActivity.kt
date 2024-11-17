@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.tracks
 
 import android.content.Intent
 import android.content.res.Configuration
@@ -22,6 +22,22 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.App
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.domain.api.ITunesService
+import com.example.playlistmaker.ui.main.MainActivity
+import com.example.playlistmaker.ui.player.PlayerActivity
+import com.example.playlistmaker.R
+import com.example.playlistmaker.data.NetworkClient
+import com.example.playlistmaker.data.TracksRepositoryImpl
+import com.example.playlistmaker.ui.history.SearchHistory
+import com.example.playlistmaker.data.dto.TracksResponse
+import com.example.playlistmaker.data.dto.TracksSearchRequest
+import com.example.playlistmaker.data.network.RetrofitNetworkClient
+import com.example.playlistmaker.domain.api.TracksInteractor
+import com.example.playlistmaker.domain.impl.TracksInteractorImpl
+import com.example.playlistmaker.domain.models.TrackData
+import com.example.playlistmaker.presentation.TracksAdapter
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -63,6 +79,9 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var historyText: TextView
     private lateinit var recycleContainer: LinearLayout
     private lateinit var progressBar: ProgressBar
+    private lateinit var arrowBack: ImageView
+    private lateinit var clearButton: ImageView
+    private lateinit var searchTracksUseCase: TracksInteractor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,25 +94,9 @@ class SearchActivity : AppCompatActivity() {
         }
 
         // RecycleView
-        trackRecycleView = findViewById(R.id.trackSearchRecyclerView)
+        init()
         trackRecycleView.layoutManager = LinearLayoutManager(this)
         trackRecycleView.adapter = trackAdapter
-
-        val arrowBack = findViewById<ImageView>(R.id.arrowBack)
-        val clearButton = findViewById<ImageView>(R.id.clearIcon)
-        searchNotification = findViewById(R.id.searchNotification)
-        refreshButton = findViewById(R.id.refreshButton)
-        inputEditText = findViewById(R.id.textSearch)
-        recycleContainer = findViewById(R.id.recycleContainer)
-        progressBar = findViewById(R.id.progressBar)
-
-        errorImage = findViewById(R.id.notFound)
-        errorText = findViewById(R.id.errorText)
-        errorConnectionText = findViewById(R.id.errorConnectionText)
-
-        // SharedPreference
-        historyText = findViewById(R.id.historySearch)
-        clearSearchButton = findViewById(R.id.clearSearchButton)
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -261,14 +264,34 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun searchTrackList() {
+
+        if (inputEditText.text.isNotEmpty()) {
+            showResultNotification(SearchState.SEARCH_PROGRESS)
+            searchTracksUseCase.searchTrack(
+                inputEditText.text.toString(),
+                consumer = object : TracksInteractor.TracksConsumer {
+                    override fun consume(foundTracks: List<TrackData>) {
+                        handler.post {
+                            if(foundTracks.isNotEmpty()) {
+                                searchTrackList.addAll(foundTracks)
+                                trackAdapter.notifyDataSetChanged()
+                                showResultNotification(SearchState.SUCCESS)
+                            }
+                        }
+                    }
+                })
+        }
+    }
+
+    private fun searchTrackList_old() {
         val itunesService = ITunesService().get()
         if (inputEditText.text.isNotEmpty()) {
             showResultNotification(SearchState.SEARCH_PROGRESS)
             itunesService.search(inputEditText.text.toString())
-                .enqueue(object : Callback<TrackResponse> {
+                .enqueue(object : Callback<TracksResponse> {
                     override fun onResponse(
-                        call: Call<TrackResponse>,
-                        response: Response<TrackResponse>
+                        call: Call<TracksResponse>,
+                        response: Response<TracksResponse>
                     ) {
                         if (response.isSuccessful) {
                             searchTrackList.clear()
@@ -287,7 +310,7 @@ class SearchActivity : AppCompatActivity() {
                         }
                     }
 
-                    override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                    override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
                         progressBar.visibility = View.GONE
                         showResultNotification(SearchState.CONNECTION_ERROR)
                     }
@@ -317,5 +340,24 @@ class SearchActivity : AppCompatActivity() {
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    private fun init() {
+        trackRecycleView = findViewById(R.id.trackSearchRecyclerView)
+        arrowBack = findViewById(R.id.arrowBack)
+        clearButton = findViewById(R.id.clearIcon)
+        searchNotification = findViewById(R.id.searchNotification)
+        refreshButton = findViewById(R.id.refreshButton)
+        inputEditText = findViewById(R.id.textSearch)
+        recycleContainer = findViewById(R.id.recycleContainer)
+        progressBar = findViewById(R.id.progressBar)
+
+        errorImage = findViewById(R.id.notFound)
+        errorText = findViewById(R.id.errorText)
+        errorConnectionText = findViewById(R.id.errorConnectionText)
+
+        historyText = findViewById(R.id.historySearch)
+        clearSearchButton = findViewById(R.id.clearSearchButton)
+        searchTracksUseCase = Creator.provideTracksInteractor()
     }
 }

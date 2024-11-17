@@ -1,7 +1,8 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.domain.models.TrackData
 
 
 class TracksAdapter(
