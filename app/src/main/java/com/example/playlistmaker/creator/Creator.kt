@@ -20,20 +20,12 @@ object Creator {
         return TracksInteractorImpl(provideSearchRepository())
     }
 
-    fun getSearchHistoryStorage(sharedPreferences: SharedPreferences): GetTracksHistoryListUseCase {
-        return GetTracksHistoryListImpl(provideHistoryTrackList(sharedPreferences))
-    }
-
-    fun addSearchHistoryStorage(sharedPreferences: SharedPreferences): AddTracksHistoryListUseCase {
-        return AddTracksToHistoryListImlp(provideHistoryTrackList(sharedPreferences))
-    }
-
-    fun clearSearchHistoryStorage(sharedPreferences: SharedPreferences): ClearTracksHistoryListUseCase {
-        return ClearTracksHistoryListImpl(provideHistoryTrackList(sharedPreferences))
-    }
-
     fun getPlayerCreator(track: TrackData): PlayerCreator {
         return PlayerCreator(track)
+    }
+
+    fun getSearchCreator(): SearchCreator {
+        return SearchCreator()
     }
 
     private fun getRetrofitNetworkClient() = RetrofitNetworkClient()
@@ -41,7 +33,4 @@ object Creator {
     private fun provideSearchRepository() =
         TracksRepositoryImpl(getRetrofitNetworkClient())
 
-    private fun provideHistoryTrackList(sharedPreferences: SharedPreferences): SearchHistory {
-        return SearchHistoryImpl(sharedPreferences)
-    }
 }

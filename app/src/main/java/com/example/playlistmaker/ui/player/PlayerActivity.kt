@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.ui.tracks.SearchActivity.Companion.TRACK
 import com.bumptech.glide.Glide
@@ -27,7 +28,6 @@ import java.util.Locale
 class PlayerActivity : AppCompatActivity() {
     companion object {
         private const val DELAY = 500L
-        private const val REFRESH_PLAY_TIME = 29900L
     }
 
     private lateinit var track: TrackData

@@ -8,11 +8,6 @@ import com.example.playlistmaker.domain.models.MediaPlayerState
 import com.example.playlistmaker.domain.models.TrackData
 
 class MediaPlayerRepositoryImpl(val track: TrackData): MediaPlayerRepository {
-    companion object {
-        private const val DELAY = 500L
-        private const val REFRESH_PLAY_TIME = 29900L
-    }
-
     var state = MediaPlayerState.STATE_DEFAULT
     private var mediaPlayer = MediaPlayer()
 

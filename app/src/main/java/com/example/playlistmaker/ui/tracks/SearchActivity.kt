@@ -46,14 +46,16 @@ class SearchActivity : AppCompatActivity() {
         CONNECTION_ERROR, NOT_FOUND, SUCCESS, HISTORY_LIST, SEARCH_PROGRESS
     }
 
+    private val searchCreator by lazy { Creator.getSearchCreator() }
+
     private val getHistoryTrackListToStorageUseCase by lazy {
-        Creator.getSearchHistoryStorage(getSharedPreferences(App.SETTINGS, MODE_PRIVATE))
+        searchCreator.getSearchHistoryStorage(getSharedPreferences(App.SETTINGS, MODE_PRIVATE))
     }
     private val addHistoryTrackListFromStorageUseCase by lazy {
-        Creator.addSearchHistoryStorage(getSharedPreferences(App.SETTINGS, MODE_PRIVATE))
+        searchCreator.addSearchHistoryStorage(getSharedPreferences(App.SETTINGS, MODE_PRIVATE))
     }
     private val clearHistoryTrackListFromStorageUseCase by lazy {
-        Creator.clearSearchHistoryStorage(getSharedPreferences(App.SETTINGS, MODE_PRIVATE))
+        searchCreator.clearSearchHistoryStorage(getSharedPreferences(App.SETTINGS, MODE_PRIVATE))
     }
 
     private val searchTrackList = mutableListOf<TrackData>()
