@@ -13,6 +13,7 @@ import com.example.playlistmaker.domain.impl.GetTracksHistoryListImpl
 import com.example.playlistmaker.domain.interfaces.AddTracksHistoryListUseCase
 import com.example.playlistmaker.domain.interfaces.ClearTracksHistoryListUseCase
 import com.example.playlistmaker.domain.interfaces.GetTracksHistoryListUseCase
+import com.example.playlistmaker.domain.models.TrackData
 
 object Creator {
     fun provideSearchTrackInteractor(): TracksInteractor {
@@ -29,6 +30,10 @@ object Creator {
 
     fun clearSearchHistoryStorage(sharedPreferences: SharedPreferences): ClearTracksHistoryListUseCase {
         return ClearTracksHistoryListImpl(provideHistoryTrackList(sharedPreferences))
+    }
+
+    fun getPlayerCreator(track: TrackData): PlayerCreator {
+        return PlayerCreator(track)
     }
 
     private fun getRetrofitNetworkClient() = RetrofitNetworkClient()

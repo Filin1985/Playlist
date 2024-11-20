@@ -4,6 +4,8 @@ import android.os.Handler
 import android.widget.TextView
 import com.example.playlistmaker.domain.models.MediaPlayerState
 
-interface PlayTrackUseCase {
-    fun execute(action: () -> Unit) : MediaPlayerState
+interface PlaybackTrackUseCase {
+    fun execute(
+        actionPlaying: () -> Unit, actionPause: () -> Unit
+    ): MediaPlayerState
 }

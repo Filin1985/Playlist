@@ -26,17 +26,4 @@ object TrackListMapper {
         }
         return trackList
     }
-
-    fun mapEntityToDto(track: TrackData) = TrackDto(
-        trackId = track.trackId ?: EMPTY_STRING,
-        trackName = track.trackName ?: EMPTY_STRING,
-        artistName = track.artistName ?: EMPTY_STRING,
-        trackTimeMillis = track.trackTimeMillis ?: 0,
-        artworkUrl100 = track.artworkUrl100 ?: EMPTY_STRING,
-        collectionName = track.collectionName ?: EMPTY_STRING,
-        releaseDate = track.releaseDate ?: EMPTY_STRING,
-        primaryGenreName = track.primaryGenreName ?: EMPTY_STRING,
-        country = track.country ?: EMPTY_STRING,
-        previewUrl = track.previewUrl ?: EMPTY_STRING
-    )
 }

@@ -6,8 +6,9 @@ import com.example.playlistmaker.domain.models.MediaPlayerState
 
 class PreparePlayerUseCaseImpl(private val playerRepository: MediaPlayerRepository) :
     PreparePlayerUseCase {
-    override fun execute(): MediaPlayerState {
+    override fun execute(action: () -> Unit): MediaPlayerState {
         playerRepository.preparePlayer()
+        action.invoke()
         return playerRepository.getPlayerState()
     }
 }
