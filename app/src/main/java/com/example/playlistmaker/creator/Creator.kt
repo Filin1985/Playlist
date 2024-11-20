@@ -1,12 +1,12 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.creator
 
 import android.content.SharedPreferences
 import com.example.playlistmaker.data.SearchHistory
-import com.example.playlistmaker.data.TracksRepositoryImpl
+import com.example.playlistmaker.data.repository.TracksRepositoryImpl
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.domain.impl.TracksInteractorImpl
-import com.example.playlistmaker.data.SearchHistoryImpl
+import com.example.playlistmaker.data.repository.SearchHistoryImpl
 import com.example.playlistmaker.domain.impl.AddTracksToHistoryListImlp
 import com.example.playlistmaker.domain.impl.ClearTracksHistoryListImpl
 import com.example.playlistmaker.domain.impl.GetTracksHistoryListImpl
