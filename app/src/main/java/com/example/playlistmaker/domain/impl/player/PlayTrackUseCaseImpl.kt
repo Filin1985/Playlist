@@ -7,7 +7,6 @@ import com.example.playlistmaker.domain.models.MediaPlayerState
 
 class PlayTrackUseCaseImpl(private val playerRepository: MediaPlayerRepository) : PlayTrackUseCase {
     override fun execute(action: () -> Unit): MediaPlayerState {
-        Log.d("PlayTrackUseCaseImpl", "${playerRepository.getPlayerState()}")
         playerRepository.play()
         action.invoke()
         return playerRepository.getPlayerState()

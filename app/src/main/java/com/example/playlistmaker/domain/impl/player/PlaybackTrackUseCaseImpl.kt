@@ -10,7 +10,6 @@ class PlaybackTrackUseCaseImpl(private val playerRepository: MediaPlayerReposito
     PlaybackTrackUseCase {
     override fun execute(actionPlaying: () -> Unit, actionPause: () -> Unit): MediaPlayerState {
         val playerState = playerRepository.getPlayerState()
-        Log.d("PlaybackTrackUseCaseImpl", "--------------$playerState")
         return when (playerState) {
             MediaPlayerState.STATE_PLAYING -> PauseTrackUseCaseImpl(playerRepository).execute(
                 actionPause
