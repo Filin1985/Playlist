@@ -1,7 +1,9 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.data.dto
 
-data class TrackData (
-    val trackId: Int,
+import com.example.playlistmaker.utils.DateUtils
+
+data class TrackDto (
+    val trackId: String,
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: Int,
@@ -11,4 +13,6 @@ data class TrackData (
     val primaryGenreName: String,
     val country: String,
     val previewUrl: String,
-)
+) {
+    fun getTrackTimeMillis(): String = DateUtils.msToMMSSFormat(trackTimeMillis)
+}
