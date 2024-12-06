@@ -1,14 +1,14 @@
 package com.example.playlistmaker.creator
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.data.SearchHistory
-import com.example.playlistmaker.data.repository.SearchHistoryImpl
-import com.example.playlistmaker.domain.impl.AddTracksToHistoryListImlp
-import com.example.playlistmaker.domain.impl.ClearTracksHistoryListImpl
-import com.example.playlistmaker.domain.impl.GetTracksHistoryListImpl
-import com.example.playlistmaker.domain.interfaces.AddTracksHistoryListUseCase
-import com.example.playlistmaker.domain.interfaces.ClearTracksHistoryListUseCase
-import com.example.playlistmaker.domain.interfaces.GetTracksHistoryListUseCase
+import com.example.playlistmaker.data.search.SearchHistory
+import com.example.playlistmaker.data.search.impl.SearchHistoryImpl
+import com.example.playlistmaker.domain.search.impl.AddTracksToHistoryListImlp
+import com.example.playlistmaker.domain.search.impl.ClearTracksHistoryListImpl
+import com.example.playlistmaker.domain.search.impl.GetTracksHistoryListImpl
+import com.example.playlistmaker.domain.search.interfaces.AddTracksHistoryListUseCase
+import com.example.playlistmaker.domain.search.interfaces.ClearTracksHistoryListUseCase
+import com.example.playlistmaker.domain.search.interfaces.GetTracksHistoryListUseCase
 
 class SearchCreator {
     fun getSearchHistoryStorage(sharedPreferences: SharedPreferences): GetTracksHistoryListUseCase {

@@ -5,7 +5,7 @@
     android:id="@+id/search"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.MainActivity">
+    tools:context=".ui.main.activity.MainActivity">
 
     <LinearLayout
         style="@style/ContainerStyle"
@@ -37,7 +37,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="16dp"
             android:orientation="horizontal"
-            tools:context=".ui.main.MainActivity">
+            tools:context=".ui.main.activity.MainActivity">
 
             <EditText
                 android:id="@+id/textSearch"

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.models.TrackData
+import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.utils.DateUtils
 
 class TracksViewHolder(parentView: ViewGroup): RecyclerView.ViewHolder(LayoutInflater.from(parentView.context).inflate(

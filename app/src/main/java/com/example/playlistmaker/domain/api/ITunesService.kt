@@ -1,6 +1,6 @@
 package com.example.playlistmaker.domain.api
 
-import com.example.playlistmaker.data.network.ITunesAPI
+import com.example.playlistmaker.data.search.network.ITunesAPI
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

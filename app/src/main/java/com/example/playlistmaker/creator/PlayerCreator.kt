@@ -1,21 +1,21 @@
 package com.example.playlistmaker.creator
 
-import com.example.playlistmaker.data.repository.MediaPlayerRepositoryImpl
-import com.example.playlistmaker.domain.impl.player.DestroyPlayerUseCaseImpl
-import com.example.playlistmaker.domain.impl.player.GetCurrentPlayerTrackTimeUseCaseImpl
-import com.example.playlistmaker.domain.impl.player.GetPlayerStateUseCaseImpl
-import com.example.playlistmaker.domain.impl.player.PauseTrackUseCaseImpl
-import com.example.playlistmaker.domain.impl.player.PlayTrackUseCaseImpl
-import com.example.playlistmaker.domain.impl.player.PlaybackTrackUseCaseImpl
-import com.example.playlistmaker.domain.impl.player.PreparePlayerUseCaseImpl
-import com.example.playlistmaker.domain.interfaces.player.DestroyPlayerUseCase
-import com.example.playlistmaker.domain.interfaces.player.GetCurrentPlayerTrackTimeUseCase
-import com.example.playlistmaker.domain.interfaces.player.GetPlayerStateUseCase
-import com.example.playlistmaker.domain.interfaces.player.PauseTrackUseCase
-import com.example.playlistmaker.domain.interfaces.player.PlayTrackUseCase
-import com.example.playlistmaker.domain.interfaces.player.PlaybackTrackUseCase
-import com.example.playlistmaker.domain.interfaces.player.PreparePlayerUseCase
-import com.example.playlistmaker.domain.models.TrackData
+import com.example.playlistmaker.data.player.MediaPlayerRepositoryImpl
+import com.example.playlistmaker.domain.player.impl.DestroyPlayerUseCaseImpl
+import com.example.playlistmaker.domain.player.impl.GetCurrentPlayerTrackTimeUseCaseImpl
+import com.example.playlistmaker.domain.player.impl.GetPlayerStateUseCaseImpl
+import com.example.playlistmaker.domain.player.impl.PauseTrackUseCaseImpl
+import com.example.playlistmaker.domain.player.impl.PlayTrackUseCaseImpl
+import com.example.playlistmaker.domain.player.impl.PlaybackTrackUseCaseImpl
+import com.example.playlistmaker.domain.player.impl.PreparePlayerUseCaseImpl
+import com.example.playlistmaker.domain.player.interfaces.DestroyPlayerUseCase
+import com.example.playlistmaker.domain.player.interfaces.GetCurrentPlayerTrackTimeUseCase
+import com.example.playlistmaker.domain.player.interfaces.GetPlayerStateUseCase
+import com.example.playlistmaker.domain.player.interfaces.PauseTrackUseCase
+import com.example.playlistmaker.domain.player.interfaces.PlayTrackUseCase
+import com.example.playlistmaker.domain.player.interfaces.PlaybackTrackUseCase
+import com.example.playlistmaker.domain.player.interfaces.PreparePlayerUseCase
+import com.example.playlistmaker.domain.search.model.TrackData
 
 class PlayerCreator(val track: TrackData) {
     private val mediaPlayer = MediaPlayerRepositoryImpl(track)
