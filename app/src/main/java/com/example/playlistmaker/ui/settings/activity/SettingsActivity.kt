@@ -10,9 +10,13 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.domain.settings.model.Theme
 import com.example.playlistmaker.ui.settings.view_model.SettingsViewModel
+import com.example.playlistmaker.ui.settings.view_model.ThemeViewModel
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
+    private val themeViewModel: ThemeViewModel by viewModels {
+        ThemeViewModel.factory()
+    }
     private val settingsViewModel: SettingsViewModel by viewModels {
         SettingsViewModel.factory()
     }
@@ -26,28 +30,23 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
-        settingsViewModel.liveData.observe(this) {
+        themeViewModel.liveData.observe(this) {
             binding.themeSwitcher.isChecked = when(it) {
                 is Theme.LightTheme -> false
                 is Theme.DarkTheme -> true
             }
         }
 
-        settingsViewModel.getPrevTheme()
-
         binding.themeSwitcher.setOnCheckedChangeListener { switcher, isChecked ->
             val theme = if (isChecked) Theme.DarkTheme() else Theme.LightTheme()
-            settingsViewModel.switchAndSaveTheme(theme)
+            themeViewModel.switchAndSaveTheme(theme)
 
         }
 
-        val shareButton = findViewById<ImageView>(R.id.share)
-        shareButton.setOnClickListener {
-            Intent(Intent.ACTION_SEND).apply {
-                putExtra(Intent.EXTRA_TEXT, getString(R.string.share_link))
-                type = "text/plain"
-                startActivity(Intent.createChooser(this, null))
-            }
+        themeViewModel.getPrevTheme()
+
+        binding.share.setOnClickListener {
+            settingsViewModel.shareApp()
         }
 
         val support = findViewById<ImageView>(R.id.support)

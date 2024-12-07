@@ -1,23 +1,23 @@
 package com.example.playlistmaker.creator
 
-import com.example.playlistmaker.data.settings.ThemeRepository
-import com.example.playlistmaker.domain.settings.impl.GetPrevThemeUseCaseImpl
-import com.example.playlistmaker.domain.settings.impl.SaveNewThemeUseCaseImpl
-import com.example.playlistmaker.domain.settings.impl.SwitchThemeUseCaseImpl
-import com.example.playlistmaker.domain.settings.interfaces.GetPrevThemeUseCase
-import com.example.playlistmaker.domain.settings.interfaces.SaveNewThemeUseCase
-import com.example.playlistmaker.domain.settings.interfaces.SwitchThemeUseCase
+import com.example.playlistmaker.data.sharing.ExternalNavigator
+import com.example.playlistmaker.domain.sharing.impl.MailToSupportUseCaseImpl
+import com.example.playlistmaker.domain.sharing.impl.OpenTermsUseCaseImpl
+import com.example.playlistmaker.domain.sharing.impl.SharingAppUseCaseImpl
+import com.example.playlistmaker.domain.sharing.interfaces.MailToSupportUseCase
+import com.example.playlistmaker.domain.sharing.interfaces.OpenTermsUseCase
+import com.example.playlistmaker.domain.sharing.interfaces.SharingAppUseCase
 
-class SettingsCreator(private val themeRepository: ThemeRepository) {
-    fun saveNewTheme(): SaveNewThemeUseCase {
-        return SaveNewThemeUseCaseImpl(themeRepository)
+class SettingsCreator(private val externalNavigator: ExternalNavigator) {
+    fun shareApp(): SharingAppUseCase {
+        return SharingAppUseCaseImpl(externalNavigator)
     }
 
-    fun switchNewTheme(): SwitchThemeUseCase {
-        return SwitchThemeUseCaseImpl(themeRepository)
+    fun mailToSupport(): MailToSupportUseCase {
+        return MailToSupportUseCaseImpl(externalNavigator)
     }
 
-    fun getPrevTheme(): GetPrevThemeUseCase {
-        return GetPrevThemeUseCaseImpl(themeRepository)
+    fun openTerms(): OpenTermsUseCase {
+        return OpenTermsUseCaseImpl(externalNavigator)
     }
 }

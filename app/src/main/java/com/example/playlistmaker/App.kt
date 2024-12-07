@@ -5,8 +5,8 @@ import com.example.playlistmaker.creator.Creator
 
 class App : Application() {
 
-    private val saveNewTheme by lazy { Creator.getSettingsCreator().saveNewTheme() }
-    private val getPrevTheme by lazy { Creator.getSettingsCreator().getPrevTheme() }
+    private val saveNewTheme by lazy { Creator.getThemeCreator().saveNewTheme() }
+    private val getPrevTheme by lazy { Creator.getThemeCreator().getPrevTheme() }
 
     override fun onCreate() {
         super.onCreate()
