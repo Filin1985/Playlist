@@ -61,13 +61,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/historySearch"
-                style="@style/TextHistorySearchStyle"
-                android:text="@string/history_search"
-                android:layout_weight="1"
-                android:visibility="gone"/>
-
             <ProgressBar android:id="@+id/progressBar"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
@@ -81,6 +74,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="100"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/recycleHistoryContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/historySearch"
+                style="@style/TextHistorySearchStyle"
+                android:text="@string/history_search"
+                android:layout_weight="1" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/trackSearchHistoryRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="100"/>
 
             <Button
                 android:id="@+id/clearSearchButton"
@@ -91,8 +103,7 @@
                 android:paddingStart="14dp"
                 android:paddingEnd="14dp"
                 android:text="@string/history_clear"
-                android:layout_weight="1"
-                android:visibility="gone"/>
+                android:layout_weight="1" />
         </LinearLayout>
 
         <LinearLayout

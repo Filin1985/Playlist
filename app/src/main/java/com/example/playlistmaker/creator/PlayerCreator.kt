@@ -1,6 +1,7 @@
 package com.example.playlistmaker.creator
 
 import com.example.playlistmaker.data.player.MediaPlayerRepositoryImpl
+import com.example.playlistmaker.domain.player.impl.CompletionUseCaseImpl
 import com.example.playlistmaker.domain.player.impl.DestroyPlayerUseCaseImpl
 import com.example.playlistmaker.domain.player.impl.GetCurrentPlayerTrackTimeUseCaseImpl
 import com.example.playlistmaker.domain.player.impl.GetPlayerStateUseCaseImpl
@@ -8,6 +9,7 @@ import com.example.playlistmaker.domain.player.impl.PauseTrackUseCaseImpl
 import com.example.playlistmaker.domain.player.impl.PlayTrackUseCaseImpl
 import com.example.playlistmaker.domain.player.impl.PlaybackTrackUseCaseImpl
 import com.example.playlistmaker.domain.player.impl.PreparePlayerUseCaseImpl
+import com.example.playlistmaker.domain.player.interfaces.CompletionUseCase
 import com.example.playlistmaker.domain.player.interfaces.DestroyPlayerUseCase
 import com.example.playlistmaker.domain.player.interfaces.GetCurrentPlayerTrackTimeUseCase
 import com.example.playlistmaker.domain.player.interfaces.GetPlayerStateUseCase
@@ -46,5 +48,9 @@ class PlayerCreator(val track: TrackData) {
 
     fun providePlaybackTrackUseCase(): PlaybackTrackUseCase {
         return PlaybackTrackUseCaseImpl(mediaPlayer)
+    }
+
+    fun provideCompletionUseCase():CompletionUseCase {
+        return CompletionUseCaseImpl(mediaPlayer)
     }
 }

@@ -1,6 +1,9 @@
 package com.example.playlistmaker.creator
 
 import android.app.Application
+import android.content.SharedPreferences
+import com.example.playlistmaker.data.search.SearchHistoryRepository
+import com.example.playlistmaker.data.search.impl.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.search.impl.TracksRepositoryImpl
 import com.example.playlistmaker.data.search.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.settings.ThemeRepository
@@ -27,7 +30,7 @@ object Creator {
     }
 
     fun getSearchCreator(): SearchCreator {
-        return SearchCreator()
+        return SearchCreator(provideHistoryTrackList())
     }
 
     fun getThemeCreator(): ThemeCreator {
@@ -49,5 +52,9 @@ object Creator {
 
     private fun provideExternalNavigator(): ExternalNavigator {
         return ExternalNavigatorImpl(application)
+    }
+
+    private fun provideHistoryTrackList(): SearchHistoryRepository {
+        return SearchHistoryRepositoryImpl(application)
     }
 }

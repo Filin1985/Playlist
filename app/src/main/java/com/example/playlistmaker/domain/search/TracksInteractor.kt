@@ -4,5 +4,5 @@ import com.example.playlistmaker.domain.consumer.Consumer
 import com.example.playlistmaker.domain.search.model.TrackData
 
 interface TracksInteractor {
-    fun searchTracks(text: String, consumer: Consumer<List<TrackData>>)
+    fun execute(text: String, consumer: Consumer<List<TrackData>>)
 }

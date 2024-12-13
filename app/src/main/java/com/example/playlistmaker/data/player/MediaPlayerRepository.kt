@@ -10,9 +10,11 @@ interface MediaPlayerRepository {
 
     fun destroy()
 
-    fun preparePlayer()
+    fun preparePlayer(setPLayerState: () -> Unit)
 
     fun getPlayerState(): MediaPlayerState
 
     fun getCurrentTime(): Int
+
+    fun setCompletionState(setPLayerState: () -> Unit)
 }
