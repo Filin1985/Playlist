@@ -1,7 +1,7 @@
 package com.example.playlistmaker.data.player
 
 import android.media.MediaPlayer
-import android.util.Log
+import com.example.playlistmaker.domain.player.MediaPlayerRepository
 import com.example.playlistmaker.domain.player.model.MediaPlayerState
 import com.example.playlistmaker.domain.search.model.TrackData
 

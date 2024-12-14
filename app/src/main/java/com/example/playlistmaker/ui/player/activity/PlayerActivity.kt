@@ -66,7 +66,7 @@ class PlayerActivity : AppCompatActivity() {
         binding.playerGenreData.text = track.primaryGenreName
         binding.playerCountryData.text = track.country
 
-        binding.playerControl.setOnClickListener {
+        binding.playerPlay.setOnClickListener {
             viewModel?.playControl()
             viewModel?.startUpdaterRunnable()
         }
@@ -77,19 +77,13 @@ class PlayerActivity : AppCompatActivity() {
         viewModel?.pausePlayer()
     }
 
-    private fun isDarkModeOn(): Boolean {
-        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        val isDarkModeOn = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
-        return isDarkModeOn
-    }
-
     private fun stateRender(playerState: MediaPlayerState) {
         when (playerState) {
-            MediaPlayerState.STATE_PLAYING -> binding.playerControl.setImageResource(if (isDarkModeOn()) R.drawable.ic_player_pause_white else R.drawable.ic_player_pause)
-            MediaPlayerState.STATE_PAUSED -> binding.playerControl.setImageResource(if (isDarkModeOn()) R.drawable.ic_player_play_white else R.drawable.ic_player_play)
+            MediaPlayerState.STATE_PLAYING -> binding.playerPlay.setImageResource(R.drawable.ic_player_pause)
+            MediaPlayerState.STATE_PAUSED -> binding.playerPlay.setImageResource(R.drawable.ic_player_play)
             MediaPlayerState.STATE_PREPARED -> {
                 binding.playerTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(0)
-                binding.playerControl.setImageResource(if (isDarkModeOn()) R.drawable.ic_player_play_white else R.drawable.ic_player_play)
+                binding.playerPlay.setImageResource(R.drawable.ic_player_play)
             }
 
             MediaPlayerState.STATE_DEFAULT -> {}

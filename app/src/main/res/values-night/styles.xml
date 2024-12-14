@@ -82,11 +82,4 @@
         <item name="navigationIcon">@drawable/ic_arrow_white</item>
     </style>
 
-    <style name="PlayerPlayButtonStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">30dp</item>
-        <item name="android:contentDescription">@string/album_cover</item>
-        <item name="android:src">@drawable/ic_player_play_white</item>
-    </style>
 </resources>

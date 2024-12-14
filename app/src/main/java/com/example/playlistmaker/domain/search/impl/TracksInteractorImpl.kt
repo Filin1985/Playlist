@@ -1,6 +1,6 @@
 package com.example.playlistmaker.domain.search.impl
 
-import com.example.playlistmaker.data.search.dto.ApiResponse
+import com.example.playlistmaker.domain.search.model.ApiResponse
 import com.example.playlistmaker.domain.consumer.Consumer
 import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.domain.search.TracksInteractor

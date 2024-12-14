@@ -1,6 +1,6 @@
 package com.example.playlistmaker.data
 
-import com.example.playlistmaker.data.search.dto.ApiResponse
+import com.example.playlistmaker.domain.search.model.ApiResponse
 import com.example.playlistmaker.data.search.dto.TracksSearchRequest
 import com.example.playlistmaker.domain.search.model.TrackData
 

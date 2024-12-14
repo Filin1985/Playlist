@@ -1,4 +1,4 @@
-package com.example.playlistmaker.data.search.dto
+package com.example.playlistmaker.domain.search.model
 
 sealed interface ApiResponse<T> {
     data class Success<T> (val data: T): ApiResponse<T>

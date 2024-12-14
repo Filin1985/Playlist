@@ -86,8 +86,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.arrowBack.setOnClickListener {
-            val mainDisplay = Intent(this, MainActivity::class.java)
-            startActivity(mainDisplay)
+            finish()
         }
 
         binding.clearIcon.setOnClickListener {
@@ -176,9 +175,7 @@ class SearchActivity : AppCompatActivity() {
                 binding.errorText.setText(R.string.not_found_error)
                 binding.errorConnectionText.visibility = View.GONE
                 binding.progressBar.visibility = View.GONE
-                binding.notFound.setImageResource(
-                    if (isDarkModeOn()) R.drawable.ic_not_found_dark else R.drawable.ic_not_found_light
-                )
+                binding.notFound.setImageResource(R.drawable.ic_not_found_dark)
             }
 
             SearchState.SEARCH_PROGRESS -> {
@@ -195,10 +192,9 @@ class SearchActivity : AppCompatActivity() {
                 binding.errorText.setText(R.string.error_connection_subtitle)
                 binding.errorConnectionText.visibility = View.VISIBLE
                 binding.progressBar.visibility = View.GONE
-                binding.notFound.setImageResource(
-                    if (isDarkModeOn()) R.drawable.ic_connection_err_dark else R.drawable.ic_connection_err_light
-                )
+                binding.notFound.setImageResource(R.drawable.ic_connection_err_dark)
             }
+
             SearchState.HISTORY_LIST -> {
                 historyTrackListAdapter.notifyDataSetChanged()
                 trackAdapter.notifyDataSetChanged()
@@ -208,17 +204,12 @@ class SearchActivity : AppCompatActivity() {
                 binding.clearIcon.visibility = View.GONE
                 binding.progressBar.visibility = View.GONE
             }
+
             SearchState.EMPTY_DATA -> {
                 historyTrackListAdapter.notifyDataSetChanged()
                 binding.recycleContainer.visibility = View.GONE
             }
         }
-    }
-
-    private fun isDarkModeOn(): Boolean {
-        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        val isDarkModeOn = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
-        return isDarkModeOn
     }
 
     private fun clickOnTrackListener(): (TrackData) -> Unit {

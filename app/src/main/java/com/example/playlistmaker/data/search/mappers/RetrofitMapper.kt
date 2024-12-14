@@ -1,6 +1,6 @@
 package com.example.playlistmaker.data.search.mappers
 
-import com.example.playlistmaker.data.search.dto.ApiResponse
+import com.example.playlistmaker.domain.search.model.ApiResponse
 import retrofit2.Response
 
 fun <T, V> Response<T>.mapToApiResponse(mapSuccess: (dto: T) -> V): ApiResponse<V> {
