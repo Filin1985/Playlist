@@ -13,16 +13,16 @@ import com.example.playlistmaker.domain.player.model.MediaPlayerState
 import com.example.playlistmaker.domain.search.model.TrackData
 
 class PlayerVewModel(track: TrackData): ViewModel() {
-    private val trackRepository by lazy { Creator.getPlayerCreator(track) }
+    private val trackCreator by lazy { Creator.getPlayerCreator(track) }
 
-    private val preparePlayer by lazy { trackRepository.providePreparePlayerUseCase() }
-    private val destroyPlayer by lazy { trackRepository.provideDestroyPlayerUseCase() }
-    private val pausePlayer by lazy { trackRepository.providePauseTrackUseCase() }
-    private val playbackPlayer by lazy { trackRepository.providePlaybackTrackUseCase() }
-    private val playTrackPlayer by lazy { trackRepository.providePlayTrackUseCase() }
-    private val getPlayerTime by lazy { trackRepository.providePlayTrackTimeUseCase() }
-    private val getPlayerState by lazy { trackRepository.provideGetPlayerStateUseCase() }
-    private val setCompletionPlayer by lazy { trackRepository.provideCompletionUseCase() }
+    private val preparePlayer by lazy { trackCreator.providePreparePlayerUseCase() }
+    private val destroyPlayer by lazy { trackCreator.provideDestroyPlayerUseCase() }
+    private val pausePlayer by lazy { trackCreator.providePauseTrackUseCase() }
+    private val playbackPlayer by lazy { trackCreator.providePlaybackTrackUseCase() }
+    private val playTrackPlayer by lazy { trackCreator.providePlayTrackUseCase() }
+    private val getPlayerTime by lazy { trackCreator.providePlayTrackTimeUseCase() }
+    private val getPlayerState by lazy { trackCreator.provideGetPlayerStateUseCase() }
+    private val setCompletionPlayer by lazy { trackCreator.provideCompletionUseCase() }
 
     private val handler = Handler(Looper.getMainLooper())
 

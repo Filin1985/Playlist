@@ -1,7 +1,7 @@
 package com.example.playlistmaker.data.search.network
 
 import com.example.playlistmaker.data.NetworkClient
-import com.example.playlistmaker.domain.search.model.ApiResponse
+import com.example.playlistmaker.domain.search.model.ResponseData
 import com.example.playlistmaker.data.search.dto.TracksSearchRequest
 import com.example.playlistmaker.data.search.mappers.TrackListMapper
 import com.example.playlistmaker.data.search.mappers.mapToApiResponse
@@ -20,7 +20,7 @@ class RetrofitNetworkClient : NetworkClient {
 
     private val itunesService = retrofit.create(ITunesAPI::class.java)
 
-    override fun doRequest(dto: TracksSearchRequest): ApiResponse<List<TrackData>> {
+    override fun doRequest(dto: TracksSearchRequest): ResponseData<List<TrackData>> {
         val response = itunesService.search(dto.text).execute()
         return response.mapToApiResponse{ dto -> TrackListMapper.mapDtoToEntity(dto.results) }
     }

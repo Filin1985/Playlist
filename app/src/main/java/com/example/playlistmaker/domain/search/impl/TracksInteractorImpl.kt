@@ -1,6 +1,6 @@
 package com.example.playlistmaker.domain.search.impl
 
-import com.example.playlistmaker.domain.search.model.ApiResponse
+import com.example.playlistmaker.domain.search.model.ResponseData
 import com.example.playlistmaker.domain.consumer.Consumer
 import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.domain.search.TracksInteractor
@@ -18,9 +18,9 @@ class TracksInteractorImpl(private val repository: TracksRepository): TracksInte
         executor.execute {
             val trackResponse = repository.searchTracks(text)
             when(trackResponse){
-                is ApiResponse.Error -> consumer.consume(TracksConsumer.Error(trackResponse.message))
-                is ApiResponse.Success -> consumer.consume(TracksConsumer.Data(trackResponse.data))
-                is ApiResponse.EmptyResponse -> consumer.consume(TracksConsumer.EmptyData())
+                is ResponseData.Error -> consumer.consume(TracksConsumer.Error(trackResponse.message))
+                is ResponseData.Success -> consumer.consume(TracksConsumer.Data(trackResponse.data))
+                is ResponseData.EmptyResponse -> consumer.consume(TracksConsumer.EmptyData())
             }
         }
     }
