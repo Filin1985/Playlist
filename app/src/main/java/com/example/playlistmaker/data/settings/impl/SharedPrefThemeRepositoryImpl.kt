@@ -2,7 +2,7 @@ package com.example.playlistmaker.data.settings.impl
 
 import android.content.Context
 import android.content.res.Configuration
-import com.example.playlistmaker.data.settings.SharedPrefRepository
+import com.example.playlistmaker.domain.sharing.SharedPrefRepository
 import com.example.playlistmaker.domain.settings.model.Theme
 
 class SharedPrefThemeRepositoryImpl(private val context: Context): SharedPrefRepository {

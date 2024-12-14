@@ -1,14 +1,12 @@
 package com.example.playlistmaker.ui.settings.activity
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.domain.settings.model.Theme
+import com.example.playlistmaker.domain.sharing.model.EmailData
 import com.example.playlistmaker.ui.settings.view_model.SettingsViewModel
 import com.example.playlistmaker.ui.settings.view_model.ThemeViewModel
 
@@ -46,25 +44,21 @@ class SettingsActivity : AppCompatActivity() {
         themeViewModel.getPrevTheme()
 
         binding.share.setOnClickListener {
-            settingsViewModel.shareApp()
+            settingsViewModel.shareApp(getString(R.string.share_link))
         }
 
-        val support = findViewById<ImageView>(R.id.support)
-        support.setOnClickListener {
-            Intent(Intent.ACTION_SENDTO).apply {
-                data = Uri.parse("mailto:")
-                putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.support_email)))
-                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.support_subject))
-                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.support_subject))
-                putExtra(Intent.EXTRA_TEXT, getString(R.string.support_text))
-                startActivity(Intent.createChooser(this, null))
-            }
+        binding.support.setOnClickListener {
+            settingsViewModel.mailToSupport(
+                EmailData(
+                    email = getString(R.string.support_email),
+                    subject = getString(R.string.support_subject),
+                    link = getString(R.string.support_text)
+                )
+            )
         }
 
-        val agreement = findViewById<ImageView>(R.id.agreement)
-        agreement.setOnClickListener {
-            val agreementIntent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.agreement_link)))
-            startActivity(agreementIntent)
+        binding.agreement.setOnClickListener {
+            settingsViewModel.openTerms(getString(R.string.agreement_link))
         }
     }
 }

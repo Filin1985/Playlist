@@ -1,4 +1,4 @@
-package com.example.playlistmaker.data.search
+package com.example.playlistmaker.domain.search
 
 import com.example.playlistmaker.data.search.dto.ApiResponse
 import com.example.playlistmaker.domain.search.model.TrackData

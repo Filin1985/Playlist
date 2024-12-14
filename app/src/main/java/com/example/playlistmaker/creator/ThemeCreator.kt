@@ -1,6 +1,6 @@
 package com.example.playlistmaker.creator
 
-import com.example.playlistmaker.data.settings.ThemeRepository
+import com.example.playlistmaker.domain.sharing.ThemeRepository
 import com.example.playlistmaker.domain.settings.impl.GetPrevThemeUseCaseImpl
 import com.example.playlistmaker.domain.settings.impl.SaveNewThemeUseCaseImpl
 import com.example.playlistmaker.domain.settings.impl.SwitchThemeUseCaseImpl

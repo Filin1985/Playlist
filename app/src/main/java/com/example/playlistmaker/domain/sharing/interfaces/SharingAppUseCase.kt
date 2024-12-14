@@ -1,5 +1,5 @@
 package com.example.playlistmaker.domain.sharing.interfaces
 
 interface SharingAppUseCase {
-    fun execute()
+    fun execute(link: String)
 }

@@ -1,6 +1,6 @@
 package com.example.playlistmaker.creator
 
-import com.example.playlistmaker.data.search.SearchHistoryRepository
+import com.example.playlistmaker.domain.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.search.impl.AddTracksToHistoryListImlp
 import com.example.playlistmaker.domain.search.impl.ClearTracksHistoryListImpl
 import com.example.playlistmaker.domain.search.impl.GetTracksHistoryListImpl

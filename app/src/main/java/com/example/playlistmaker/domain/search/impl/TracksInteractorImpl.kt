@@ -2,7 +2,7 @@ package com.example.playlistmaker.domain.search.impl
 
 import com.example.playlistmaker.data.search.dto.ApiResponse
 import com.example.playlistmaker.domain.consumer.Consumer
-import com.example.playlistmaker.data.search.TracksRepository
+import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.domain.search.model.TracksConsumer

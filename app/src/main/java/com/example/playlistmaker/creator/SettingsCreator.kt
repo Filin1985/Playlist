@@ -1,6 +1,6 @@
 package com.example.playlistmaker.creator
 
-import com.example.playlistmaker.data.sharing.ExternalNavigator
+import com.example.playlistmaker.domain.sharing.ExternalNavigator
 import com.example.playlistmaker.domain.sharing.impl.MailToSupportUseCaseImpl
 import com.example.playlistmaker.domain.sharing.impl.OpenTermsUseCaseImpl
 import com.example.playlistmaker.domain.sharing.impl.SharingAppUseCaseImpl

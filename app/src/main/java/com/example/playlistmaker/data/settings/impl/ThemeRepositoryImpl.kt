@@ -1,9 +1,8 @@
 package com.example.playlistmaker.data.settings.impl
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.data.settings.SharedPrefRepository
-import com.example.playlistmaker.data.settings.ThemeRepository
+import com.example.playlistmaker.domain.sharing.SharedPrefRepository
+import com.example.playlistmaker.domain.sharing.ThemeRepository
 import com.example.playlistmaker.domain.settings.model.Theme
 
 class ThemeRepositoryImpl(private val themeStorage: SharedPrefRepository): ThemeRepository {

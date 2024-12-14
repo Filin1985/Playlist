@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
-    private var binding: ActivityPlayerBinding? = null
+    private lateinit var binding: ActivityPlayerBinding
     private var viewModel: PlayerVewModel? = null
 
     private lateinit var track: TrackData
@@ -27,10 +27,10 @@ class PlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
-        setContentView(binding?.root)
+        setContentView(binding.root)
 
         track = Gson().fromJson(intent.getStringExtra(TRACK), TrackData::class.java)
-        binding?.arrowBackPlayer?.setOnClickListener {
+        binding.arrowBackPlayer.setOnClickListener {
             finish()
         }
 
@@ -51,22 +51,22 @@ class PlayerActivity : AppCompatActivity() {
             .transform(RoundedCorners(albumCover.resources.getDimensionPixelSize(R.dimen.art_work)))
             .into(albumCover)
 
-        binding?.playerSongName?.text = track.trackName
+        binding.playerSongName.text = track.trackName
 
-        binding?.playerBand?.text = track.artistName
+        binding.playerBand.text = track.artistName
 
         if (track.collectionName.isEmpty()) {
-            binding?.albumCover?.visibility = View.GONE
-        } else binding?.playerAlbumData?.text = track.collectionName
+            binding.albumCover.visibility = View.GONE
+        } else binding.playerAlbumData.text = track.collectionName
 
         val formatDate = SimpleDateFormat("yyyy", Locale.getDefault()).parse(track.releaseDate)
         val year = formatDate?.let { SimpleDateFormat("yyyy", Locale.getDefault()).format(it) }
-        binding?.playerYearData?.text = year
+        binding.playerYearData.text = year
 
-        binding?.playerGenreData?.text = track.primaryGenreName
-        binding?.playerCountryData?.text = track.country
+        binding.playerGenreData.text = track.primaryGenreName
+        binding.playerCountryData.text = track.country
 
-        binding?.playerControl?.setOnClickListener {
+        binding.playerControl.setOnClickListener {
             viewModel?.playControl()
             viewModel?.startUpdaterRunnable()
         }
@@ -85,11 +85,11 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun stateRender(playerState: MediaPlayerState) {
         when (playerState) {
-            MediaPlayerState.STATE_PLAYING -> binding?.playerControl?.setImageResource(if (isDarkModeOn()) R.drawable.ic_player_pause_white else R.drawable.ic_player_pause)
-            MediaPlayerState.STATE_PAUSED -> binding?.playerControl?.setImageResource(if (isDarkModeOn()) R.drawable.ic_player_play_white else R.drawable.ic_player_play)
+            MediaPlayerState.STATE_PLAYING -> binding.playerControl.setImageResource(if (isDarkModeOn()) R.drawable.ic_player_pause_white else R.drawable.ic_player_pause)
+            MediaPlayerState.STATE_PAUSED -> binding.playerControl.setImageResource(if (isDarkModeOn()) R.drawable.ic_player_play_white else R.drawable.ic_player_play)
             MediaPlayerState.STATE_PREPARED -> {
-                binding?.playerTime?.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(0)
-                binding?.playerControl?.setImageResource(if (isDarkModeOn()) R.drawable.ic_player_play_white else R.drawable.ic_player_play)
+                binding.playerTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(0)
+                binding.playerControl.setImageResource(if (isDarkModeOn()) R.drawable.ic_player_play_white else R.drawable.ic_player_play)
             }
 
             MediaPlayerState.STATE_DEFAULT -> {}
@@ -99,12 +99,12 @@ class PlayerActivity : AppCompatActivity() {
     private fun playTimeRender(time: Int) {
         when (viewModel?.stateLiveData?.value) {
             MediaPlayerState.STATE_PLAYING, MediaPlayerState.STATE_PAUSED -> {
-                binding?.playerTime?.text =
+                binding.playerTime.text =
                     SimpleDateFormat("mm:ss", Locale.getDefault()).format(time)
             }
 
             MediaPlayerState.STATE_PREPARED -> {
-                binding?.playerTime?.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(0)
+                binding.playerTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(0)
             }
 
             MediaPlayerState.STATE_DEFAULT, null -> {}
