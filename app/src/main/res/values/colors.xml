@@ -10,4 +10,5 @@
     <color name="yp_blue_light">#9FBBF3</color>
     <color name="black">#000000</color>
     <color name="main_grey">#AEAFB4</color>
+    <color name="not_found">#1A1B22</color>
 </resources>

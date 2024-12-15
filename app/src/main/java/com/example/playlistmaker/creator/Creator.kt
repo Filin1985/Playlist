@@ -1,21 +1,25 @@
 package com.example.playlistmaker.creator
 
-import android.content.SharedPreferences
-import com.example.playlistmaker.data.SearchHistory
-import com.example.playlistmaker.data.repository.TracksRepositoryImpl
-import com.example.playlistmaker.data.network.RetrofitNetworkClient
-import com.example.playlistmaker.domain.api.TracksInteractor
-import com.example.playlistmaker.domain.impl.TracksInteractorImpl
-import com.example.playlistmaker.data.repository.SearchHistoryImpl
-import com.example.playlistmaker.domain.impl.AddTracksToHistoryListImlp
-import com.example.playlistmaker.domain.impl.ClearTracksHistoryListImpl
-import com.example.playlistmaker.domain.impl.GetTracksHistoryListImpl
-import com.example.playlistmaker.domain.interfaces.AddTracksHistoryListUseCase
-import com.example.playlistmaker.domain.interfaces.ClearTracksHistoryListUseCase
-import com.example.playlistmaker.domain.interfaces.GetTracksHistoryListUseCase
-import com.example.playlistmaker.domain.models.TrackData
+import android.app.Application
+import com.example.playlistmaker.domain.search.SearchHistoryRepository
+import com.example.playlistmaker.data.search.impl.SearchHistoryRepositoryImpl
+import com.example.playlistmaker.data.search.impl.TracksRepositoryImpl
+import com.example.playlistmaker.data.search.network.RetrofitNetworkClient
+import com.example.playlistmaker.domain.sharing.ThemeRepository
+import com.example.playlistmaker.data.settings.impl.SharedPrefThemeRepositoryImpl
+import com.example.playlistmaker.data.settings.impl.ThemeRepositoryImpl
+import com.example.playlistmaker.domain.sharing.ExternalNavigator
+import com.example.playlistmaker.data.sharing.impl.ExternalNavigatorImpl
+import com.example.playlistmaker.domain.search.TracksInteractor
+import com.example.playlistmaker.domain.search.impl.TracksInteractorImpl
+import com.example.playlistmaker.domain.search.model.TrackData
 
 object Creator {
+    lateinit var application: Application
+    fun registryApplication(application: Application) {
+        this.application = application
+    }
+
     fun provideSearchTrackInteractor(): TracksInteractor {
         return TracksInteractorImpl(provideSearchRepository())
     }
@@ -25,7 +29,15 @@ object Creator {
     }
 
     fun getSearchCreator(): SearchCreator {
-        return SearchCreator()
+        return SearchCreator(provideHistoryTrackList())
+    }
+
+    fun getThemeCreator(): ThemeCreator {
+        return ThemeCreator(provideThemeRepository())
+    }
+
+    fun getSettingsCreator(): SettingsCreator {
+        return SettingsCreator(provideExternalNavigator())
     }
 
     private fun getRetrofitNetworkClient() = RetrofitNetworkClient()
@@ -33,4 +45,15 @@ object Creator {
     private fun provideSearchRepository() =
         TracksRepositoryImpl(getRetrofitNetworkClient())
 
+    private fun provideThemeRepository(): ThemeRepository {
+        return ThemeRepositoryImpl(SharedPrefThemeRepositoryImpl(application))
+    }
+
+    private fun provideExternalNavigator(): ExternalNavigator {
+        return ExternalNavigatorImpl(application)
+    }
+
+    private fun provideHistoryTrackList(): SearchHistoryRepository {
+        return SearchHistoryRepositoryImpl(application)
+    }
 }

@@ -1,29 +1,23 @@
 package com.example.playlistmaker.creator
 
-import android.content.SharedPreferences
-import com.example.playlistmaker.data.SearchHistory
-import com.example.playlistmaker.data.repository.SearchHistoryImpl
-import com.example.playlistmaker.domain.impl.AddTracksToHistoryListImlp
-import com.example.playlistmaker.domain.impl.ClearTracksHistoryListImpl
-import com.example.playlistmaker.domain.impl.GetTracksHistoryListImpl
-import com.example.playlistmaker.domain.interfaces.AddTracksHistoryListUseCase
-import com.example.playlistmaker.domain.interfaces.ClearTracksHistoryListUseCase
-import com.example.playlistmaker.domain.interfaces.GetTracksHistoryListUseCase
+import com.example.playlistmaker.domain.search.SearchHistoryRepository
+import com.example.playlistmaker.domain.search.impl.AddTracksToHistoryListImlp
+import com.example.playlistmaker.domain.search.impl.ClearTracksHistoryListImpl
+import com.example.playlistmaker.domain.search.impl.GetTracksHistoryListImpl
+import com.example.playlistmaker.domain.search.interfaces.AddTracksHistoryListUseCase
+import com.example.playlistmaker.domain.search.interfaces.ClearTracksHistoryListUseCase
+import com.example.playlistmaker.domain.search.interfaces.GetTracksHistoryListUseCase
 
-class SearchCreator {
-    fun getSearchHistoryStorage(sharedPreferences: SharedPreferences): GetTracksHistoryListUseCase {
-        return GetTracksHistoryListImpl(provideHistoryTrackList(sharedPreferences))
+class SearchCreator(private val searchHistoryRepository: SearchHistoryRepository) {
+    fun getSearchHistoryStorage(): GetTracksHistoryListUseCase {
+        return GetTracksHistoryListImpl(searchHistoryRepository)
     }
 
-    fun addSearchHistoryStorage(sharedPreferences: SharedPreferences): AddTracksHistoryListUseCase {
-        return AddTracksToHistoryListImlp(provideHistoryTrackList(sharedPreferences))
+    fun addSearchHistoryStorage(): AddTracksHistoryListUseCase {
+        return AddTracksToHistoryListImlp(searchHistoryRepository)
     }
 
-    fun clearSearchHistoryStorage(sharedPreferences: SharedPreferences): ClearTracksHistoryListUseCase {
-        return ClearTracksHistoryListImpl(provideHistoryTrackList(sharedPreferences))
-    }
-
-    private fun provideHistoryTrackList(sharedPreferences: SharedPreferences): SearchHistory {
-        return SearchHistoryImpl(sharedPreferences)
+    fun clearSearchHistoryStorage(): ClearTracksHistoryListUseCase {
+        return ClearTracksHistoryListImpl(searchHistoryRepository)
     }
 }

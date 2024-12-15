@@ -1,27 +1,26 @@
 package com.example.playlistmaker.presentation
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.domain.models.TrackData
+import com.example.playlistmaker.databinding.ActivitySongCardBinding
+import com.example.playlistmaker.domain.search.model.TrackData
 
 
-class TracksAdapter(
-    private val clickListener: ClickListener
+class TrackAdapter(
+    private val tracks: MutableList<TrackData>
 ) : RecyclerView.Adapter<TracksViewHolder>() {
 
-    var tracks = mutableListOf<TrackData>()
-
-    fun interface ClickListener {
-        fun click(track: TrackData)
-    }
-
+    var eventListener: (TrackData) -> Unit = {}
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TracksViewHolder {
-        return TracksViewHolder(parent)
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = ActivitySongCardBinding.inflate(inflater, parent, false)
+        return TracksViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: TracksViewHolder, position: Int) {
         holder.bind(tracks[position])
-        holder.itemView.setOnClickListener { clickListener.click(tracks[position]) }
+        holder.itemView.setOnClickListener { eventListener.invoke(tracks[position]) }
     }
 
     override fun getItemCount(): Int = tracks.size
