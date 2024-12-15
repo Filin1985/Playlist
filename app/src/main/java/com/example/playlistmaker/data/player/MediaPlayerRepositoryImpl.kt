@@ -5,7 +5,7 @@ import com.example.playlistmaker.domain.player.MediaPlayerRepository
 import com.example.playlistmaker.domain.player.model.MediaPlayerState
 import com.example.playlistmaker.domain.search.model.TrackData
 
-class MediaPlayerRepositoryImpl(val track: TrackData) : MediaPlayerRepository {
+class MediaPlayerRepositoryImpl() : MediaPlayerRepository {
     private var state = MediaPlayerState.STATE_DEFAULT
     private var mediaPlayer = MediaPlayer()
 
@@ -25,7 +25,7 @@ class MediaPlayerRepositoryImpl(val track: TrackData) : MediaPlayerRepository {
         mediaPlayer.release()
     }
 
-    override fun preparePlayer(setPLayerState: () -> Unit) {
+    override fun preparePlayer(track: TrackData, setPLayerState: () -> Unit) {
         mediaPlayer.apply {
             setDataSource(track.previewUrl)
             prepareAsync()

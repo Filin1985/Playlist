@@ -1,6 +1,7 @@
 package com.example.playlistmaker.domain.player
 
 import com.example.playlistmaker.domain.player.model.MediaPlayerState
+import com.example.playlistmaker.domain.search.model.TrackData
 
 interface MediaPlayerRepository {
 
@@ -10,7 +11,7 @@ interface MediaPlayerRepository {
 
     fun destroy()
 
-    fun preparePlayer(setPLayerState: () -> Unit)
+    fun preparePlayer(track: TrackData, setPLayerState: () -> Unit)
 
     fun getPlayerState(): MediaPlayerState
 

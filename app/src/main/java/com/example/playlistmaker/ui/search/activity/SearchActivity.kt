@@ -144,9 +144,9 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showResultNotification(resultType: SearchState) {
-        Log.d("STATE-----", "$resultType")
         when (resultType) {
             SearchState.SUCCESS -> {
+                historyTrackListAdapter.notifyDataSetChanged()
                 trackAdapter.notifyDataSetChanged()
                 binding.recycleContainer.visibility = View.VISIBLE
                 binding.searchNotification.visibility = View.GONE
@@ -155,6 +155,7 @@ class SearchActivity : AppCompatActivity() {
             }
 
             SearchState.NOT_FOUND -> {
+                historyTrackListAdapter.notifyDataSetChanged()
                 trackAdapter.notifyDataSetChanged()
                 binding.clearIcon.visibility = View.GONE
                 binding.recycleContainer.visibility = View.GONE
@@ -166,12 +167,15 @@ class SearchActivity : AppCompatActivity() {
             }
 
             SearchState.SEARCH_PROGRESS -> {
+                historyTrackListAdapter.notifyDataSetChanged()
+                trackAdapter.notifyDataSetChanged()
                 binding.recycleContainer.visibility = View.VISIBLE
                 binding.clearIcon.visibility = View.GONE
                 binding.progressBar.visibility = View.VISIBLE
             }
 
             SearchState.CONNECTION_ERROR -> {
+                historyTrackListAdapter.notifyDataSetChanged()
                 trackAdapter.notifyDataSetChanged()
                 binding.clearIcon.visibility = View.GONE
                 binding.recycleContainer.visibility = View.GONE
@@ -194,6 +198,7 @@ class SearchActivity : AppCompatActivity() {
 
             SearchState.EMPTY_DATA -> {
                 historyTrackListAdapter.notifyDataSetChanged()
+                trackAdapter.notifyDataSetChanged()
                 binding.recycleContainer.visibility = View.GONE
             }
         }

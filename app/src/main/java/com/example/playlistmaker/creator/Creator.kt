@@ -15,29 +15,7 @@ import com.example.playlistmaker.domain.search.impl.TracksInteractorImpl
 import com.example.playlistmaker.domain.search.model.TrackData
 
 object Creator {
-    lateinit var application: Application
-    fun registryApplication(application: Application) {
-        this.application = application
-    }
-
-//    fun provideSearchTrackInteractor(): TracksInteractor {
-//        return TracksInteractorImpl(provideSearchRepository())
+//    fun getPlayerCreator(track: TrackData): PlayerCreator {
+//        return PlayerCreator(track)
 //    }
-
-    fun getPlayerCreator(track: TrackData): PlayerCreator {
-        return PlayerCreator(track)
-    }
-
-//    fun getSearchCreator(): SearchCreator {
-//        return SearchCreator(provideHistoryTrackList())
-//    }
-
-    private fun getRetrofitNetworkClient() = RetrofitNetworkClient()
-
-    private fun provideSearchRepository() =
-        TracksRepositoryImpl(getRetrofitNetworkClient())
-
-    private fun provideHistoryTrackList(): SearchHistoryRepository {
-        return SearchHistoryRepositoryImpl(application)
-    }
 }

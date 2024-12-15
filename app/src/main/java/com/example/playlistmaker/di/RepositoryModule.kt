@@ -2,11 +2,17 @@ package com.example.playlistmaker.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.playlistmaker.data.NetworkClient
+import com.example.playlistmaker.data.player.MediaPlayerRepositoryImpl
 import com.example.playlistmaker.data.search.impl.SearchHistoryRepositoryImpl
+import com.example.playlistmaker.data.search.impl.TracksRepositoryImpl
+import com.example.playlistmaker.data.search.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.settings.impl.SharedPrefThemeRepositoryImpl
 import com.example.playlistmaker.data.settings.impl.ThemeRepositoryImpl
 import com.example.playlistmaker.data.sharing.impl.ExternalNavigatorImpl
+import com.example.playlistmaker.domain.player.MediaPlayerRepository
 import com.example.playlistmaker.domain.search.SearchHistoryRepository
+import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.domain.sharing.ExternalNavigator
 import com.example.playlistmaker.domain.sharing.SharedPrefRepository
 import com.example.playlistmaker.domain.sharing.ThemeRepository
@@ -33,7 +39,26 @@ val repositoryModule = module {
         ExternalNavigatorImpl(get())
     }
 
+    single<NetworkClient> {
+        RetrofitNetworkClient()
+    }
+
+    single<SharedPreferences> {
+        androidContext().getSharedPreferences(
+            SearchHistoryRepositoryImpl.SEARCH_HISTORY,
+            Context.MODE_PRIVATE
+        )
+    }
+
     single<SearchHistoryRepository> {
         SearchHistoryRepositoryImpl(get())
+    }
+
+    single<TracksRepository> {
+        TracksRepositoryImpl(get())
+    }
+
+    single<MediaPlayerRepository> {
+        MediaPlayerRepositoryImpl()
     }
 }

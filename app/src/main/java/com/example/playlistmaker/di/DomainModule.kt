@@ -1,5 +1,21 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.domain.player.impl.CompletionUseCaseImpl
+import com.example.playlistmaker.domain.player.impl.DestroyPlayerUseCaseImpl
+import com.example.playlistmaker.domain.player.impl.GetCurrentPlayerTrackTimeUseCaseImpl
+import com.example.playlistmaker.domain.player.impl.GetPlayerStateUseCaseImpl
+import com.example.playlistmaker.domain.player.impl.PauseTrackUseCaseImpl
+import com.example.playlistmaker.domain.player.impl.PlayTrackUseCaseImpl
+import com.example.playlistmaker.domain.player.impl.PlaybackTrackUseCaseImpl
+import com.example.playlistmaker.domain.player.impl.PreparePlayerUseCaseImpl
+import com.example.playlistmaker.domain.player.interfaces.CompletionUseCase
+import com.example.playlistmaker.domain.player.interfaces.DestroyPlayerUseCase
+import com.example.playlistmaker.domain.player.interfaces.GetCurrentPlayerTrackTimeUseCase
+import com.example.playlistmaker.domain.player.interfaces.GetPlayerStateUseCase
+import com.example.playlistmaker.domain.player.interfaces.PauseTrackUseCase
+import com.example.playlistmaker.domain.player.interfaces.PlayTrackUseCase
+import com.example.playlistmaker.domain.player.interfaces.PlaybackTrackUseCase
+import com.example.playlistmaker.domain.player.interfaces.PreparePlayerUseCase
 import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.impl.AddTracksToHistoryListImlp
 import com.example.playlistmaker.domain.search.impl.ClearTracksHistoryListImpl
@@ -47,8 +63,6 @@ val domainModule = module {
         OpenTermsUseCaseImpl(get())
     }
 
-
-
     single<GetTracksHistoryListUseCase> {
         GetTracksHistoryListImpl(get())
     }
@@ -63,5 +77,37 @@ val domainModule = module {
 
     single<ClearTracksHistoryListUseCase> {
         ClearTracksHistoryListImpl(get())
+    }
+
+    factory<GetPlayerStateUseCase> {
+        GetPlayerStateUseCaseImpl(get())
+    }
+
+    factory<DestroyPlayerUseCase> {
+        DestroyPlayerUseCaseImpl(get())
+    }
+
+    factory<GetCurrentPlayerTrackTimeUseCase> {
+        GetCurrentPlayerTrackTimeUseCaseImpl(get())
+    }
+
+    factory<PauseTrackUseCase> {
+        PauseTrackUseCaseImpl(get())
+    }
+
+    factory<PlaybackTrackUseCase> {
+        PlaybackTrackUseCaseImpl(get())
+    }
+
+    factory<PlayTrackUseCase> {
+        PlayTrackUseCaseImpl(get())
+    }
+
+    factory<PreparePlayerUseCase> {
+        PreparePlayerUseCaseImpl(get())
+    }
+
+    factory<CompletionUseCase> {
+        CompletionUseCaseImpl(get())
     }
 }

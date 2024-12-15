@@ -22,7 +22,6 @@ class App : Application() {
             androidContext(this@App)
             modules(repositoryModule, domainModule, viewModuleModule)
         }
-        Creator.registryApplication(this)
         saveNewTheme.execute(getPrevTheme.execute())
     }
 
