@@ -32,9 +32,9 @@ object Creator {
         return SearchCreator(provideHistoryTrackList())
     }
 
-    fun getThemeCreator(): ThemeCreator {
-        return ThemeCreator(provideThemeRepository())
-    }
+//    fun getThemeCreator(): ThemeCreator {
+//        return ThemeCreator(provideThemeRepository())
+//    }
 
     fun getSettingsCreator(): SettingsCreator {
         return SettingsCreator(provideExternalNavigator())
@@ -45,9 +45,9 @@ object Creator {
     private fun provideSearchRepository() =
         TracksRepositoryImpl(getRetrofitNetworkClient())
 
-    private fun provideThemeRepository(): ThemeRepository {
-        return ThemeRepositoryImpl(SharedPrefThemeRepositoryImpl(application))
-    }
+//    private fun provideThemeRepository(): ThemeRepository {
+//        return ThemeRepositoryImpl(SharedPrefThemeRepositoryImpl(application))
+//    }
 
     private fun provideExternalNavigator(): ExternalNavigator {
         return ExternalNavigatorImpl(application)

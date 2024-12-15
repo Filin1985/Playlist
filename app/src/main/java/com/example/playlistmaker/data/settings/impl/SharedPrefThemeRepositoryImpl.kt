@@ -1,12 +1,12 @@
 package com.example.playlistmaker.data.settings.impl
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import com.example.playlistmaker.domain.sharing.SharedPrefRepository
 import com.example.playlistmaker.domain.settings.model.Theme
 
-class SharedPrefThemeRepositoryImpl(private val context: Context): SharedPrefRepository {
-    private val sharedPreferences = context.getSharedPreferences(THEME_SETTINGS, Context.MODE_PRIVATE)
+class SharedPrefThemeRepositoryImpl(private val sharedPreferences: SharedPreferences, private val context: Context): SharedPrefRepository {
 
     override fun getPrevTheme(): Theme {
         val isDarkTheme = sharedPreferences.getBoolean(

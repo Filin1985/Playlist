@@ -7,12 +7,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.domain.settings.interfaces.GetPrevThemeUseCase
+import com.example.playlistmaker.domain.settings.interfaces.SaveNewThemeUseCase
+import com.example.playlistmaker.domain.settings.interfaces.SwitchThemeUseCase
 import com.example.playlistmaker.domain.settings.model.Theme
 
-class ThemeViewModel: ViewModel() {
-    private val saveThemeUseCase by lazy { Creator.getThemeCreator().saveNewTheme() }
-    private val getPrevThemeUseCase by lazy { Creator.getThemeCreator().getPrevTheme() }
-    private val switchThemeUseCase by lazy { Creator.getThemeCreator().switchNewTheme() }
+class ThemeViewModel(
+    private val saveThemeUseCase: SaveNewThemeUseCase,
+    private val getPrevThemeUseCase: GetPrevThemeUseCase,
+    private val switchThemeUseCase: SwitchThemeUseCase
+) : ViewModel() {
+
 
     private val mutableLiveData = MutableLiveData<Theme>()
     val liveData: LiveData<Theme> = mutableLiveData
@@ -25,15 +30,5 @@ class ThemeViewModel: ViewModel() {
 
     fun getPrevTheme() {
         mutableLiveData.value = getPrevThemeUseCase.execute()
-    }
-
-    companion object {
-        fun factory(): ViewModelProvider.Factory {
-            return viewModelFactory {
-                initializer {
-                    ThemeViewModel()
-                }
-            }
-        }
     }
 }
