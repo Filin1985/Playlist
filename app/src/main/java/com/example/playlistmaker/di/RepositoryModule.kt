@@ -2,8 +2,12 @@ package com.example.playlistmaker.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.playlistmaker.data.search.impl.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.settings.impl.SharedPrefThemeRepositoryImpl
 import com.example.playlistmaker.data.settings.impl.ThemeRepositoryImpl
+import com.example.playlistmaker.data.sharing.impl.ExternalNavigatorImpl
+import com.example.playlistmaker.domain.search.SearchHistoryRepository
+import com.example.playlistmaker.domain.sharing.ExternalNavigator
 import com.example.playlistmaker.domain.sharing.SharedPrefRepository
 import com.example.playlistmaker.domain.sharing.ThemeRepository
 import org.koin.android.ext.koin.androidContext
@@ -23,5 +27,13 @@ val repositoryModule = module {
 
     single<SharedPrefRepository> {
         SharedPrefThemeRepositoryImpl(get(), get())
+    }
+
+    single<ExternalNavigator> {
+        ExternalNavigatorImpl(get())
+    }
+
+    single<SearchHistoryRepository> {
+        SearchHistoryRepositoryImpl(get())
     }
 }

@@ -20,38 +20,22 @@ object Creator {
         this.application = application
     }
 
-    fun provideSearchTrackInteractor(): TracksInteractor {
-        return TracksInteractorImpl(provideSearchRepository())
-    }
+//    fun provideSearchTrackInteractor(): TracksInteractor {
+//        return TracksInteractorImpl(provideSearchRepository())
+//    }
 
     fun getPlayerCreator(track: TrackData): PlayerCreator {
         return PlayerCreator(track)
     }
 
-    fun getSearchCreator(): SearchCreator {
-        return SearchCreator(provideHistoryTrackList())
-    }
-
-//    fun getThemeCreator(): ThemeCreator {
-//        return ThemeCreator(provideThemeRepository())
+//    fun getSearchCreator(): SearchCreator {
+//        return SearchCreator(provideHistoryTrackList())
 //    }
-
-    fun getSettingsCreator(): SettingsCreator {
-        return SettingsCreator(provideExternalNavigator())
-    }
 
     private fun getRetrofitNetworkClient() = RetrofitNetworkClient()
 
     private fun provideSearchRepository() =
         TracksRepositoryImpl(getRetrofitNetworkClient())
-
-//    private fun provideThemeRepository(): ThemeRepository {
-//        return ThemeRepositoryImpl(SharedPrefThemeRepositoryImpl(application))
-//    }
-
-    private fun provideExternalNavigator(): ExternalNavigator {
-        return ExternalNavigatorImpl(application)
-    }
 
     private fun provideHistoryTrackList(): SearchHistoryRepository {
         return SearchHistoryRepositoryImpl(application)

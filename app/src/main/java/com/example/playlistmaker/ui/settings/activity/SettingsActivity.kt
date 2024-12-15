@@ -1,7 +1,6 @@
 package com.example.playlistmaker.ui.settings.activity
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
@@ -14,9 +13,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
     private val themeViewModel: ThemeViewModel by viewModel()
-    private val settingsViewModel: SettingsViewModel by viewModels {
-        SettingsViewModel.factory()
-    }
+    private val settingsViewModel: SettingsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
