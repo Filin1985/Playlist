@@ -3,10 +3,6 @@ package com.example.playlistmaker.ui.settings.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.domain.settings.interfaces.GetPrevThemeUseCase
 import com.example.playlistmaker.domain.settings.interfaces.SaveNewThemeUseCase
 import com.example.playlistmaker.domain.settings.interfaces.SwitchThemeUseCase

@@ -1,10 +1,6 @@
 package com.example.playlistmaker.ui.settings.view_model
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.domain.sharing.interfaces.MailToSupportUseCase
 import com.example.playlistmaker.domain.sharing.interfaces.OpenTermsUseCase
 import com.example.playlistmaker.domain.sharing.interfaces.SharingAppUseCase
