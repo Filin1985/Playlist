@@ -39,43 +39,43 @@ import com.example.playlistmaker.domain.sharing.interfaces.SharingAppUseCase
 import org.koin.dsl.module
 
 val domainModule = module {
-    single<SaveNewThemeUseCase> {
+    factory<SaveNewThemeUseCase> {
         SaveNewThemeUseCaseImpl(get())
     }
 
-    single<GetPrevThemeUseCase> {
+    factory<GetPrevThemeUseCase> {
         GetPrevThemeUseCaseImpl(get())
     }
 
-    single<SwitchThemeUseCase> {
+    factory<SwitchThemeUseCase> {
         SwitchThemeUseCaseImpl(get())
     }
 
-    single<SharingAppUseCase> {
+    factory<SharingAppUseCase> {
         SharingAppUseCaseImpl(get())
     }
 
-    single<MailToSupportUseCase> {
+    factory<MailToSupportUseCase> {
         MailToSupportUseCaseImpl(get())
     }
 
-    single<OpenTermsUseCase> {
+    factory<OpenTermsUseCase> {
         OpenTermsUseCaseImpl(get())
     }
 
-    single<GetTracksHistoryListUseCase> {
+    factory<GetTracksHistoryListUseCase> {
         GetTracksHistoryListImpl(get())
     }
 
-    single<AddTracksHistoryListUseCase> {
+    factory<AddTracksHistoryListUseCase> {
         AddTracksToHistoryListImlp(get())
     }
 
-    single<TracksInteractor> {
+    factory<TracksInteractor> {
         TracksInteractorImpl(get())
     }
 
-    single<ClearTracksHistoryListUseCase> {
+    factory<ClearTracksHistoryListUseCase> {
         ClearTracksHistoryListImpl(get())
     }
 

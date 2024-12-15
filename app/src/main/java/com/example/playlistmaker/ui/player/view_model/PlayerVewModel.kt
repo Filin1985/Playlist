@@ -77,6 +77,10 @@ class PlayerVewModel(
         handler.post(createUpdaterRunnable())
     }
 
+    fun stopPlayer() {
+        onCleared()
+    }
+
     override fun onCleared() {
         destroyPlayer.execute()
         super.onCleared()

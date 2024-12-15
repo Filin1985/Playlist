@@ -6,9 +6,17 @@
     tools:context=".ui.main.activity.MainActivity"
     style="@style/ContainerStyle" >
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/top_border_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="14dp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/top_border_settings"
         >
 
         <ImageView
@@ -18,7 +26,8 @@
 
         <TextView
             android:text="@string/settings"
-            style="@style/NavigationText" />
+            style="@style/NavigationText"
+            android:paddingBottom="16dp"/>
     </LinearLayout>
 
     <LinearLayout

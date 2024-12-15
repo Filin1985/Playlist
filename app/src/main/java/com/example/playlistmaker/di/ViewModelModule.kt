@@ -23,15 +23,15 @@ val viewModuleModule = module {
 
     viewModel<PlayerVewModel> { params ->
         PlayerVewModel(
-            params.get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get()
+            track = params.get(),
+            preparePlayer = get(),
+            destroyPlayer = get(),
+            pausePlayer = get(),
+            playbackPlayer = get(),
+            playTrackPlayer = get(),
+            getPlayerTime = get(),
+            getPlayerState = get(),
+            setCompletionPlayer = get()
         )
     }
 }
