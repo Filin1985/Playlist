@@ -37,7 +37,7 @@ class PlayerActivity : AppCompatActivity() {
             stateRender(it)
         }
 
-        viewModel.playTrackProgressLiveData?.observe(this) {
+        viewModel.playTrackProgressLiveData.observe(this) {
             playTimeRender(it)
         }
 

@@ -2,9 +2,13 @@ package com.example.playlistmaker.ui.player.view_model
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.domain.player.interfaces.CompletionUseCase
 import com.example.playlistmaker.domain.player.interfaces.DestroyPlayerUseCase
 import com.example.playlistmaker.domain.player.interfaces.GetCurrentPlayerTrackTimeUseCase
@@ -53,6 +57,7 @@ class PlayerVewModel(
     }
 
     fun playControl() {
+        Log.d("PLAY_CONTROL", "$track")
         stateMutableLiveData.postValue(playbackPlayer.execute(
             actionPause = { }, actionPlaying = { }
         ))
@@ -75,10 +80,6 @@ class PlayerVewModel(
 
     fun startUpdaterRunnable() {
         handler.post(createUpdaterRunnable())
-    }
-
-    fun stopPlayer() {
-        onCleared()
     }
 
     override fun onCleared() {

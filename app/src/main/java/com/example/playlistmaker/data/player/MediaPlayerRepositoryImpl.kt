@@ -1,47 +1,57 @@
 package com.example.playlistmaker.data.player
 
 import android.media.MediaPlayer
+import android.util.Log
 import com.example.playlistmaker.domain.player.MediaPlayerRepository
 import com.example.playlistmaker.domain.player.model.MediaPlayerState
 import com.example.playlistmaker.domain.search.model.TrackData
 
-class MediaPlayerRepositoryImpl(private var mediaPlayer: MediaPlayer?) : MediaPlayerRepository {
+class MediaPlayerRepositoryImpl(private var mediaPlayer: MediaPlayer) : MediaPlayerRepository {
     private var state = MediaPlayerState.STATE_DEFAULT
 
     override fun play() {
-        mediaPlayer?.start()
-        state = MediaPlayerState.STATE_PLAYING
+        if (state == MediaPlayerState.STATE_PREPARED || state == MediaPlayerState.STATE_PAUSED) {
+            mediaPlayer.start()
+            state = MediaPlayerState.STATE_PLAYING
+        }
     }
 
     override fun pause() {
         if (state == MediaPlayerState.STATE_PLAYING) {
-            mediaPlayer?.pause()
+            mediaPlayer.pause()
             state = MediaPlayerState.STATE_PAUSED
         }
     }
 
     override fun destroy() {
-        mediaPlayer?.release()
-        mediaPlayer = null
+        mediaPlayer.reset()
         state = MediaPlayerState.STATE_DEFAULT
     }
 
     override fun preparePlayer(track: TrackData, setPLayerState: () -> Unit) {
-        mediaPlayer = MediaPlayer()
-        mediaPlayer?.apply {
-            setDataSource(track.previewUrl)
-            prepareAsync()
-            setOnPreparedListener {
-                setPLayerState.invoke()
-                state = MediaPlayerState.STATE_PREPARED
+        try {
+            mediaPlayer.apply {
+                setDataSource(track.previewUrl)
+                prepareAsync()
+                setOnPreparedListener {
+                    setPLayerState.invoke()
+                    state = MediaPlayerState.STATE_PREPARED
+                }
+                setOnErrorListener { mp, what, extra ->
+                    Log.e("MediaPlayer", "Error occurred: $what, $extra")
+                    false
+                }
             }
+        } catch (e: Exception) {
+            Log.e("MediaPlayer", "Error preparing player: ${e.message}")
         }
     }
 
     override fun setCompletionState(setPLayerState: () -> Unit) {
-        mediaPlayer?.setOnCompletionListener {
+        mediaPlayer.setOnCompletionListener {
             setPLayerState.invoke()
             state = MediaPlayerState.STATE_PREPARED
+            mediaPlayer.seekTo(0)
         }
     }
 
@@ -49,7 +59,7 @@ class MediaPlayerRepositoryImpl(private var mediaPlayer: MediaPlayer?) : MediaPl
     override fun getCurrentTime() = if (state == MediaPlayerState.STATE_DEFAULT) {
         INITIAL_PLAY_TRACK_TIME_MILLIS
     } else {
-        mediaPlayer!!.currentPosition
+        mediaPlayer.currentPosition
     }
 
     companion object {

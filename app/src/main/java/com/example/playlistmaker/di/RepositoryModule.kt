@@ -70,11 +70,11 @@ val repositoryModule = module {
         MediaPlayer()
     }
 
-    single<TracksRepository> {
-        TracksRepositoryImpl(get())
+    factory<MediaPlayerRepository> {
+        MediaPlayerRepositoryImpl(get())
     }
 
-    single<MediaPlayerRepository> {
-        MediaPlayerRepositoryImpl(get())
+    single<TracksRepository> {
+        TracksRepositoryImpl(get())
     }
 }
