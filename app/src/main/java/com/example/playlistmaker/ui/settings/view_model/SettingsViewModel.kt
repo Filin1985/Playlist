@@ -1,17 +1,16 @@
 package com.example.playlistmaker.ui.settings.view_model
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.domain.sharing.interfaces.MailToSupportUseCase
+import com.example.playlistmaker.domain.sharing.interfaces.OpenTermsUseCase
+import com.example.playlistmaker.domain.sharing.interfaces.SharingAppUseCase
 import com.example.playlistmaker.domain.sharing.model.EmailData
 
-class SettingsViewModel: ViewModel() {
-    private val shareAppUseCase by lazy { Creator.getSettingsCreator().shareApp() }
-    private val openTermsUseCase by lazy { Creator.getSettingsCreator().openTerms() }
-    private val mailToSupportUseCase by lazy { Creator.getSettingsCreator().mailToSupport() }
-
+class SettingsViewModel(
+    private val shareAppUseCase: SharingAppUseCase,
+    private val openTermsUseCase: OpenTermsUseCase,
+    private val mailToSupportUseCase: MailToSupportUseCase
+) : ViewModel() {
     fun shareApp(link: String) {
         shareAppUseCase.execute(link)
     }
@@ -22,15 +21,5 @@ class SettingsViewModel: ViewModel() {
 
     fun mailToSupport(emailData: EmailData) {
         mailToSupportUseCase.execute(emailData)
-    }
-
-    companion object {
-        fun factory(): ViewModelProvider.Factory {
-            return viewModelFactory {
-                initializer {
-                    SettingsViewModel()
-                }
-            }
-        }
     }
 }

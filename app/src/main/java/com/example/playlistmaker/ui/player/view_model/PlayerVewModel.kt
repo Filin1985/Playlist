@@ -2,28 +2,35 @@ package com.example.playlistmaker.ui.player.view_model
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.domain.player.interfaces.CompletionUseCase
+import com.example.playlistmaker.domain.player.interfaces.DestroyPlayerUseCase
+import com.example.playlistmaker.domain.player.interfaces.GetCurrentPlayerTrackTimeUseCase
+import com.example.playlistmaker.domain.player.interfaces.GetPlayerStateUseCase
+import com.example.playlistmaker.domain.player.interfaces.PauseTrackUseCase
+import com.example.playlistmaker.domain.player.interfaces.PlayTrackUseCase
+import com.example.playlistmaker.domain.player.interfaces.PlaybackTrackUseCase
+import com.example.playlistmaker.domain.player.interfaces.PreparePlayerUseCase
 import com.example.playlistmaker.domain.player.model.MediaPlayerState
 import com.example.playlistmaker.domain.search.model.TrackData
 
-class PlayerVewModel(track: TrackData): ViewModel() {
-    private val trackCreator by lazy { Creator.getPlayerCreator(track) }
-
-    private val preparePlayer by lazy { trackCreator.providePreparePlayerUseCase() }
-    private val destroyPlayer by lazy { trackCreator.provideDestroyPlayerUseCase() }
-    private val pausePlayer by lazy { trackCreator.providePauseTrackUseCase() }
-    private val playbackPlayer by lazy { trackCreator.providePlaybackTrackUseCase() }
-    private val playTrackPlayer by lazy { trackCreator.providePlayTrackUseCase() }
-    private val getPlayerTime by lazy { trackCreator.providePlayTrackTimeUseCase() }
-    private val getPlayerState by lazy { trackCreator.provideGetPlayerStateUseCase() }
-    private val setCompletionPlayer by lazy { trackCreator.provideCompletionUseCase() }
-
+class PlayerVewModel(
+    private val track: TrackData,
+    private val preparePlayer: PreparePlayerUseCase,
+    private val destroyPlayer: DestroyPlayerUseCase,
+    private val pausePlayer: PauseTrackUseCase,
+    private val playbackPlayer: PlaybackTrackUseCase,
+    private val playTrackPlayer: PlayTrackUseCase,
+    private val getPlayerTime: GetCurrentPlayerTrackTimeUseCase,
+    private val getPlayerState: GetPlayerStateUseCase,
+    private val setCompletionPlayer: CompletionUseCase
+) : ViewModel() {
     private val handler = Handler(Looper.getMainLooper())
 
     private val stateMutableLiveData = MutableLiveData<MediaPlayerState>().also {
@@ -37,7 +44,7 @@ class PlayerVewModel(track: TrackData): ViewModel() {
     val playTrackProgressLiveData: LiveData<Int> = playTrackProgressMutableLiveData
 
     init {
-        preparePlayer.execute {
+        preparePlayer.execute(track) {
             stateMutableLiveData.postValue(MediaPlayerState.STATE_PREPARED)
         }
         setCompletionPlayer.execute {
@@ -50,6 +57,7 @@ class PlayerVewModel(track: TrackData): ViewModel() {
     }
 
     fun playControl() {
+        Log.d("PLAY_CONTROL", "$track")
         stateMutableLiveData.postValue(playbackPlayer.execute(
             actionPause = { }, actionPlaying = { }
         ))
@@ -81,13 +89,5 @@ class PlayerVewModel(track: TrackData): ViewModel() {
 
     companion object {
         private const val DELAY_MILLIS = 500L
-
-        fun factory(track: TrackData): ViewModelProvider.Factory {
-            return viewModelFactory {
-                initializer {
-                    PlayerVewModel(track)
-                }
-            }
-        }
     }
 }

@@ -1,7 +1,6 @@
 package com.example.playlistmaker.ui.settings.activity
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
@@ -9,15 +8,12 @@ import com.example.playlistmaker.domain.settings.model.Theme
 import com.example.playlistmaker.domain.sharing.model.EmailData
 import com.example.playlistmaker.ui.settings.view_model.SettingsViewModel
 import com.example.playlistmaker.ui.settings.view_model.ThemeViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
-    private val themeViewModel: ThemeViewModel by viewModels {
-        ThemeViewModel.factory()
-    }
-    private val settingsViewModel: SettingsViewModel by viewModels {
-        SettingsViewModel.factory()
-    }
+    private val themeViewModel: ThemeViewModel by viewModel()
+    private val settingsViewModel: SettingsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

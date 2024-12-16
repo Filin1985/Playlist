@@ -1,17 +1,16 @@
 package com.example.playlistmaker.data.search.impl
 
-import android.content.Context
+import android.content.SharedPreferences
 import com.example.playlistmaker.domain.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class SearchHistoryRepositoryImpl(context: Context) : SearchHistoryRepository {
+class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferences) :
+    SearchHistoryRepository {
     companion object {
         const val SEARCH_HISTORY = "SEARCH_HISTORY"
     }
-
-    private val sharedPreferences = context.getSharedPreferences(SEARCH_HISTORY, Context.MODE_PRIVATE)
 
     override fun getTrackList(): ArrayList<TrackData> {
         val inputJSON = sharedPreferences.getString(SEARCH_HISTORY, "")

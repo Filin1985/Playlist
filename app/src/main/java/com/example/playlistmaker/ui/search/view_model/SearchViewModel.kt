@@ -1,40 +1,25 @@
 package com.example.playlistmaker.ui.search.view_model
 
-import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.domain.consumer.Consumer
+import com.example.playlistmaker.domain.search.TracksInteractor
+import com.example.playlistmaker.domain.search.interfaces.AddTracksHistoryListUseCase
+import com.example.playlistmaker.domain.search.interfaces.ClearTracksHistoryListUseCase
+import com.example.playlistmaker.domain.search.interfaces.GetTracksHistoryListUseCase
 import com.example.playlistmaker.domain.search.model.SearchState
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.domain.search.model.TracksConsumer
 
-class SearchViewModel : ViewModel() {
-    private val searchCreator by lazy { Creator.getSearchCreator() }
-
-    private val getHistoryTrackListToStorageUseCase by lazy {
-        searchCreator.getSearchHistoryStorage()
-    }
-
-    private val searchTrackListUseCase by lazy {
-        Creator.provideSearchTrackInteractor()
-    }
-
-    private val addTrackToHistoryUseCase by lazy {
-        searchCreator.addSearchHistoryStorage()
-    }
-
-    private val clearTrackHistoryUseCase by lazy {
-        searchCreator.clearSearchHistoryStorage()
-    }
-
+class SearchViewModel(
+    private val getHistoryTrackListToStorageUseCase: GetTracksHistoryListUseCase,
+    private val searchTrackListUseCase: TracksInteractor,
+    private val addTrackToHistoryUseCase: AddTracksHistoryListUseCase,
+    private val clearTrackHistoryUseCase: ClearTracksHistoryListUseCase
+) : ViewModel() {
     private val handler = Handler(Looper.getMainLooper())
 
     private val searchTrackList = mutableListOf<TrackData>()
@@ -48,7 +33,8 @@ class SearchViewModel : ViewModel() {
         getHistoryTrackListToStorageUseCase.execute()
     private val historyTrackListMutableData =
         MutableLiveData<MutableList<TrackData>>(searchHistoryTrackList)
-    val searchHistoryTrackListLiveData: LiveData<MutableList<TrackData>> = historyTrackListMutableData
+    val searchHistoryTrackListLiveData: LiveData<MutableList<TrackData>> =
+        historyTrackListMutableData
 
     private val searchRequestMutableData = MutableLiveData<String>()
     val searchRequestLiveData: LiveData<String> = searchRequestMutableData
@@ -59,7 +45,7 @@ class SearchViewModel : ViewModel() {
     private var searchRunnable = Runnable { }
 
     init {
-        if(searchHistoryTrackList.isNotEmpty()) searchTrackState.value = SearchState.HISTORY_LIST
+        if (searchHistoryTrackList.isNotEmpty()) searchTrackState.value = SearchState.HISTORY_LIST
     }
 
     private fun searchTrackList(searchRequest: String) {
@@ -96,7 +82,7 @@ class SearchViewModel : ViewModel() {
     }
 
     fun startImmediateSearch(searchRequest: String) {
-        if(searchRequest.isBlank()) {
+        if (searchRequest.isBlank()) {
             searchTrackList.clear()
             searchTrackState.value = SearchState.NOT_FOUND
         } else {
@@ -120,10 +106,13 @@ class SearchViewModel : ViewModel() {
     }
 
     fun clickOnTrackDebounce(track: TrackData) {
-        if(isClickAllowedLiveData.value!!) {
+        if (isClickAllowedLiveData.value!!) {
             isClickAllowedMutableLiveData.value = false
             saveHistoryToStorage(track)
-            handler.postDelayed({isClickAllowedMutableLiveData.value = true}, CLICK_DEBOUNCE_DELAY)
+            handler.postDelayed(
+                { isClickAllowedMutableLiveData.value = true },
+                CLICK_DEBOUNCE_DELAY
+            )
         }
     }
 
@@ -142,20 +131,8 @@ class SearchViewModel : ViewModel() {
         searchTrackState.value = SearchState.HISTORY_LIST
     }
 
-    fun setState(currentState: SearchState) {
-        searchTrackState.value = currentState
-    }
-
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private const val CLICK_DEBOUNCE_DELAY = 1000L
-
-        fun factory(): ViewModelProvider.Factory {
-            return viewModelFactory {
-                initializer {
-                    SearchViewModel()
-                }
-            }
-        }
     }
 }

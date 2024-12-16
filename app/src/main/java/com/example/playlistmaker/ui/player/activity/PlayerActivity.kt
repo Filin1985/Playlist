@@ -1,11 +1,9 @@
 package com.example.playlistmaker.ui.player.activity
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.ui.search.activity.SearchActivity.Companion.TRACK
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -15,14 +13,15 @@ import com.example.playlistmaker.domain.player.model.MediaPlayerState
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.ui.player.view_model.PlayerVewModel
 import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlayerBinding
-    private var viewModel: PlayerVewModel? = null
-
     private lateinit var track: TrackData
+    private val viewModel: PlayerVewModel by viewModel { parametersOf(track) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,13 +33,11 @@ class PlayerActivity : AppCompatActivity() {
             finish()
         }
 
-        viewModel =
-            ViewModelProvider(this, PlayerVewModel.factory(track))[PlayerVewModel::class.java]
-        viewModel?.stateLiveData?.observe(this) {
+        viewModel.stateLiveData.observe(this) {
             stateRender(it)
         }
 
-        viewModel?.playTrackProgressLiveData?.observe(this) {
+        viewModel.playTrackProgressLiveData.observe(this) {
             playTimeRender(it)
         }
 
@@ -67,14 +64,14 @@ class PlayerActivity : AppCompatActivity() {
         binding.playerCountryData.text = track.country
 
         binding.playerPlay.setOnClickListener {
-            viewModel?.playControl()
-            viewModel?.startUpdaterRunnable()
+            viewModel.playControl()
+            viewModel.startUpdaterRunnable()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        viewModel?.pausePlayer()
+        viewModel.pausePlayer()
     }
 
     private fun stateRender(playerState: MediaPlayerState) {
@@ -91,7 +88,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun playTimeRender(time: Int) {
-        when (viewModel?.stateLiveData?.value) {
+        when (viewModel.stateLiveData.value) {
             MediaPlayerState.STATE_PLAYING, MediaPlayerState.STATE_PAUSED -> {
                 binding.playerTime.text =
                     SimpleDateFormat("mm:ss", Locale.getDefault()).format(time)

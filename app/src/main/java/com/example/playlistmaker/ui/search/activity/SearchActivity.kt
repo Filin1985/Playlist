@@ -1,35 +1,24 @@
 package com.example.playlistmaker.ui.search.activity
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.App
-import com.example.playlistmaker.creator.Creator
-import com.example.playlistmaker.ui.main.activity.MainActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.model.SearchState
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.presentation.TrackAdapter
 import com.example.playlistmaker.ui.player.activity.PlayerActivity
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
-import com.example.playlistmaker.ui.settings.view_model.SettingsViewModel
 import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
     companion object {
@@ -39,9 +28,7 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
 
-    private val viewModel: SearchViewModel by viewModels {
-        SearchViewModel.factory()
-    }
+    private val viewModel: SearchViewModel by viewModel()
 
     private lateinit var trackAdapter: TrackAdapter
 
@@ -49,7 +36,6 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -157,9 +143,9 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showResultNotification(resultType: SearchState) {
-        Log.d("STATE-----", "$resultType")
         when (resultType) {
             SearchState.SUCCESS -> {
+                historyTrackListAdapter.notifyDataSetChanged()
                 trackAdapter.notifyDataSetChanged()
                 binding.recycleContainer.visibility = View.VISIBLE
                 binding.searchNotification.visibility = View.GONE
@@ -168,6 +154,7 @@ class SearchActivity : AppCompatActivity() {
             }
 
             SearchState.NOT_FOUND -> {
+                historyTrackListAdapter.notifyDataSetChanged()
                 trackAdapter.notifyDataSetChanged()
                 binding.clearIcon.visibility = View.GONE
                 binding.recycleContainer.visibility = View.GONE
@@ -179,12 +166,15 @@ class SearchActivity : AppCompatActivity() {
             }
 
             SearchState.SEARCH_PROGRESS -> {
+                historyTrackListAdapter.notifyDataSetChanged()
+                trackAdapter.notifyDataSetChanged()
                 binding.recycleContainer.visibility = View.VISIBLE
                 binding.clearIcon.visibility = View.GONE
                 binding.progressBar.visibility = View.VISIBLE
             }
 
             SearchState.CONNECTION_ERROR -> {
+                historyTrackListAdapter.notifyDataSetChanged()
                 trackAdapter.notifyDataSetChanged()
                 binding.clearIcon.visibility = View.GONE
                 binding.recycleContainer.visibility = View.GONE
@@ -207,6 +197,7 @@ class SearchActivity : AppCompatActivity() {
 
             SearchState.EMPTY_DATA -> {
                 historyTrackListAdapter.notifyDataSetChanged()
+                trackAdapter.notifyDataSetChanged()
                 binding.recycleContainer.visibility = View.GONE
             }
         }
