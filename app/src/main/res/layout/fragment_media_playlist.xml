@@ -5,17 +5,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/new_playlist"
+        style="@style/RefreshButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:text="@string/new_playlist"
+        app:layout_constraintBottom_toTopOf="@+id/not_found_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <ImageView
         android:id="@+id/not_found_image"
         style="@style/MediaImageStyle"
         android:src="@drawable/ic_not_found_dark"
-        app:layout_constraintBottom_toTopOf="@id/empty_media" />
+        app:layout_constraintBottom_toTopOf="@id/not_found" />
 
     <TextView
-        android:id="@+id/empty_media"
+        android:id="@+id/not_found"
         style="@style/NotFoundTextStyle"
         android:textColor="?attr/colorOnPrimary"
-        android:text="@string/empty_media"
+        android:text="@string/empty_playlist"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/not_found_image"
