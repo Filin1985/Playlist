@@ -64,4 +64,10 @@ dependencies {
     // DI
     implementation("io.insert-koin:koin-core:3.5.0")
     implementation("io.insert-koin:koin-android:3.5.0")
+
+    // Fragment
+    val fragment_version = "1.8.4"
+    implementation("androidx.fragment:fragment-ktx:$fragment_version")
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
+    implementation("com.google.android.material:material:1.8.0")
 }
