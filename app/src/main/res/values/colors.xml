@@ -11,4 +11,6 @@
     <color name="black">#000000</color>
     <color name="main_grey">#AEAFB4</color>
     <color name="not_found">#1A1B22</color>
+    <color name="black_to_white">#1A1B22</color>
+    <color name="white_to_black">#FFFFFF</color>
 </resources>
