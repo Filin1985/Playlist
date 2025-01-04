@@ -14,7 +14,7 @@ class MediaViewPageAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycl
         return when(position) {
             0 -> MediaFragmentFavourite.newInstance()
             1 -> MediaFragmentPlaylist.newInstance()
-            else -> Fragment()
+            else -> MediaFragmentPlaylist.newInstance()
         }
     }
 

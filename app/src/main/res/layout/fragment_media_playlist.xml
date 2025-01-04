@@ -27,7 +27,7 @@
     <TextView
         android:id="@+id/not_found"
         style="@style/NotFoundTextStyle"
-        android:textColor="?attr/colorOnPrimary"
+        android:textColor="@color/black_to_white"
         android:text="@string/empty_playlist"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

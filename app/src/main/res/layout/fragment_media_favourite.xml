@@ -14,7 +14,7 @@
     <TextView
         android:id="@+id/empty_media"
         style="@style/NotFoundTextStyle"
-        android:textColor="?attr/colorOnPrimary"
+        android:textColor="@color/black_to_white"
         android:text="@string/empty_media"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
