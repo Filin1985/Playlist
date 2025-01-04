@@ -8,20 +8,24 @@ import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.FragmentMediaFavouriteBinding
 
 class MediaFragmentFavourite: Fragment() {
-    companion object {
-        private const val PAGE_NUMBER = "page_number"
-
-        fun newInstance() = MediaFragmentFavourite()
-    }
-
-    private lateinit var binding: FragmentMediaFavouriteBinding
+    private var _binding: FragmentMediaFavouriteBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMediaFavouriteBinding.inflate(inflater, container, false)
+        _binding = FragmentMediaFavouriteBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    companion object {
+        fun newInstance() = MediaFragmentFavourite()
     }
 }
