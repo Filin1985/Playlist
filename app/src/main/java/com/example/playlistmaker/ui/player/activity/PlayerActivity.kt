@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.playlistmaker.ui.search.activity.SearchActivity.Companion.TRACK
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -12,6 +11,7 @@ import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.domain.player.model.MediaPlayerState
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.ui.player.view_model.PlayerVewModel
+import com.example.playlistmaker.ui.search.fragment.SearchFragment
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -28,7 +28,7 @@ class PlayerActivity : AppCompatActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        track = Gson().fromJson(intent.getStringExtra(TRACK), TrackData::class.java)
+        track = Gson().fromJson(intent.getStringExtra(SearchFragment.TRACK), TrackData::class.java)
         binding.arrowBackPlayer.setOnClickListener {
             finish()
         }
