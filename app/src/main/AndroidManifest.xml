@@ -14,21 +14,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/Base.Theme.PlaylistMaker"
+        android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
         tools:targetApi="35">
         <activity
             android:name=".ui.player.activity.PlayerActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.media.activity.MediaActivity"
-            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
-            android:exported="false" />
-        <activity
-            android:name=".ui.settings.activity.SettingsActivity"
-            android:exported="true" />
-        <activity
             android:name=".ui.root.RootActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

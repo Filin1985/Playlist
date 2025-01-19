@@ -3,4 +3,13 @@
     <color name="not_found">#ffffff</color>
     <color name="black_to_white">#FFFFFF</color>
     <color name="white_to_black">#1A1B22</color>
+
+    <color name="black_day_white_night">#FFFFFF</color>
+    <color name="black_day_black_night">#1A1B22</color>
+    <color name="white_day_black_night">#1A1B22</color>
+    <color name="grey2_day_black_night">#1A1B22</color>
+    <color name="grey2_day_grey2_night">#AEAFB4</color>
+    <color name="grey1_day_white_night">#FFFFFF</color>
+    <color name="true_black_day_true_white_night">#FFFFFF</color>
+    <color name="grey2_day_true_white_night">#FFFFFF</color>
 </resources>
