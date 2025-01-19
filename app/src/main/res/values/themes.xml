@@ -13,10 +13,4 @@
         <item name="android:textColor">@color/yp_text_gray</item>
         <item name="android:statusBarColor">@color/yp_black</item>
     </style>
-
-    <style name="MainActivity.Theme.PlaylistMaker" parent="Base.Theme.PlaylistMaker">
-        <item name="android:statusBarColor">@color/yp_blue</item>
-        <item name="android:navigationBarColor">@color/yp_blue</item>
-        <item name="android:background">@color/yp_blue</item>
-    </style>
 </resources>
