@@ -46,4 +46,9 @@ class MediaFragment : Fragment() {
         super.onDestroy()
         tabMediator.detach()
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

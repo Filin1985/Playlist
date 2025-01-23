@@ -1,7 +1,9 @@
 package com.example.playlistmaker.ui.search.fragment
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity.INPUT_METHOD_SERVICE
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
@@ -144,6 +147,7 @@ class SearchFragment: Fragment() {
                 historyTrackListAdapter.notifyDataSetChanged()
                 trackAdapter.notifyDataSetChanged()
                 binding.recycleContainer.visibility = View.VISIBLE
+                binding.trackSearchRecyclerView.visibility = View.VISIBLE
                 binding.searchNotification.visibility = View.GONE
                 binding.clearIcon.visibility = View.VISIBLE
                 binding.progressBar.visibility = View.GONE
@@ -162,9 +166,8 @@ class SearchFragment: Fragment() {
             }
 
             SearchState.SEARCH_PROGRESS -> {
-                historyTrackListAdapter.notifyDataSetChanged()
-                trackAdapter.notifyDataSetChanged()
                 binding.recycleContainer.visibility = View.VISIBLE
+                binding.trackSearchRecyclerView.visibility = View.GONE
                 binding.clearIcon.visibility = View.GONE
                 binding.progressBar.visibility = View.VISIBLE
             }
@@ -192,9 +195,9 @@ class SearchFragment: Fragment() {
             }
 
             SearchState.EMPTY_DATA -> {
-                historyTrackListAdapter.notifyDataSetChanged()
-                trackAdapter.notifyDataSetChanged()
                 binding.recycleContainer.visibility = View.GONE
+                binding.searchNotification.visibility = View.GONE
+                binding.errorConnectionText.visibility = View.GONE
             }
         }
     }
@@ -203,13 +206,25 @@ class SearchFragment: Fragment() {
         return { track: TrackData ->
             if (viewModel.isClickAllowedLiveData.value!!) {
                 viewModel.clickOnTrackDebounce(track)
-                val playerIntent = Intent(requireContext(), PlayerActivity::class.java)
-                playerIntent.putExtra(TRACK, Gson().toJson(track))
-                startActivity(playerIntent)
-
+                findNavController().navigate(
+                    R.id.action_searchFragment_to_playerActivity,
+                    PlayerActivity.createArgs(Gson().toJson(track))
+                )
+                viewModel.writeTrackToList(track)
                 historyTrackListAdapter.notifyDataSetChanged()
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        clearSearchForm()
+        viewModel.cancelSearch()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

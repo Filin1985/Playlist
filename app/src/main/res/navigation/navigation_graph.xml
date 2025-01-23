@@ -3,13 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
-    app:startDestination="@id/searchFragment">
-
+    app:startDestination="@id/mediaFragment">
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.playlistmaker.ui.search.fragment.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search">
+
+        <action
+            android:id="@+id/action_searchFragment_to_playerActivity"
+            app:destination="@id/playerActivity" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.playlistmaker.ui.settings.fragment.SettingsFragment"
@@ -20,13 +24,6 @@
         android:name="com.example.playlistmaker.ui.media.fragment.MediaFragment"
         android:label="fragment_media"
         tools:layout="@layout/fragment_media">
-
-        <action
-            android:id="@+id/action_mediaFragment_to_favoriteTrackFragment"
-            app:destination="@id/favoriteTrackFragment" />
-        <action
-            android:id="@+id/action_mediaFragment_to_playListMediaFragment"
-            app:destination="@id/playListMediaFragment" />
     </fragment>
     <fragment
         android:id="@+id/playListMediaFragment"
@@ -38,4 +35,9 @@
         android:name="com.example.playlistmaker.ui.media.fragment.MediaFragmentFavourite"
         android:label="fragment_favorite_track"
         tools:layout="@layout/fragment_media_favourite" />
+    <activity
+        android:id="@+id/playerActivity"
+        android:name="com.example.playlistmaker.ui.player.activity.PlayerActivity"
+        android:label="activity_player"
+        tools:layout="@layout/activity_player" />
 </navigation>
