@@ -2,6 +2,7 @@ package com.example.playlistmaker.ui.search.view_model
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -45,11 +46,13 @@ class SearchViewModel(
     private var searchRunnable = Runnable { }
 
     init {
+        Log.d("INIT", "$historyTrackListMutableData")
         if (searchHistoryTrackList.isNotEmpty()) searchTrackState.value = SearchState.HISTORY_LIST
     }
 
     private fun searchTrackList(searchRequest: String) {
         if (searchRequest.isNotEmpty()) {
+            Log.d("SEARCH_REQUEST-------------------", searchRequest)
             searchTrackState.value = SearchState.SEARCH_PROGRESS
             searchTrackListUseCase.execute(
                 text = searchRequest,
@@ -84,7 +87,7 @@ class SearchViewModel(
     fun startImmediateSearch(searchRequest: String) {
         if (searchRequest.isBlank()) {
             searchTrackList.clear()
-            searchTrackState.value = SearchState.NOT_FOUND
+            searchTrackState.value = SearchState.EMPTY_DATA
         } else {
             handler.removeCallbacks(searchRunnable)
             searchTrackList(searchRequest)
@@ -95,7 +98,7 @@ class SearchViewModel(
     fun startDebounceSearch(searchRequest: String) {
         if (searchRequest.isBlank()) {
             searchTrackList.clear()
-            searchTrackState.value = SearchState.NOT_FOUND
+            searchTrackState.value = SearchState.EMPTY_DATA
         } else {
             handler.removeCallbacks(searchRunnable)
             searchRunnable = Runnable { searchTrackList(searchRequest) }
@@ -131,8 +134,14 @@ class SearchViewModel(
         searchTrackState.value = SearchState.HISTORY_LIST
     }
 
+    fun cancelSearch() {
+        handler.removeCallbacks(searchRunnable)
+        searchRequestMutableData.value = EMPTY_SEARCH
+    }
+
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val EMPTY_SEARCH = ""
     }
 }

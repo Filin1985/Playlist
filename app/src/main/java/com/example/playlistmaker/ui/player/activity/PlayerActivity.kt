@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -99,6 +100,14 @@ class PlayerActivity : AppCompatActivity() {
             }
 
             MediaPlayerState.STATE_DEFAULT, null -> {}
+        }
+    }
+
+    companion object {
+        const val TRACK = "TRACK"
+
+        fun createArgs(encodedTrack: String) : Bundle {
+            return bundleOf(TRACK to encodedTrack)
         }
     }
 }

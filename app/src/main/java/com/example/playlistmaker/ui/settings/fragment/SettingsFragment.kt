@@ -64,4 +64,9 @@ class SettingsFragment : Fragment() {
             settingsViewModel.openTerms(getString(R.string.agreement_link))
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
