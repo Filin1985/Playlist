@@ -14,6 +14,7 @@ import com.example.playlistmaker.domain.search.interfaces.GetTracksHistoryListUs
 import com.example.playlistmaker.domain.search.model.SearchState
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.domain.search.model.TracksConsumer
+import java.util.Collections
 
 class SearchViewModel(
     private val getHistoryTrackListToStorageUseCase: GetTracksHistoryListUseCase,
@@ -46,13 +47,11 @@ class SearchViewModel(
     private var searchRunnable = Runnable { }
 
     init {
-        Log.d("INIT", "$historyTrackListMutableData")
         if (searchHistoryTrackList.isNotEmpty()) searchTrackState.value = SearchState.HISTORY_LIST
     }
 
     private fun searchTrackList(searchRequest: String) {
         if (searchRequest.isNotEmpty()) {
-            Log.d("SEARCH_REQUEST-------------------", searchRequest)
             searchTrackState.value = SearchState.SEARCH_PROGRESS
             searchTrackListUseCase.execute(
                 text = searchRequest,
@@ -123,6 +122,18 @@ class SearchViewModel(
         addTrackToHistoryUseCase.execute(track)
     }
 
+    fun writeTrackToList(track: TrackData) {
+        val trackIndex = searchHistoryTrackList.indexOfFirst { it.trackId == track.trackId }
+        if (trackIndex != -1) {
+            Collections.swap(searchHistoryTrackList, trackIndex, searchHistoryTrackList.size-1)
+        } else {
+            if (searchHistoryTrackList.size == HISTORY_TRACK_LIST_SIZE) {
+                searchHistoryTrackList.removeAt(0)
+            }
+            searchHistoryTrackList.add(track)
+        }
+    }
+
     fun clearHistory() {
         searchHistoryTrackList.clear()
         searchHistoryTrackListLiveData.value!!.clear()
@@ -143,5 +154,6 @@ class SearchViewModel(
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val EMPTY_SEARCH = ""
+        private const val HISTORY_TRACK_LIST_SIZE = 10
     }
 }

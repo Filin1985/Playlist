@@ -142,7 +142,6 @@ class SearchFragment: Fragment() {
     }
 
     private fun showResultNotification(resultType: SearchState) {
-        Log.d("SEARCH_STATE", "$resultType")
         when (resultType) {
             SearchState.SUCCESS -> {
                 historyTrackListAdapter.notifyDataSetChanged()
@@ -211,10 +210,8 @@ class SearchFragment: Fragment() {
                     R.id.action_searchFragment_to_playerActivity,
                     PlayerActivity.createArgs(Gson().toJson(track))
                 )
-                binding.recycleHistoryContainer.visibility = View.VISIBLE
-                trackAdapter.notifyDataSetChanged()
+                viewModel.writeTrackToList(track)
                 historyTrackListAdapter.notifyDataSetChanged()
-                Log.d("CLICK_ON_TRACK", "${historyTrackListAdapter.itemCount}")
             }
         }
     }
