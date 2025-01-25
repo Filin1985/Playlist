@@ -5,14 +5,13 @@ import retrofit2.Response
 
 fun <T, V> Response<T>.mapToApiResponse(mapSuccess: (dto: T) -> V): ResponseData<V> {
     val dto = body()
-    val errorMessage = "Loading Error"
     return when {
         !isSuccessful -> {
-            ResponseData.Error(errorBody()?.string() ?: errorMessage)
+            ResponseData.Error()
         }
         dto != null -> ResponseData.Success(mapSuccess(dto))
         else -> {
-            ResponseData.Error(errorMessage)
+            ResponseData.Error()
         }
     }
 }

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/settingsFragment"
     tools:context=".ui.settings.fragment.SettingsFragment"
+    android:background="@color/white_to_black"
     style="@style/ContainerStyle" >
 
     <androidx.constraintlayout.widget.Guideline
