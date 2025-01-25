@@ -18,7 +18,7 @@ class TracksInteractorImpl(private val repository: TracksRepository): TracksInte
         executor.execute {
             val trackResponse = repository.searchTracks(text)
             when(trackResponse){
-                is ResponseData.Error -> consumer.consume(TracksConsumer.Error(trackResponse.message))
+                is ResponseData.Error -> consumer.consume(TracksConsumer.Error())
                 is ResponseData.Success -> consumer.consume(TracksConsumer.Data(trackResponse.data))
                 is ResponseData.EmptyResponse -> consumer.consume(TracksConsumer.EmptyData())
             }
