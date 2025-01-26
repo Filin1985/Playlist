@@ -98,7 +98,7 @@ class SearchViewModel(
         if (searchRequest.isBlank()) {
             searchTrackList.clear()
             searchTrackState.value = SearchState.EMPTY_DATA
-        } else {
+        } else if (searchRequestMutableData.value != searchRequest) {
             handler.removeCallbacks(searchRunnable)
             searchRunnable = Runnable { searchTrackList(searchRequest) }
             handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)

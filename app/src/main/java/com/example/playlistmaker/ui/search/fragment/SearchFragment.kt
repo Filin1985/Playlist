@@ -106,6 +106,7 @@ class SearchFragment: Fragment() {
             if (text.isNullOrEmpty()) binding.clearIcon.visibility = View.GONE
             else binding.clearIcon.visibility = View.VISIBLE
 
+
             viewModel.startDebounceSearch(text.toString())
         }
 
@@ -161,6 +162,8 @@ class SearchFragment: Fragment() {
                 binding.errorConnectionText.visibility = View.GONE
                 binding.progressBar.visibility = View.GONE
                 binding.notFound.setImageResource(R.drawable.ic_not_found_dark)
+                binding.refreshButton.visibility = View.GONE
+                binding.clearIcon.visibility = View.VISIBLE
             }
 
             SearchState.SEARCH_PROGRESS -> {
@@ -212,12 +215,6 @@ class SearchFragment: Fragment() {
                 historyTrackListAdapter.notifyDataSetChanged()
             }
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        clearSearchForm()
-        viewModel.cancelSearch()
     }
 
     override fun onDestroyView() {
