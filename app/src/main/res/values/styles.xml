@@ -217,4 +217,8 @@
         <item name="android:textColor">@color/black_day_white_night</item>
     </style>
 
+    <style name="BottomNavigationStyle" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:background">@drawable/background_bottom_nav</item>
+    </style>
+
 </resources>
