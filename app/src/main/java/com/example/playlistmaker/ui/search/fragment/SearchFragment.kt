@@ -148,14 +148,12 @@ class SearchFragment: Fragment() {
                 binding.recycleContainer.visibility = View.VISIBLE
                 binding.trackSearchRecyclerView.visibility = View.VISIBLE
                 binding.searchNotification.visibility = View.GONE
-                binding.clearIcon.visibility = View.VISIBLE
                 binding.progressBar.visibility = View.GONE
             }
 
             SearchState.NOT_FOUND -> {
                 historyTrackListAdapter.notifyDataSetChanged()
                 trackAdapter.notifyDataSetChanged()
-                binding.clearIcon.visibility = View.GONE
                 binding.recycleContainer.visibility = View.GONE
                 binding.searchNotification.visibility = View.VISIBLE
                 binding.errorText.setText(R.string.not_found_error)
@@ -163,20 +161,17 @@ class SearchFragment: Fragment() {
                 binding.progressBar.visibility = View.GONE
                 binding.notFound.setImageResource(R.drawable.ic_not_found_dark)
                 binding.refreshButton.visibility = View.GONE
-                binding.clearIcon.visibility = View.VISIBLE
             }
 
             SearchState.SEARCH_PROGRESS -> {
                 binding.recycleContainer.visibility = View.VISIBLE
                 binding.trackSearchRecyclerView.visibility = View.GONE
-                binding.clearIcon.visibility = View.GONE
                 binding.progressBar.visibility = View.VISIBLE
             }
 
             SearchState.CONNECTION_ERROR -> {
                 historyTrackListAdapter.notifyDataSetChanged()
                 trackAdapter.notifyDataSetChanged()
-                binding.clearIcon.visibility = View.GONE
                 binding.recycleContainer.visibility = View.GONE
                 binding.searchNotification.visibility = View.VISIBLE
                 binding.errorText.setText(R.string.error_connection_subtitle)
@@ -191,7 +186,6 @@ class SearchFragment: Fragment() {
                 binding.recycleHistoryContainer.visibility = View.VISIBLE
                 binding.recycleContainer.visibility = View.GONE
                 binding.searchNotification.visibility = View.GONE
-                binding.clearIcon.visibility = View.GONE
                 binding.progressBar.visibility = View.GONE
             }
 
