@@ -1,14 +1,14 @@
-package com.example.playlistmaker.presentation.media
+package com.example.playlistmaker.ui.media.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.playlistmaker.databinding.FragmentMediaFavouriteBinding
+import com.example.playlistmaker.databinding.FragmentMediaPlaylistBinding
 
-class MediaFragmentFavourite: Fragment() {
-    private var _binding: FragmentMediaFavouriteBinding? = null
+class MediaFragmentPlaylist: Fragment() {
+    private var _binding: FragmentMediaPlaylistBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -16,7 +16,7 @@ class MediaFragmentFavourite: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentMediaFavouriteBinding.inflate(inflater, container, false)
+        _binding = FragmentMediaPlaylistBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -26,6 +26,6 @@ class MediaFragmentFavourite: Fragment() {
     }
 
     companion object {
-        fun newInstance() = MediaFragmentFavourite()
+        fun newInstance() = MediaFragmentPlaylist()
     }
 }

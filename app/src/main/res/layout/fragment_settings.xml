@@ -2,8 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/settings"
-    tools:context=".ui.main.activity.MainActivity"
+    android:id="@+id/settingsFragment"
+    tools:context=".ui.settings.fragment.SettingsFragment"
+    android:background="@color/white_to_black"
     style="@style/ContainerStyle" >
 
     <androidx.constraintlayout.widget.Guideline
@@ -18,11 +19,6 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/top_border_settings"
         >
-
-        <ImageView
-            android:id="@+id/arrow_back"
-            android:contentDescription="@string/settings"
-            style="@style/NavigationArrowIcon"/>
 
         <TextView
             android:text="@string/settings"
