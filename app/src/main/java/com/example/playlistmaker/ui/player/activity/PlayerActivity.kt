@@ -66,7 +66,7 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.playerPlay.setOnClickListener {
             viewModel.playControl()
-            viewModel.startUpdaterRunnable()
+            viewModel.startTimer()
         }
     }
 

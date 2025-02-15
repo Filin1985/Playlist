@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.domain.player.interfaces.CompletionUseCase
@@ -19,6 +20,9 @@ import com.example.playlistmaker.domain.player.interfaces.PlaybackTrackUseCase
 import com.example.playlistmaker.domain.player.interfaces.PreparePlayerUseCase
 import com.example.playlistmaker.domain.player.model.MediaPlayerState
 import com.example.playlistmaker.domain.search.model.TrackData
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PlayerVewModel(
     private val track: TrackData,
@@ -31,7 +35,6 @@ class PlayerVewModel(
     private val getPlayerState: GetPlayerStateUseCase,
     private val setCompletionPlayer: CompletionUseCase
 ) : ViewModel() {
-    private val handler = Handler(Looper.getMainLooper())
 
     private val stateMutableLiveData = MutableLiveData<MediaPlayerState>().also {
         it.value = getPlayerState.execute()
@@ -43,6 +46,8 @@ class PlayerVewModel(
     }
     val playTrackProgressLiveData: LiveData<Int> = playTrackProgressMutableLiveData
 
+    private var timerJob: Job? = null
+
     init {
         preparePlayer.execute(track) {
             stateMutableLiveData.postValue(MediaPlayerState.STATE_PREPARED)
@@ -53,6 +58,7 @@ class PlayerVewModel(
     }
 
     fun pausePlayer() {
+        timerJob?.cancel()
         stateMutableLiveData.postValue(pausePlayer.execute { })
     }
 
@@ -63,23 +69,13 @@ class PlayerVewModel(
         ))
     }
 
-    private fun createUpdaterRunnable(): Runnable {
-        return object : Runnable {
-            override fun run() {
+    fun startTimer() {
+        timerJob = viewModelScope.launch {
+            while (getPlayerState.execute() == MediaPlayerState.STATE_PLAYING) {
+                delay(DELAY_MILLIS)
                 playTrackProgressMutableLiveData.value = getPlayerTime.execute()
-                val playerState = getPlayerState.execute()
-                when (playerState) {
-                    MediaPlayerState.STATE_PLAYING -> handler.postDelayed(this, DELAY_MILLIS)
-                    MediaPlayerState.STATE_PAUSED -> handler.removeCallbacks(this)
-                    MediaPlayerState.STATE_PREPARED -> handler.removeCallbacks(this)
-                    MediaPlayerState.STATE_DEFAULT -> {}
-                }
             }
         }
-    }
-
-    fun startUpdaterRunnable() {
-        handler.post(createUpdaterRunnable())
     }
 
     override fun onCleared() {
@@ -88,6 +84,6 @@ class PlayerVewModel(
     }
 
     companion object {
-        private const val DELAY_MILLIS = 500L
+        private const val DELAY_MILLIS = 300L
     }
 }

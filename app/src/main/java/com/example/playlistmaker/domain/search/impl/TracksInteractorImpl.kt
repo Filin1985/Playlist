@@ -6,22 +6,11 @@ import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.domain.search.model.TracksConsumer
+import kotlinx.coroutines.flow.Flow
 import java.util.concurrent.Executors
 
 class TracksInteractorImpl(private val repository: TracksRepository): TracksInteractor {
-    private val executor = Executors.newCachedThreadPool()
-
-    override fun execute(
-        text: String,
-        consumer: Consumer<List<TrackData>>
-    ) {
-        executor.execute {
-            val trackResponse = repository.searchTracks(text)
-            when(trackResponse){
-                is ResponseData.Error -> consumer.consume(TracksConsumer.Error())
-                is ResponseData.Success -> consumer.consume(TracksConsumer.Data(trackResponse.data))
-                is ResponseData.EmptyResponse -> consumer.consume(TracksConsumer.EmptyData())
-            }
-        }
+    override suspend fun execute(text: String): Flow<ResponseData<List<TrackData>>> {
+        return repository.searchTracks(text)
     }
 }

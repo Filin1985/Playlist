@@ -106,7 +106,6 @@ class SearchFragment: Fragment() {
             if (text.isNullOrEmpty()) binding.clearIcon.visibility = View.GONE
             else binding.clearIcon.visibility = View.VISIBLE
 
-
             viewModel.startDebounceSearch(text.toString())
         }
 
