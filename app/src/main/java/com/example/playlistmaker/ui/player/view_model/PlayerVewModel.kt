@@ -35,7 +35,6 @@ class PlayerVewModel(
     private val getPlayerState: GetPlayerStateUseCase,
     private val setCompletionPlayer: CompletionUseCase
 ) : ViewModel() {
-    private val handler = Handler(Looper.getMainLooper())
 
     private val stateMutableLiveData = MutableLiveData<MediaPlayerState>().also {
         it.value = getPlayerState.execute()
@@ -46,8 +45,6 @@ class PlayerVewModel(
         it.value = getPlayerTime.execute()
     }
     val playTrackProgressLiveData: LiveData<Int> = playTrackProgressMutableLiveData
-
-    private var timerJob: Job? = null
 
     init {
         preparePlayer.execute(track) {

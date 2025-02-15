@@ -93,7 +93,7 @@ class SearchViewModel(
             searchTrackList.clear()
             searchTrackState.value = SearchState.EMPTY_DATA
         } else {
-            handler.removeCallbacks(searchRunnable)
+            searchJob?.cancel()
             searchTrackList(searchRequest)
         }
         searchRequestMutableData.value = searchRequest
@@ -118,10 +118,10 @@ class SearchViewModel(
         if (isClickAllowedLiveData.value!!) {
             isClickAllowedMutableLiveData.value = false
             saveHistoryToStorage(track)
-            handler.postDelayed(
-                { isClickAllowedMutableLiveData.value = true },
-                CLICK_DEBOUNCE_DELAY
-            )
+            viewModelScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowedMutableLiveData.value = true
+            }
         }
     }
 
@@ -150,11 +150,6 @@ class SearchViewModel(
     fun clear() {
         searchTrackList.clear()
         searchTrackState.value = SearchState.HISTORY_LIST
-    }
-
-    fun cancelSearch() {
-        handler.removeCallbacks(searchRunnable)
-        searchRequestMutableData.value = EMPTY_SEARCH
     }
 
     companion object {
