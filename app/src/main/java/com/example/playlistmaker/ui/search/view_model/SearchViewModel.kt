@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.consumer.Consumer
 import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.interfaces.AddTracksHistoryListUseCase
@@ -14,6 +15,9 @@ import com.example.playlistmaker.domain.search.interfaces.GetTracksHistoryListUs
 import com.example.playlistmaker.domain.search.model.SearchState
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.domain.search.model.TracksConsumer
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.Collections
 
 class SearchViewModel(
@@ -45,6 +49,7 @@ class SearchViewModel(
     val isClickAllowedLiveData: LiveData<Boolean> = isClickAllowedMutableLiveData
 
     private var searchRunnable = Runnable { }
+    private var searchJob: Job? = null
 
     init {
         if (searchHistoryTrackList.isNotEmpty()) searchTrackState.value = SearchState.HISTORY_LIST
@@ -98,10 +103,12 @@ class SearchViewModel(
         if (searchRequest.isBlank()) {
             searchTrackList.clear()
             searchTrackState.value = SearchState.EMPTY_DATA
-        } else if (searchRequestMutableData.value != searchRequest) {
-            handler.removeCallbacks(searchRunnable)
-            searchRunnable = Runnable { searchTrackList(searchRequest) }
-            handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        } else {
+            searchJob?.cancel()
+            searchJob = viewModelScope.launch {
+                delay(SEARCH_DEBOUNCE_DELAY)
+                searchTrackList(searchRequest)
+            }
             searchTrackState.value = SearchState.SEARCH_PROGRESS
         }
         searchRequestMutableData.value = searchRequest
