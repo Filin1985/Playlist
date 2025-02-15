@@ -1,20 +1,16 @@
 package com.example.playlistmaker.ui.search.view_model
 
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.domain.consumer.Consumer
 import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.interfaces.AddTracksHistoryListUseCase
 import com.example.playlistmaker.domain.search.interfaces.ClearTracksHistoryListUseCase
 import com.example.playlistmaker.domain.search.interfaces.GetTracksHistoryListUseCase
+import com.example.playlistmaker.domain.search.model.ResponseData
 import com.example.playlistmaker.domain.search.model.SearchState
 import com.example.playlistmaker.domain.search.model.TrackData
-import com.example.playlistmaker.domain.search.model.TracksConsumer
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -26,7 +22,6 @@ class SearchViewModel(
     private val addTrackToHistoryUseCase: AddTracksHistoryListUseCase,
     private val clearTrackHistoryUseCase: ClearTracksHistoryListUseCase
 ) : ViewModel() {
-    private val handler = Handler(Looper.getMainLooper())
 
     private val searchTrackList = mutableListOf<TrackData>()
     private val searchTrackListMutableData = MutableLiveData(searchTrackList)
@@ -48,43 +43,39 @@ class SearchViewModel(
     private val isClickAllowedMutableLiveData = MutableLiveData(true)
     val isClickAllowedLiveData: LiveData<Boolean> = isClickAllowedMutableLiveData
 
-    private var searchRunnable = Runnable { }
     private var searchJob: Job? = null
 
     init {
         if (searchHistoryTrackList.isNotEmpty()) searchTrackState.value = SearchState.HISTORY_LIST
     }
 
-    private fun searchTrackList(searchRequest: String) {
+    private fun searchTrackList(data: ResponseData<List<TrackData>>) {
+        when (data) {
+            is ResponseData.Success -> {
+                searchTrackList.clear()
+                searchTrackList.addAll(data.data)
+                searchTrackState.value = SearchState.SUCCESS
+            }
+
+            is ResponseData.EmptyResponse -> {
+                searchTrackList.clear()
+                searchTrackState.value = SearchState.NOT_FOUND
+            }
+
+            is ResponseData.Error -> {
+                searchTrackList.clear()
+                searchTrackState.value = SearchState.CONNECTION_ERROR
+            }
+        }
+    }
+
+    private fun startTrackSearch(searchRequest: String) {
         if (searchRequest.isNotEmpty()) {
-            searchTrackState.value = SearchState.SEARCH_PROGRESS
-            searchTrackListUseCase.execute(
-                text = searchRequest,
-                consumer = object : Consumer<List<TrackData>> {
-                    override fun consume(data: TracksConsumer<List<TrackData>>) {
-                        val consumeRunnable = Runnable {
-                            when (data) {
-                                is TracksConsumer.Data -> {
-                                    searchTrackList.clear()
-                                    searchTrackList.addAll(data.value)
-                                    searchTrackState.value = SearchState.SUCCESS
-                                }
-
-                                is TracksConsumer.EmptyData -> {
-                                    searchTrackList.clear()
-                                    searchTrackState.value = SearchState.NOT_FOUND
-                                }
-
-                                is TracksConsumer.Error -> {
-                                    searchTrackList.clear()
-                                    searchTrackState.value = SearchState.CONNECTION_ERROR
-                                }
-                            }
-                        }
-                        handler.post(consumeRunnable)
-                    }
+            viewModelScope.launch {
+                searchTrackListUseCase.execute(searchRequest).collect {
+                    searchTrackList(it)
                 }
-            )
+            }
         }
     }
 
@@ -94,7 +85,7 @@ class SearchViewModel(
             searchTrackState.value = SearchState.EMPTY_DATA
         } else {
             searchJob?.cancel()
-            searchTrackList(searchRequest)
+            startTrackSearch(searchRequest)
         }
         searchRequestMutableData.value = searchRequest
     }
@@ -107,7 +98,7 @@ class SearchViewModel(
             searchJob?.cancel()
             searchJob = viewModelScope.launch {
                 delay(SEARCH_DEBOUNCE_DELAY)
-                searchTrackList(searchRequest)
+                startTrackSearch(searchRequest)
             }
             searchTrackState.value = SearchState.SEARCH_PROGRESS
         }
@@ -132,7 +123,7 @@ class SearchViewModel(
     fun writeTrackToList(track: TrackData) {
         val trackIndex = searchHistoryTrackList.indexOfFirst { it.trackId == track.trackId }
         if (trackIndex != -1) {
-            Collections.swap(searchHistoryTrackList, trackIndex, searchHistoryTrackList.size-1)
+            Collections.swap(searchHistoryTrackList, trackIndex, searchHistoryTrackList.size - 1)
         } else {
             if (searchHistoryTrackList.size == HISTORY_TRACK_LIST_SIZE) {
                 searchHistoryTrackList.removeAt(0)
@@ -155,7 +146,6 @@ class SearchViewModel(
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val EMPTY_SEARCH = ""
         private const val HISTORY_TRACK_LIST_SIZE = 10
     }
 }

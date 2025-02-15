@@ -7,31 +7,35 @@ import com.example.playlistmaker.data.search.dto.TracksSearchRequest
 import com.example.playlistmaker.data.search.mappers.TrackListMapper
 import com.example.playlistmaker.data.search.mappers.mapToApiResponse
 import com.example.playlistmaker.domain.search.model.TrackData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 
 class RetrofitNetworkClient(private val itunesService: ITunesAPI) : NetworkClient {
 
-    override fun doRequest(dto: TracksSearchRequest): ResponseData<List<TrackData>> {
+    override fun doRequest(dto: TracksSearchRequest): Flow<ResponseData<List<TrackData>>> = flow {
         try {
-            val response = itunesService.search(dto.text).execute()
-            return when {
-                response.code() == 404 -> ResponseData.EmptyResponse<List<TrackData>>()
+            val response = itunesService.search(dto.text)
+            when {
+                response.code() == 404 -> emit(ResponseData.EmptyResponse<List<TrackData>>())
 
                 response.body() != null -> {
                     val responseBody = response.body() as TracksResponse
-                    if(responseBody.results.isEmpty()) {
-                        ResponseData.EmptyResponse<List<TrackData>>()
+                    if (responseBody.results.isEmpty()) {
+                        emit(ResponseData.EmptyResponse<List<TrackData>>())
                     } else {
-                        response.mapToApiResponse{ dto -> TrackListMapper.mapDtoToEntity(dto.results) }
+                        emit(response.mapToApiResponse { dto -> TrackListMapper.mapDtoToEntity(dto.results) })
                     }
                 }
 
-                else -> ResponseData.Error<List<TrackData>>()
+                else -> emit(ResponseData.Error<List<TrackData>>())
             }
         } catch (exception: Exception) {
-            return ResponseData.Error<List<TrackData>>()
+            emit(ResponseData.Error<List<TrackData>>())
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     companion object {
         const val ITUNES_BASE_URL = "https://itunes.apple.com"

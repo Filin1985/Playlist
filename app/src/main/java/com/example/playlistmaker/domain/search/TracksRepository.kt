@@ -2,7 +2,8 @@ package com.example.playlistmaker.domain.search
 
 import com.example.playlistmaker.domain.search.model.ResponseData
 import com.example.playlistmaker.domain.search.model.TrackData
+import kotlinx.coroutines.flow.Flow
 
 interface TracksRepository {
-    fun searchTracks(text: String): ResponseData<List<TrackData>>
+    fun searchTracks(text: String): Flow<ResponseData<List<TrackData>>>
 }
