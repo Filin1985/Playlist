@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import java.util.concurrent.Executors
 
 class TracksInteractorImpl(private val repository: TracksRepository): TracksInteractor {
-    override fun execute(text: String): Flow<ResponseData<List<TrackData>>> {
+    override suspend fun execute(text: String): Flow<ResponseData<List<TrackData>>> {
         return repository.searchTracks(text)
     }
 }

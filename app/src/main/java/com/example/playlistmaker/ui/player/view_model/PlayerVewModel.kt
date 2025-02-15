@@ -46,6 +46,8 @@ class PlayerVewModel(
     }
     val playTrackProgressLiveData: LiveData<Int> = playTrackProgressMutableLiveData
 
+    private var timerJob: Job? = null
+
     init {
         preparePlayer.execute(track) {
             stateMutableLiveData.postValue(MediaPlayerState.STATE_PREPARED)
@@ -56,6 +58,7 @@ class PlayerVewModel(
     }
 
     fun pausePlayer() {
+        timerJob?.cancel()
         stateMutableLiveData.postValue(pausePlayer.execute { })
     }
 
@@ -67,7 +70,7 @@ class PlayerVewModel(
     }
 
     fun startTimer() {
-        viewModelScope.launch {
+        timerJob = viewModelScope.launch {
             while (getPlayerState.execute() == MediaPlayerState.STATE_PLAYING) {
                 delay(DELAY_MILLIS)
                 playTrackProgressMutableLiveData.value = getPlayerTime.execute()

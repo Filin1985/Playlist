@@ -71,7 +71,8 @@ class SearchViewModel(
 
     private fun startTrackSearch(searchRequest: String) {
         if (searchRequest.isNotEmpty()) {
-            viewModelScope.launch {
+            searchJob?.cancel()
+            searchJob = viewModelScope.launch {
                 searchTrackListUseCase.execute(searchRequest).collect {
                     searchTrackList(it)
                 }

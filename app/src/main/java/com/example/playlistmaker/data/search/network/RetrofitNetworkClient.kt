@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.flowOn
 
 class RetrofitNetworkClient(private val itunesService: ITunesAPI) : NetworkClient {
 
-    override fun doRequest(dto: TracksSearchRequest): Flow<ResponseData<List<TrackData>>> = flow {
+    override suspend fun doRequest(dto: TracksSearchRequest): Flow<ResponseData<List<TrackData>>> = flow {
         try {
             val response = itunesService.search(dto.text)
             when {

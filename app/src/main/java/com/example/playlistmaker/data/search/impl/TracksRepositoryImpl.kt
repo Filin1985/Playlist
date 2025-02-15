@@ -8,7 +8,7 @@ import com.example.playlistmaker.domain.search.model.TrackData
 import kotlinx.coroutines.flow.Flow
 
 class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
-    override fun searchTracks(text: String): Flow<ResponseData<List<TrackData>>> {
+    override suspend fun searchTracks(text: String): Flow<ResponseData<List<TrackData>>> {
             return networkClient.doRequest(TracksSearchRequest(text))
     }
 }

@@ -5,5 +5,5 @@ import com.example.playlistmaker.domain.search.model.TrackData
 import kotlinx.coroutines.flow.Flow
 
 interface TracksRepository {
-    fun searchTracks(text: String): Flow<ResponseData<List<TrackData>>>
+    suspend fun searchTracks(text: String): Flow<ResponseData<List<TrackData>>>
 }

@@ -6,5 +6,5 @@ import com.example.playlistmaker.domain.search.model.TrackData
 import kotlinx.coroutines.flow.Flow
 
 interface TracksInteractor {
-    fun execute(text: String): Flow<ResponseData<List<TrackData>>>
+    suspend fun execute(text: String): Flow<ResponseData<List<TrackData>>>
 }

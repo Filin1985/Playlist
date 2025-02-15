@@ -6,5 +6,5 @@ import com.example.playlistmaker.domain.search.model.TrackData
 import kotlinx.coroutines.flow.Flow
 
 interface NetworkClient {
-    fun doRequest(dto: TracksSearchRequest): Flow<ResponseData<List<TrackData>>>
+    suspend fun doRequest(dto: TracksSearchRequest): Flow<ResponseData<List<TrackData>>>
 }
