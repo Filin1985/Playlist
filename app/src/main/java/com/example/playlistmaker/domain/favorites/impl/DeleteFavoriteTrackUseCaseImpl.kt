@@ -6,7 +6,7 @@ import com.example.playlistmaker.domain.search.model.TrackData
 
 class DeleteFavoriteTrackUseCaseImpl(private val favoriteRepository: FavoriteTracksRepository) :
     DeleteFavoriteTrackUseCase {
-    override suspend fun deleteFavoriteTrack(track: TrackData) {
+    override suspend fun execute(track: TrackData) {
         favoriteRepository.deleteFavoriteTrack(track)
     }
 }

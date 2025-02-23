@@ -4,5 +4,5 @@ import com.example.playlistmaker.domain.search.model.TrackData
 import kotlinx.coroutines.flow.Flow
 
 interface GetFavoriteTracksIdsUseCase {
-    suspend fun execute(): Flow<List<Long>>
+    suspend fun execute(): Flow<List<String>>
 }
