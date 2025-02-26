@@ -1,5 +1,7 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.domain.favorites.interfaces.GetFavoriteTracksIdsUseCase
+import com.example.playlistmaker.domain.favorites.interfaces.InsertFavoriteTrackUseCase
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.ui.media.view_model.MediaFavouriteViewModel
 import com.example.playlistmaker.ui.media.view_model.MediaPlaylistViewModel
@@ -33,12 +35,15 @@ val viewModuleModule = module {
             playTrackPlayer = get(),
             getPlayerTime = get(),
             getPlayerState = get(),
-            setCompletionPlayer = get()
+            setCompletionPlayer = get(),
+            deleteTrackFromFavorite = get(),
+            insertTrackToFavorite = get(),
+            getTrackIdsFromDb = get()
         )
     }
 
     viewModel<MediaFavouriteViewModel> {
-        MediaFavouriteViewModel()
+        MediaFavouriteViewModel(get())
     }
 
     viewModel<MediaPlaylistViewModel> {

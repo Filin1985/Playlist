@@ -5,11 +5,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/left_border_fav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="13dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/right_border_fav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="13dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/favoriteTracksHistoryRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintStart_toEndOf="@id/left_border_fav"
+        app:layout_constraintEnd_toStartOf="@id/right_border_fav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="16dp"
+        />
+
     <ImageView
         android:id="@+id/not_found_image"
         style="@style/MediaImageStyle"
         android:src="@drawable/ic_not_found_dark"
-        app:layout_constraintBottom_toTopOf="@id/empty_media" />
+        app:layout_constraintBottom_toTopOf="@id/empty_media"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/empty_media"
@@ -19,6 +46,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/not_found_image"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

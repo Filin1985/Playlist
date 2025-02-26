@@ -42,6 +42,10 @@ class PlayerActivity : AppCompatActivity() {
             playTimeRender(it)
         }
 
+        viewModel.isTrackInFavoriteLiveData.observe(this) {
+            toggleFavoriteTrack(it)
+        }
+
         val albumCover = findViewById<ImageView>(R.id.album_cover)
         Glide.with(albumCover)
             .load(track.artworkUrl100.replaceAfterLast("/", "512x512bb.jpg"))
@@ -67,6 +71,10 @@ class PlayerActivity : AppCompatActivity() {
         binding.playerPlay.setOnClickListener {
             viewModel.playControl()
             viewModel.startTimer()
+        }
+
+        binding.playerLike.setOnClickListener {
+            viewModel.toggleTrackFavoriteState()
         }
     }
 
@@ -101,6 +109,11 @@ class PlayerActivity : AppCompatActivity() {
 
             MediaPlayerState.STATE_DEFAULT, null -> {}
         }
+    }
+
+    private fun toggleFavoriteTrack(isTrackInFavorite: Boolean?) {
+        val likeImage = if(isTrackInFavorite == true) R.drawable.ic_player_like_active else R.drawable.ic_player_like
+        binding.playerLike.setImageDrawable(getDrawable(likeImage))
     }
 
     companion object {
