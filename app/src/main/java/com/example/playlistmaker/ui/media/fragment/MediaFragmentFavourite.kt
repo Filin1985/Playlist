@@ -15,7 +15,6 @@ import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.presentation.search.TrackAdapter
 import com.example.playlistmaker.ui.media.view_model.MediaFavouriteViewModel
 import com.example.playlistmaker.ui.player.activity.PlayerActivity
-import com.example.playlistmaker.ui.search.view_model.SearchViewModel
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

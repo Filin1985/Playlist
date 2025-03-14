@@ -5,12 +5,14 @@ import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.domain.player.model.MediaPlayerState
 import com.example.playlistmaker.domain.search.model.TrackData
+import com.example.playlistmaker.ui.media.view_model.MediaFavouriteViewModel
 import com.example.playlistmaker.ui.player.view_model.PlayerVewModel
 import com.example.playlistmaker.ui.search.fragment.SearchFragment
 import com.google.gson.Gson
@@ -29,6 +31,8 @@ class PlayerActivity : AppCompatActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val favouriteViewModel = ViewModelProvider(this).get(MediaFavouriteViewModel::class.java)
+
         track = Gson().fromJson(intent.getStringExtra(SearchFragment.TRACK), TrackData::class.java)
         binding.arrowBackPlayer.setOnClickListener {
             finish()
@@ -44,6 +48,7 @@ class PlayerActivity : AppCompatActivity() {
 
         viewModel.isTrackInFavoriteLiveData.observe(this) {
             toggleFavoriteTrack(it)
+            favouriteViewModel.showFavoriteTracks()
         }
 
         val albumCover = findViewById<ImageView>(R.id.album_cover)
