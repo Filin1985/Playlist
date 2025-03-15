@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/f"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -90,7 +89,7 @@
         app:layout_constraintEnd_toEndOf="@id/right_boundary">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/playlist_name_text_input_edit_text"
+            android:id="@+id/playlist_description_input_edit_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             style="@style/TextInputNewPlaylistStyle"/>

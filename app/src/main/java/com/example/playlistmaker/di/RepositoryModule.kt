@@ -5,8 +5,8 @@ import android.content.SharedPreferences
 import android.media.MediaPlayer
 import androidx.room.Room
 import com.example.playlistmaker.data.NetworkClient
-import com.example.playlistmaker.data.db.FavoriteTracksDB
-import com.example.playlistmaker.data.db.FavoriteTracksRepositoryImpl
+import com.example.playlistmaker.data.db.AppDB
+import com.example.playlistmaker.data.media.FavoriteTracksRepositoryImpl
 import com.example.playlistmaker.data.player.MediaPlayerRepositoryImpl
 import com.example.playlistmaker.data.search.impl.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.search.impl.TracksRepositoryImpl
@@ -87,7 +87,7 @@ val repositoryModule = module {
     }
 
     single {
-        Room.databaseBuilder(androidContext(), FavoriteTracksDB::class.java, "database.db")
+        Room.databaseBuilder(androidContext(), AppDB::class.java, "database.db")
             .build()
     }
 }

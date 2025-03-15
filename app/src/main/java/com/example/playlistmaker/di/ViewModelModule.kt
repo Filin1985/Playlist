@@ -1,9 +1,7 @@
 package com.example.playlistmaker.di
 
-import com.example.playlistmaker.domain.favorites.interfaces.GetFavoriteTracksIdsUseCase
-import com.example.playlistmaker.domain.favorites.interfaces.InsertFavoriteTrackUseCase
-import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.ui.media.view_model.MediaFavouriteViewModel
+import com.example.playlistmaker.ui.media.view_model.MediaNewPlaylistViewModel
 import com.example.playlistmaker.ui.media.view_model.MediaPlaylistViewModel
 import com.example.playlistmaker.ui.player.view_model.PlayerVewModel
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
@@ -48,5 +46,9 @@ val viewModuleModule = module {
 
     viewModel<MediaPlaylistViewModel> {
         MediaPlaylistViewModel()
+    }
+
+    viewModel<MediaNewPlaylistViewModel> {
+        MediaNewPlaylistViewModel()
     }
 }

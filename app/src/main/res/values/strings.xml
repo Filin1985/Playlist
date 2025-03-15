@@ -32,4 +32,9 @@
     <string name="playlist_description">Описание</string>
     <string name="playlist_required">Обязательное поле</string>
     <string name="playlist_create">Создать</string>
+    <string name="playlist_create_complete">Завершить создание плейлиста?</string>
+    <string name="playlist_create_lost">Все несохраненные данные будут потеряны</string>
+    <string name="playlist_create_cancel">Отмена</string>
+    <string name="playlist_create_accept">Завершить</string>
+    <string name="playlist_created">Плейлист %1$s создан</string>
 </resources>
