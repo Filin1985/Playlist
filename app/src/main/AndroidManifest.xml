@@ -17,7 +17,7 @@
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
         tools:targetApi="35">
         <activity
-            android:name=".ui.media.fragment.MediaFragmentNewPlaylist"
+            android:name=".ui.media.playlist.fragment.MediaNewPlaylistFragment"
             android:exported="false"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
         <activity

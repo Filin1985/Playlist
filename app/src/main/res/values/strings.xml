@@ -37,4 +37,12 @@
     <string name="playlist_create_cancel">Отмена</string>
     <string name="playlist_create_accept">Завершить</string>
     <string name="playlist_created">Плейлист %1$s создан</string>
+    <plurals name="playlist_plurals">
+        <item quantity="zero">%1$d треков</item>
+        <item quantity="one">%1$d трек</item>
+        <item quantity="two">%1$d трека</item>
+        <item quantity="few">%1$d трека</item>
+        <item quantity="many">%1$d треков</item>
+        <item quantity="other">%1$d треков</item>
+    </plurals>
 </resources>

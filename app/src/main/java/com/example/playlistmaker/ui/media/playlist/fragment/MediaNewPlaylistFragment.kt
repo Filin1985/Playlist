@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.media.fragment
+package com.example.playlistmaker.ui.media.playlist.fragment
 
 import android.content.DialogInterface
 import android.graphics.Bitmap
@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.view.isNotEmpty
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -21,13 +20,13 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentMediaNewPlaylistBinding
-import com.example.playlistmaker.ui.media.view_model.MediaNewPlaylistViewModel
+import com.example.playlistmaker.ui.media.playlist.view_model.MediaNewPlaylistViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 
-class MediaFragmentNewPlaylist : Fragment() {
+class MediaNewPlaylistFragment : Fragment() {
     private var _binding: FragmentMediaNewPlaylistBinding? = null
     private val binding get() = _binding!!
     private val viewModel: MediaNewPlaylistViewModel by viewModel()

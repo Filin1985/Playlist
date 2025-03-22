@@ -24,6 +24,8 @@ import com.example.playlistmaker.domain.player.interfaces.PauseTrackUseCase
 import com.example.playlistmaker.domain.player.interfaces.PlayTrackUseCase
 import com.example.playlistmaker.domain.player.interfaces.PlaybackTrackUseCase
 import com.example.playlistmaker.domain.player.interfaces.PreparePlayerUseCase
+import com.example.playlistmaker.domain.playlist.impl.ShowPlaylistUseCaseImpl
+import com.example.playlistmaker.domain.playlist.interfaces.ShowPlaylistUseCase
 import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.impl.AddTracksToHistoryListImlp
 import com.example.playlistmaker.domain.search.impl.ClearTracksHistoryListImpl
@@ -133,5 +135,9 @@ val domainModule = module {
 
     factory<GetFavoriteTracksIdsUseCase> {
         GetFavoriteTracksIdsUseCaseImpl(get())
+    }
+
+    factory<ShowPlaylistUseCase> {
+        ShowPlaylistUseCaseImpl(get())
     }
 }

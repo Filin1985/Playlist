@@ -1,16 +1,14 @@
 package com.example.playlistmaker.data.mediateca
 
-import android.util.Log
 import com.example.playlistmaker.data.convertes.DbConverter
 import com.example.playlistmaker.data.db.AppDB
-import com.example.playlistmaker.data.db.entities.PlaylistEntity
 import com.example.playlistmaker.domain.mediateca.playlists.PlaylistsRepository
 import com.example.playlistmaker.domain.mediateca.playlists.model.Playlist
 import com.example.playlistmaker.domain.search.model.TrackData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-abstract class PlaylistsRepositoryImpl(
+class PlaylistsRepositoryImpl(
     private val appDB: AppDB
 ) : PlaylistsRepository {
 
@@ -39,5 +37,9 @@ abstract class PlaylistsRepositoryImpl(
         appDB.playlistsDAO().updatePlaylist(
             DbConverter.convertPlaylistToPlaylistEntity(playlistWithUpdatedTracksId)
         )
+    }
+
+    override suspend fun addTrackToPlaylistsTracksStorage(track: TrackData) {
+
     }
 }

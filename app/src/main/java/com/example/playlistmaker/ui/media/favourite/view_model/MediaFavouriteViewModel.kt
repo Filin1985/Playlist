@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.media.view_model
+package com.example.playlistmaker.ui.media.favourite.view_model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.favorites.interfaces.GetFavoriteTracksUseCase
 import com.example.playlistmaker.domain.favorites.model.FavoriteTracksState
-import com.example.playlistmaker.domain.search.model.SearchState
 import com.example.playlistmaker.domain.search.model.TrackData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

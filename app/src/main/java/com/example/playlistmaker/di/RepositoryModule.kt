@@ -7,6 +7,7 @@ import androidx.room.Room
 import com.example.playlistmaker.data.NetworkClient
 import com.example.playlistmaker.data.db.AppDB
 import com.example.playlistmaker.data.media.FavoriteTracksRepositoryImpl
+import com.example.playlistmaker.data.mediateca.PlaylistsRepositoryImpl
 import com.example.playlistmaker.data.player.MediaPlayerRepositoryImpl
 import com.example.playlistmaker.data.search.impl.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.search.impl.TracksRepositoryImpl
@@ -16,6 +17,7 @@ import com.example.playlistmaker.data.settings.impl.SharedPrefThemeRepositoryImp
 import com.example.playlistmaker.data.settings.impl.ThemeRepositoryImpl
 import com.example.playlistmaker.data.sharing.impl.ExternalNavigatorImpl
 import com.example.playlistmaker.domain.favorites.FavoriteTracksRepository
+import com.example.playlistmaker.domain.mediateca.playlists.PlaylistsRepository
 import com.example.playlistmaker.domain.player.MediaPlayerRepository
 import com.example.playlistmaker.domain.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.search.TracksRepository
@@ -84,6 +86,10 @@ val repositoryModule = module {
 
     single<FavoriteTracksRepository> {
         FavoriteTracksRepositoryImpl(get())
+    }
+
+    single<PlaylistsRepository> {
+        PlaylistsRepositoryImpl(get())
     }
 
     single {

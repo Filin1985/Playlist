@@ -35,18 +35,18 @@
     </fragment>
     <fragment
         android:id="@+id/playListMediaFragment"
-        android:name="com.example.playlistmaker.ui.media.fragment.MediaFragmentPlaylist"
+        android:name="com.example.playlistmaker.ui.media.playlist.fragment.MediaPlaylistFragment"
         android:label="fragment_play_list_media"
         tools:layout="@layout/fragment_media_playlist">
     </fragment>
     <fragment
         android:id="@+id/favoriteTrackFragment"
-        android:name="com.example.playlistmaker.ui.media.fragment.MediaFragmentFavourite"
+        android:name="com.example.playlistmaker.ui.media.favourite.fragment.MediaFragmentFavourite"
         android:label="fragment_favorite_track"
         tools:layout="@layout/fragment_media_favourite" />
     <fragment
         android:id="@+id/newPlaylistFragment"
-        android:name="com.example.playlistmaker.ui.media.fragment.MediaFragmentNewPlaylist"
+        android:name="com.example.playlistmaker.ui.media.playlist.fragment.MediaNewPlaylistFragment"
         android:label="fragment_new_playlist"
         tools:layout="@layout/fragment_media_new_playlist" />
     <activity
