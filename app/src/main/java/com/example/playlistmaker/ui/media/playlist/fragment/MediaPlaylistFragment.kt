@@ -73,6 +73,11 @@ class MediaPlaylistFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.showPlaylists()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

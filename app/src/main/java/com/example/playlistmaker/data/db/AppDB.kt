@@ -2,6 +2,7 @@ package com.example.playlistmaker.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.example.playlistmaker.data.db.dao.PlaylistTracksDao
 import com.example.playlistmaker.data.db.dao.PlaylistsDAO
 import com.example.playlistmaker.data.db.dao.TrackDao
 import com.example.playlistmaker.data.db.entities.PlaylistEntity
@@ -15,4 +16,5 @@ abstract class AppDB : RoomDatabase(){
 
     abstract fun playlistsDAO(): PlaylistsDAO
 
+    abstract fun playlistTracksDao(): PlaylistTracksDao
 }

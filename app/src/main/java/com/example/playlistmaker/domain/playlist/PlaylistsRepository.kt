@@ -12,5 +12,5 @@ interface PlaylistsRepository {
 
     suspend fun updatePlaylist(playlist: Playlist, track: TrackData)
 
-    suspend fun addTrackToPlaylistsTracksStorage(track: TrackData)
+    suspend fun addTrackToPlaylistsStorage(track: TrackData)
 }

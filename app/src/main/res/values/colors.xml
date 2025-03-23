@@ -22,4 +22,5 @@
     <color name="grey1_day_white_night">#E6E8EB</color>
     <color name="true_black_day_true_white_night">#000000</color>
     <color name="grey2_day_true_white_night">#AEAFB4</color>
+    <color name="transparent_black">#801A1B22</color>
 </resources>

@@ -12,31 +12,31 @@ import kotlinx.serialization.json.Json
 object DbConverter {
     fun convertTrackToTrackEntity(track: TrackData): TrackEntity {
         return TrackEntity(
-            trackId = track.trackId.toString(),
+            trackId = track.trackId,
             trackName = track.trackName,
             artistName = track.artistName,
             trackTimeMillis = track.trackTimeMillis,
             previewUrl = track.previewUrl,
             artworkUrl100 = track.artworkUrl100,
-            collectionName = track.collectionName.orEmpty(),
-            releaseYear = track.releaseDate,
+            collectionName = track.collectionName,
+            releaseDate = track.releaseDate,
             country = track.country,
-            genre = track.primaryGenreName
+            primaryGenreName = track.primaryGenreName
         )
     }
 
     fun convertTrackEntityToTrack(trackEntity: TrackEntity): TrackData {
         return TrackData(
-            trackId = trackEntity.trackId.toString(),
+            trackId = trackEntity.trackId,
             trackName = trackEntity.trackName,
             artistName = trackEntity.artistName,
             trackTimeMillis = trackEntity.trackTimeMillis,
             previewUrl = trackEntity.previewUrl,
             artworkUrl100 = trackEntity.artworkUrl100,
             collectionName = trackEntity.collectionName,
-            releaseDate = trackEntity.releaseYear,
+            releaseDate = trackEntity.releaseDate,
             country = trackEntity.country,
-            primaryGenreName = trackEntity.genre
+            primaryGenreName = trackEntity.primaryGenreName
         )
     }
 
@@ -48,15 +48,15 @@ object DbConverter {
             trackTimeMillis = track.trackTimeMillis,
             previewUrl = track.previewUrl,
             artworkUrl100 = track.artworkUrl100,
-            collectionName = track.collectionName.orEmpty(),
-            releaseYear = track.releaseDate,
+            collectionName = track.collectionName,
+            releaseDate = track.releaseDate,
             country = track.country,
-            genre = track.primaryGenreName
+            primaryGenreName = track.primaryGenreName
         )
     }
 
-    fun convertPlaylistTrackEntityToTrack(playlistTrackEntity: PlaylistTrackEntity): TrackEntity {
-        return TrackEntity(
+    fun convertPlaylistTrackEntityToTrack(playlistTrackEntity: PlaylistTrackEntity): TrackData {
+        return TrackData(
             trackId = playlistTrackEntity.trackId,
             trackName = playlistTrackEntity.trackName,
             artistName = playlistTrackEntity.artistName,
@@ -64,9 +64,9 @@ object DbConverter {
             previewUrl = playlistTrackEntity.previewUrl,
             artworkUrl100 = playlistTrackEntity.artworkUrl100,
             collectionName = playlistTrackEntity.collectionName,
-            releaseYear = playlistTrackEntity.releaseYear,
+            releaseDate = playlistTrackEntity.releaseDate,
             country = playlistTrackEntity.country,
-            genre = playlistTrackEntity.genre
+            primaryGenreName = playlistTrackEntity.primaryGenreName
         )
     }
 

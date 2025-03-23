@@ -36,7 +36,10 @@ val viewModuleModule = module {
             setCompletionPlayer = get(),
             deleteTrackFromFavorite = get(),
             insertTrackToFavorite = get(),
-            getTrackIdsFromDb = get()
+            getTrackIdsFromDb = get(),
+            showPlaylistsUseCase = get(),
+            addTrackToPlaylistUseCase = get(),
+            updatePlaylistUseCase = get()
         )
     }
 
@@ -49,6 +52,6 @@ val viewModuleModule = module {
     }
 
     viewModel<MediaNewPlaylistViewModel> {
-        MediaNewPlaylistViewModel()
+        MediaNewPlaylistViewModel(createNewPlaylistUseCase = get())
     }
 }

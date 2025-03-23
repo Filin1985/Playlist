@@ -3,16 +3,24 @@ package com.example.playlistmaker.ui.player.activity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
+import com.example.playlistmaker.domain.mediateca.playlists.model.Playlist
 import com.example.playlistmaker.domain.player.model.MediaPlayerState
+import com.example.playlistmaker.domain.player.model.TrackPlaylistState
+import com.example.playlistmaker.domain.playlist.model.PlaylistStatus
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.ui.player.view_model.PlayerVewModel
 import com.example.playlistmaker.ui.search.fragment.SearchFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -23,6 +31,8 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlayerBinding
     private lateinit var track: TrackData
     private val viewModel: PlayerVewModel by viewModel { parametersOf(track) }
+    private lateinit var adapter: PlayerBottomSheetAdapter
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,8 +41,45 @@ class PlayerActivity : AppCompatActivity() {
 
 
         track = Gson().fromJson(intent.getStringExtra(SearchFragment.TRACK), TrackData::class.java)
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).also {
+            it.state = BottomSheetBehavior.STATE_HIDDEN
+
+            it.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            binding.overlay.isVisible = false
+                        }
+                        else -> {
+                            binding.overlay.isVisible = true
+                        }
+                    }
+                }
+                override fun onSlide(bottomSheet: View, slideOffset: Float) { }
+            })
+        }
+
+        adapter = PlayerBottomSheetAdapter(viewModel.playlistLiveData.value!!)
+        adapter.listener = {
+            viewModel.addTrackToPlaylist(it)
+            showTrackAddingToPlaylistResult(viewModel.playlistStateLiveData.value!!, it)
+        }
+        binding.recyclerViewPlaylists.adapter = adapter
+        binding.recyclerViewPlaylists.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.arrowBackPlayer.setOnClickListener {
             finish()
+        }
+
+        binding.addToPlaylist.setOnClickListener {
+            viewModel.showPlaylists()
+            binding.recyclerViewPlaylists.isVisible = true
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        viewModel.playlistLiveData.observe(this) {
+            if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
+                adapter.notifyDataSetChanged()
+            }
         }
 
         viewModel.stateLiveData.observe(this) {
@@ -115,6 +162,23 @@ class PlayerActivity : AppCompatActivity() {
     private fun toggleFavoriteTrack(isTrackInFavorite: Boolean?) {
         val likeImage = if(isTrackInFavorite == true) R.drawable.ic_player_like_active else R.drawable.ic_player_like
         binding.playerLike.setImageDrawable(getDrawable(likeImage))
+    }
+
+    private fun showTrackAddingToPlaylistResult(trackPlaylistRelationship: TrackPlaylistState, playlist: Playlist) {
+        if (trackPlaylistRelationship == TrackPlaylistState.TRACK_IS_ALREADY_ADDED) {
+            Toast.makeText(
+                this,
+                resources.getString(R.string.track_is_already_in_playlist).format(playlist.title),
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            Toast.makeText(
+                this,
+                resources.getString(R.string.track_is_added_to_playlist).format(playlist.title),
+                Toast.LENGTH_SHORT
+            ).show()
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
     }
 
     companion object {

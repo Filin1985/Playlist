@@ -7,7 +7,7 @@ data class Playlist(
     val title: String,
     val description: String?,
     val coverUri: Uri?,
-    val tracksId: List<Long> = emptyList(),
+    val tracksId: List<String> = emptyList(),
 ) {
     val size: Int get() = tracksId.size
 }

@@ -73,13 +73,18 @@ class MediaNewPlaylistFragment : Fragment() {
         }
 
         binding.createNewPlaylistButton.setOnClickListener {
-            val playlistTitle = binding.playlistDescriptionInputEditText.text.toString()
+            val playlistTitle = binding.playlistTitleInputEditText.text.toString()
             Toast.makeText(
                 requireContext(),
                 resources.getString(R.string.playlist_created).format(playlistTitle),
                 Toast.LENGTH_SHORT
             ).show()
+
             viewModel.playlistUriLiveData.value?.let { saveCoverToStorage(it) }
+            viewModel.createNewPlaylist(
+                title = playlistTitle,
+                description = binding.playlistDescriptionInputEditText.text.toString()
+            )
 
             findNavController().popBackStack()
         }

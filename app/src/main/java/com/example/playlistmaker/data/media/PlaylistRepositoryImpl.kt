@@ -18,17 +18,10 @@ class PlaylistsRepositoryImpl(
         )
     }
 
-    override fun showPlaylists(): Flow<List<Playlist>> = flow {
-        val playlists = appDB.playlistsDAO().showPlaylists().map {
-            DbConverter.convertPlaylistEntityToPlaylist(it)
-        }
-        emit(playlists)
-    }
-
     override suspend fun updatePlaylist(playlist: Playlist, track: TrackData) {
 
         val updatedPlaylistTracksId = playlist.tracksId.toMutableList().also {
-            it.add(track.trackId.toLong())
+            it.add(track.trackId)
         }
 
         val playlistWithUpdatedTracksId = playlist.copy(
@@ -39,7 +32,16 @@ class PlaylistsRepositoryImpl(
         )
     }
 
-    override suspend fun addTrackToPlaylistsTracksStorage(track: TrackData) {
+    override fun showPlaylists(): Flow<List<Playlist>> = flow {
+        val playlists = appDB.playlistsDAO().showPlaylists().map {
+            DbConverter.convertPlaylistEntityToPlaylist(it)
+        }
+        emit(playlists)
+    }
 
+    override suspend fun addTrackToPlaylistsStorage(track: TrackData) {
+        appDB.playlistTracksDao().addTrackToDb(
+            DbConverter.convertTrackToPlaylistTrackEntity(track)
+        )
     }
 }

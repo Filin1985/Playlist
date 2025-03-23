@@ -5,9 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.data.search.mappers.TrackListMapper
 import com.example.playlistmaker.domain.favorites.interfaces.DeleteFavoriteTrackUseCase
 import com.example.playlistmaker.domain.favorites.interfaces.GetFavoriteTracksIdsUseCase
 import com.example.playlistmaker.domain.favorites.interfaces.InsertFavoriteTrackUseCase
+import com.example.playlistmaker.domain.mediateca.playlists.model.Playlist
 import com.example.playlistmaker.domain.player.interfaces.CompletionUseCase
 import com.example.playlistmaker.domain.player.interfaces.DestroyPlayerUseCase
 import com.example.playlistmaker.domain.player.interfaces.GetCurrentPlayerTrackTimeUseCase
@@ -17,6 +19,11 @@ import com.example.playlistmaker.domain.player.interfaces.PlayTrackUseCase
 import com.example.playlistmaker.domain.player.interfaces.PlaybackTrackUseCase
 import com.example.playlistmaker.domain.player.interfaces.PreparePlayerUseCase
 import com.example.playlistmaker.domain.player.model.MediaPlayerState
+import com.example.playlistmaker.domain.player.model.TrackPlaylistState
+import com.example.playlistmaker.domain.playlist.interfaces.AddTrackToPlaylistUseCase
+import com.example.playlistmaker.domain.playlist.interfaces.ShowPlaylistUseCase
+import com.example.playlistmaker.domain.playlist.interfaces.UpdatePlaylistUseCase
+import com.example.playlistmaker.domain.playlist.model.PlaylistStatus
 import com.example.playlistmaker.domain.search.model.TrackData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -36,7 +43,10 @@ class PlayerVewModel(
     private val setCompletionPlayer: CompletionUseCase,
     private val deleteTrackFromFavorite: DeleteFavoriteTrackUseCase,
     private val insertTrackToFavorite: InsertFavoriteTrackUseCase,
-    private val getTrackIdsFromDb: GetFavoriteTracksIdsUseCase
+    private val getTrackIdsFromDb: GetFavoriteTracksIdsUseCase,
+    private val showPlaylistsUseCase: ShowPlaylistUseCase,
+    private val addTrackToPlaylistUseCase: AddTrackToPlaylistUseCase,
+    private val updatePlaylistUseCase: UpdatePlaylistUseCase
 ) : ViewModel() {
 
     private val stateMutableLiveData = MutableLiveData<MediaPlayerState>().also {
@@ -53,6 +63,14 @@ class PlayerVewModel(
     val isTrackInFavoriteLiveData: LiveData<Boolean> = isTrackInFavoriteMutableData
 
     private var timerJob: Job? = null
+
+    private val playlists = mutableListOf<Playlist>()
+
+    private val playlistMutableLiveData = MutableLiveData<List<Playlist>>(playlists)
+    val playlistLiveData: LiveData<List<Playlist>> = playlistMutableLiveData
+
+    private val playlistStateMutableLiveData = MutableLiveData<TrackPlaylistState>(TrackPlaylistState.TRACK_IS_ADDED_UNKNOWN)
+    val playlistStateLiveData: LiveData<TrackPlaylistState> = playlistStateMutableLiveData
 
     init {
         preparePlayer.execute(track) {
@@ -107,6 +125,33 @@ class PlayerVewModel(
             }
             val isTrackInFavorite = trackFromDb.contains(track.trackId)
             isTrackInFavoriteMutableData.postValue(isTrackInFavorite)
+        }
+    }
+
+    fun showPlaylists() {
+        playlists.clear()
+        viewModelScope.launch(Dispatchers.IO) {
+            showPlaylistsUseCase.execute().collect {
+                playlists.addAll(it)
+                if (playlists.isNotEmpty()) {
+                    playlistMutableLiveData.postValue(playlists)
+                }
+            }
+        }
+    }
+
+    fun addTrackToPlaylist(playlist: Playlist) {
+        if (playlist.tracksId.contains(track.trackId)) {
+            playlistStateMutableLiveData.value = TrackPlaylistState.TRACK_IS_ALREADY_ADDED
+        } else {
+            viewModelScope.launch(Dispatchers.IO) {
+                addTrackToPlaylistUseCase.execute(track = track)
+                updatePlaylistUseCase.execute(
+                    playlist = playlist,
+                    track = track
+                )
+            }
+            playlistStateMutableLiveData.postValue(TrackPlaylistState.TRACK_IS_ADDED)
         }
     }
 
