@@ -1,25 +1,27 @@
-package com.example.playlistmaker.ui.player.activity
+package com.example.playlistmaker.ui.player.fragment
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageView
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivityPlayerBinding
+import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.domain.mediateca.playlists.model.Playlist
 import com.example.playlistmaker.domain.player.model.MediaPlayerState
 import com.example.playlistmaker.domain.player.model.TrackPlaylistState
-import com.example.playlistmaker.domain.playlist.model.PlaylistStatus
 import com.example.playlistmaker.domain.search.model.TrackData
+import com.example.playlistmaker.ui.player.activity.PlayerBottomSheetAdapter
 import com.example.playlistmaker.ui.player.view_model.PlayerVewModel
-import com.example.playlistmaker.ui.search.fragment.SearchFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -27,20 +29,30 @@ import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityPlayerBinding
-    private lateinit var track: TrackData
+class PlayerFragment : Fragment() {
+    private var _binding: FragmentPlayerBinding? = null
+    private val binding get() = _binding!!
+    private val track: String by lazy {
+        requireArguments().getString(TRACK) ?: throw IllegalStateException("Track data not found")
+    }
     private val viewModel: PlayerVewModel by viewModel { parametersOf(track) }
     private lateinit var adapter: PlayerBottomSheetAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentPlayerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        track = Gson().fromJson(intent.getStringExtra(SearchFragment.TRACK), TrackData::class.java)
+        val trackData = Gson().fromJson(track, TrackData::class.java)
+
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).also {
             it.state = BottomSheetBehavior.STATE_HIDDEN
 
@@ -50,12 +62,14 @@ class PlayerActivity : AppCompatActivity() {
                         BottomSheetBehavior.STATE_HIDDEN -> {
                             binding.overlay.isVisible = false
                         }
+
                         else -> {
                             binding.overlay.isVisible = true
                         }
                     }
                 }
-                override fun onSlide(bottomSheet: View, slideOffset: Float) { }
+
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {}
             })
         }
 
@@ -65,9 +79,10 @@ class PlayerActivity : AppCompatActivity() {
             showTrackAddingToPlaylistResult(viewModel.playlistStateLiveData.value!!, it)
         }
         binding.recyclerViewPlaylists.adapter = adapter
-        binding.recyclerViewPlaylists.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.recyclerViewPlaylists.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.arrowBackPlayer.setOnClickListener {
-            finish()
+            findNavController().popBackStack()
         }
 
         binding.addToPlaylist.setOnClickListener {
@@ -76,49 +91,53 @@ class PlayerActivity : AppCompatActivity() {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
-        viewModel.playlistLiveData.observe(this) {
+        viewModel.playlistLiveData.observe(viewLifecycleOwner) {
             if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
                 adapter.notifyDataSetChanged()
             }
         }
 
-        viewModel.stateLiveData.observe(this) {
+        viewModel.stateLiveData.observe(viewLifecycleOwner) {
             stateRender(it)
         }
 
-        viewModel.playTrackProgressLiveData.observe(this) {
+        viewModel.playTrackProgressLiveData.observe(viewLifecycleOwner) {
             playTimeRender(it)
         }
 
-        viewModel.isTrackInFavoriteLiveData.observe(this) {
+        viewModel.isTrackInFavoriteLiveData.observe(viewLifecycleOwner) {
             toggleFavoriteTrack(it)
         }
 
-        val albumCover = findViewById<ImageView>(R.id.album_cover)
+        val albumCover = binding.albumCover
         Glide.with(albumCover)
-            .load(track.artworkUrl100.replaceAfterLast("/", "512x512bb.jpg"))
+            .load(trackData.artworkUrl100.replaceAfterLast("/", "512x512bb.jpg"))
             .placeholder(R.drawable.default_art_work)
             .transform(RoundedCorners(albumCover.resources.getDimensionPixelSize(R.dimen.art_work)))
             .into(albumCover)
 
-        binding.playerSongName.text = track.trackName
+        binding.playerSongName.text = trackData.trackName
 
-        binding.playerBand.text = track.artistName
+        binding.playerBand.text = trackData.artistName
 
-        if (track.collectionName.isEmpty()) {
+        if (trackData.collectionName.isEmpty()) {
             binding.albumCover.visibility = View.GONE
-        } else binding.playerAlbumData.text = track.collectionName
+        } else binding.playerAlbumData.text = trackData.collectionName
 
-        val formatDate = SimpleDateFormat("yyyy", Locale.getDefault()).parse(track.releaseDate)
+        val formatDate = SimpleDateFormat("yyyy", Locale.getDefault()).parse(trackData.releaseDate)
         val year = formatDate?.let { SimpleDateFormat("yyyy", Locale.getDefault()).format(it) }
         binding.playerYearData.text = year
 
-        binding.playerGenreData.text = track.primaryGenreName
-        binding.playerCountryData.text = track.country
+        binding.playerGenreData.text = trackData.primaryGenreName
+        binding.playerCountryData.text = trackData.country
 
         binding.playerPlay.setOnClickListener {
             viewModel.playControl()
             viewModel.startTimer()
+        }
+
+        binding.createNewPlaylistButton.setOnClickListener {
+            findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
         }
 
         binding.playerLike.setOnClickListener {
@@ -160,20 +179,24 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun toggleFavoriteTrack(isTrackInFavorite: Boolean?) {
-        val likeImage = if(isTrackInFavorite == true) R.drawable.ic_player_like_active else R.drawable.ic_player_like
-        binding.playerLike.setImageDrawable(getDrawable(likeImage))
+        val likeImage =
+            if (isTrackInFavorite == true) R.drawable.ic_player_like_active else R.drawable.ic_player_like
+        binding.playerLike.setImageDrawable(ContextCompat.getDrawable(requireContext(), likeImage))
     }
 
-    private fun showTrackAddingToPlaylistResult(trackPlaylistRelationship: TrackPlaylistState, playlist: Playlist) {
+    private fun showTrackAddingToPlaylistResult(
+        trackPlaylistRelationship: TrackPlaylistState,
+        playlist: Playlist
+    ) {
         if (trackPlaylistRelationship == TrackPlaylistState.TRACK_IS_ALREADY_ADDED) {
             Toast.makeText(
-                this,
+                requireContext(),
                 resources.getString(R.string.track_is_already_in_playlist).format(playlist.title),
                 Toast.LENGTH_SHORT
             ).show()
         } else {
             Toast.makeText(
-                this,
+                requireContext(),
                 resources.getString(R.string.track_is_added_to_playlist).format(playlist.title),
                 Toast.LENGTH_SHORT
             ).show()
@@ -184,7 +207,7 @@ class PlayerActivity : AppCompatActivity() {
     companion object {
         const val TRACK = "TRACK"
 
-        fun createArgs(encodedTrack: String) : Bundle {
+        fun createArgs(encodedTrack: String): Bundle {
             return bundleOf(TRACK to encodedTrack)
         }
     }

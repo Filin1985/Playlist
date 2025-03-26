@@ -25,6 +25,7 @@ import com.example.playlistmaker.domain.playlist.interfaces.ShowPlaylistUseCase
 import com.example.playlistmaker.domain.playlist.interfaces.UpdatePlaylistUseCase
 import com.example.playlistmaker.domain.playlist.model.PlaylistStatus
 import com.example.playlistmaker.domain.search.model.TrackData
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -32,7 +33,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PlayerVewModel(
-    private val track: TrackData,
+    private val track: String,
     private val preparePlayer: PreparePlayerUseCase,
     private val destroyPlayer: DestroyPlayerUseCase,
     private val pausePlayer: PauseTrackUseCase,
@@ -53,6 +54,7 @@ class PlayerVewModel(
         it.value = getPlayerState.execute()
     }
     val stateLiveData: LiveData<MediaPlayerState> = stateMutableLiveData
+    val trackData = Gson().fromJson(track, TrackData::class.java)
 
     private val playTrackProgressMutableLiveData = MutableLiveData<Int>().also {
         it.value = getPlayerTime.execute()
@@ -73,7 +75,7 @@ class PlayerVewModel(
     val playlistStateLiveData: LiveData<TrackPlaylistState> = playlistStateMutableLiveData
 
     init {
-        preparePlayer.execute(track) {
+        preparePlayer.execute(trackData) {
             stateMutableLiveData.postValue(MediaPlayerState.STATE_PREPARED)
         }
         setCompletionPlayer.execute {
@@ -108,10 +110,10 @@ class PlayerVewModel(
         viewModelScope.launch(Dispatchers.IO) {
             if(isTrackInFavoriteMutableData.value == true) {
                 isTrackInFavoriteMutableData.postValue(false)
-                deleteTrackFromFavorite.execute(track)
+                deleteTrackFromFavorite.execute(trackData)
             } else {
                 isTrackInFavoriteMutableData.postValue(true)
-                insertTrackToFavorite.execute(track)
+                insertTrackToFavorite.execute(trackData)
             }
         }
     }
@@ -123,7 +125,7 @@ class PlayerVewModel(
             getTrackIdsFromDb.execute().collect {
                 trackFromDb.addAll(it)
             }
-            val isTrackInFavorite = trackFromDb.contains(track.trackId)
+            val isTrackInFavorite = trackFromDb.contains(trackData.trackId)
             isTrackInFavoriteMutableData.postValue(isTrackInFavorite)
         }
     }
@@ -141,14 +143,14 @@ class PlayerVewModel(
     }
 
     fun addTrackToPlaylist(playlist: Playlist) {
-        if (playlist.tracksId.contains(track.trackId)) {
+        if (playlist.tracksId.contains(trackData.trackId)) {
             playlistStateMutableLiveData.value = TrackPlaylistState.TRACK_IS_ALREADY_ADDED
         } else {
             viewModelScope.launch(Dispatchers.IO) {
-                addTrackToPlaylistUseCase.execute(track = track)
+                addTrackToPlaylistUseCase.execute(track = trackData)
                 updatePlaylistUseCase.execute(
                     playlist = playlist,
-                    track = track
+                    track = trackData
                 )
             }
             playlistStateMutableLiveData.postValue(TrackPlaylistState.TRACK_IS_ADDED)

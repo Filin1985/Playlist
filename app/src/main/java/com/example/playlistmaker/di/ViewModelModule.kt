@@ -1,5 +1,6 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.ui.media.favourite.view_model.MediaFavouriteViewModel
 import com.example.playlistmaker.ui.media.playlist.view_model.MediaNewPlaylistViewModel
 import com.example.playlistmaker.ui.media.playlist.view_model.MediaPlaylistViewModel
@@ -23,9 +24,9 @@ val viewModuleModule = module {
         SearchViewModel(get(), get(), get(), get())
     }
 
-    viewModel<PlayerVewModel> { params ->
+    viewModel<PlayerVewModel> { (track: String) ->
         PlayerVewModel(
-            track = params.get(),
+            track = track,
             preparePlayer = get(),
             destroyPlayer = get(),
             pausePlayer = get(),

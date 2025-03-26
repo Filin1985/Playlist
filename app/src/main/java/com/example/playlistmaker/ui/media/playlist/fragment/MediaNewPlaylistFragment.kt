@@ -92,7 +92,7 @@ class MediaNewPlaylistFragment : Fragment() {
 
     private fun closeWithoutSaving() {
         if (binding.playlistDescriptionInputEditText.text?.isNotBlank() == true
-            || binding.playlistDescriptionInputEditText.text?.isNotBlank() == true
+            || binding.playlistTitleInputEditText.text?.isNotBlank() == true
             || viewModel.playlistUriLiveData.value != null
         ) {
             dialogModal.show()
