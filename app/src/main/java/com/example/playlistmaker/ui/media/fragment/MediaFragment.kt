@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentMediaBinding
 import com.example.playlistmaker.presentation.media.MediaViewPageAdapter
-import com.example.playlistmaker.ui.media.view_model.MediaFavouriteViewModel
+import com.example.playlistmaker.ui.media.favourite.view_model.MediaFavouriteViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.media.fragment
+package com.example.playlistmaker.ui.media.favourite.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,9 +13,8 @@ import com.example.playlistmaker.databinding.FragmentMediaFavouriteBinding
 import com.example.playlistmaker.domain.favorites.model.FavoriteTracksState
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.presentation.search.TrackAdapter
-import com.example.playlistmaker.ui.media.view_model.MediaFavouriteViewModel
-import com.example.playlistmaker.ui.player.activity.PlayerActivity
-import com.example.playlistmaker.ui.search.view_model.SearchViewModel
+import com.example.playlistmaker.ui.media.favourite.view_model.MediaFavouriteViewModel
+import com.example.playlistmaker.ui.player.fragment.PlayerFragment
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -60,7 +59,7 @@ class MediaFragmentFavourite : Fragment() {
                 viewModel.clickOnTrackDebounce(track)
                 findNavController().navigate(
                     R.id.action_mediaFragment_to_playerActivity,
-                    PlayerActivity.createArgs(Gson().toJson(track))
+                    PlayerFragment.createArgs(Gson().toJson(track))
                 )
             }
         }

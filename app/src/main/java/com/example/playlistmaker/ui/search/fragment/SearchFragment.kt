@@ -17,7 +17,7 @@ import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.search.model.SearchState
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.presentation.search.TrackAdapter
-import com.example.playlistmaker.ui.player.activity.PlayerActivity
+import com.example.playlistmaker.ui.player.fragment.PlayerFragment
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -200,9 +200,10 @@ class SearchFragment: Fragment() {
         return { track: TrackData ->
             if (viewModel.isClickAllowedLiveData.value!!) {
                 viewModel.clickOnTrackDebounce(track)
+                Log.d("TRACK DATA--------------", Gson().toJson(track))
                 findNavController().navigate(
                     R.id.action_searchFragment_to_playerActivity,
-                    PlayerActivity.createArgs(Gson().toJson(track))
+                    PlayerFragment.createArgs(Gson().toJson(track))
                 )
                 viewModel.writeTrackToList(track)
                 historyTrackListAdapter.notifyDataSetChanged()

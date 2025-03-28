@@ -1,10 +1,9 @@
 package com.example.playlistmaker.di
 
-import com.example.playlistmaker.domain.favorites.interfaces.GetFavoriteTracksIdsUseCase
-import com.example.playlistmaker.domain.favorites.interfaces.InsertFavoriteTrackUseCase
 import com.example.playlistmaker.domain.search.model.TrackData
-import com.example.playlistmaker.ui.media.view_model.MediaFavouriteViewModel
-import com.example.playlistmaker.ui.media.view_model.MediaPlaylistViewModel
+import com.example.playlistmaker.ui.media.favourite.view_model.MediaFavouriteViewModel
+import com.example.playlistmaker.ui.media.playlist.view_model.MediaNewPlaylistViewModel
+import com.example.playlistmaker.ui.media.playlist.view_model.MediaPlaylistViewModel
 import com.example.playlistmaker.ui.player.view_model.PlayerVewModel
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
 import com.example.playlistmaker.ui.settings.view_model.SettingsViewModel
@@ -25,9 +24,9 @@ val viewModuleModule = module {
         SearchViewModel(get(), get(), get(), get())
     }
 
-    viewModel<PlayerVewModel> { params ->
+    viewModel<PlayerVewModel> { (track: String) ->
         PlayerVewModel(
-            track = params.get(),
+            track = track,
             preparePlayer = get(),
             destroyPlayer = get(),
             pausePlayer = get(),
@@ -38,7 +37,10 @@ val viewModuleModule = module {
             setCompletionPlayer = get(),
             deleteTrackFromFavorite = get(),
             insertTrackToFavorite = get(),
-            getTrackIdsFromDb = get()
+            getTrackIdsFromDb = get(),
+            showPlaylistsUseCase = get(),
+            addTrackToPlaylistUseCase = get(),
+            updatePlaylistUseCase = get()
         )
     }
 
@@ -47,6 +49,10 @@ val viewModuleModule = module {
     }
 
     viewModel<MediaPlaylistViewModel> {
-        MediaPlaylistViewModel()
+        MediaPlaylistViewModel(showPlaylistsUseCase = get())
+    }
+
+    viewModel<MediaNewPlaylistViewModel> {
+        MediaNewPlaylistViewModel(createNewPlaylistUseCase = get())
     }
 }

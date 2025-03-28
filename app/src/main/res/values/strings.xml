@@ -28,4 +28,24 @@
     <string name="like_icon">Кнопка понравилось</string>
     <string name="play_icon">Кнопка воспроизвести</string>
     <string name="default_time">00:00</string>
+    <string name="playlist_title">Название*</string>
+    <string name="playlist_description">Описание</string>
+    <string name="playlist_required">Обязательное поле</string>
+    <string name="playlist_create">Создать</string>
+    <string name="playlist_create_complete">Завершить создание плейлиста?</string>
+    <string name="playlist_create_lost">Все несохраненные данные будут потеряны</string>
+    <string name="playlist_create_cancel">Отмена</string>
+    <string name="playlist_create_accept">Завершить</string>
+    <string name="playlist_created">Плейлист %1$s создан</string>
+    <plurals name="playlist_plurals">
+        <item quantity="zero">%1$d треков</item>
+        <item quantity="one">%1$d трек</item>
+        <item quantity="two">%1$d трека</item>
+        <item quantity="few">%1$d трека</item>
+        <item quantity="many">%1$d треков</item>
+        <item quantity="other">%1$d треков</item>
+    </plurals>
+    <string name="playlist_add">Добавить в плейлист</string>
+    <string name="track_is_added_to_playlist">Добавлено в плейлист %1$s</string>
+    <string name="track_is_already_in_playlist">Трек уже добавлен в плейлист %1$s</string>
 </resources>

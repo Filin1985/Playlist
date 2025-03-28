@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".App"
@@ -17,7 +19,11 @@
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
         tools:targetApi="35">
         <activity
-            android:name=".ui.player.activity.PlayerActivity"
+            android:name=".ui.media.playlist.fragment.MediaNewPlaylistFragment"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
+        <activity
+            android:name=".ui.player.fragment.PlayerFragment"
             android:exported="false" />
         <activity
             android:name=".ui.root.RootActivity"
