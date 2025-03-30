@@ -5,6 +5,7 @@ import com.example.playlistmaker.ui.media.favourite.view_model.MediaFavouriteVie
 import com.example.playlistmaker.ui.media.playlist.view_model.MediaNewPlaylistViewModel
 import com.example.playlistmaker.ui.media.playlist.view_model.MediaPlaylistViewModel
 import com.example.playlistmaker.ui.player.view_model.PlayerVewModel
+import com.example.playlistmaker.ui.playlistDetails.view_model.DetailPlaylistViewModel
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
 import com.example.playlistmaker.ui.settings.view_model.SettingsViewModel
 import com.example.playlistmaker.ui.settings.view_model.ThemeViewModel
@@ -54,5 +55,13 @@ val viewModuleModule = module {
 
     viewModel<MediaNewPlaylistViewModel> {
         MediaNewPlaylistViewModel(createNewPlaylistUseCase = get())
+    }
+
+    viewModel<DetailPlaylistViewModel>() { (playlistId: Int) ->
+        DetailPlaylistViewModel(
+            playlistId = playlistId,
+            getPlaylistByIdUseCase = get(),
+            getTracksFromPlaylistUseCase = get(),
+        )
     }
 }

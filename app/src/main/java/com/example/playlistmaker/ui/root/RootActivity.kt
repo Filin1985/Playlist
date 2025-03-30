@@ -25,6 +25,7 @@ class RootActivity : AppCompatActivity() {
                 binding.bottomNavigationView.isVisible = when (destination.id) {
                     R.id.newPlaylistFragment -> false
                     R.id.playerFragment -> false
+                    R.id.playlistDetailFragment -> false
                     else -> true
                 }
             }

@@ -32,6 +32,10 @@ import com.example.playlistmaker.domain.playlist.interfaces.AddTrackToPlaylistUs
 import com.example.playlistmaker.domain.playlist.interfaces.CreateNewPlaylistUseCase
 import com.example.playlistmaker.domain.playlist.interfaces.ShowPlaylistUseCase
 import com.example.playlistmaker.domain.playlist.interfaces.UpdatePlaylistUseCase
+import com.example.playlistmaker.domain.playlistDetails.impl.GetPlaylistByIdUseCaseImpl
+import com.example.playlistmaker.domain.playlistDetails.impl.GetTracksFromPlaylistUseCaseImpl
+import com.example.playlistmaker.domain.playlistDetails.interfaces.GetPlaylistByIdUseCase
+import com.example.playlistmaker.domain.playlistDetails.interfaces.GetTracksFromPlaylistUseCase
 import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.impl.AddTracksToHistoryListImlp
 import com.example.playlistmaker.domain.search.impl.ClearTracksHistoryListImpl
@@ -157,5 +161,13 @@ val domainModule = module {
 
     factory<AddTrackToPlaylistUseCase> {
         AddTrackToPlaylistUseCaseImpl(get())
+    }
+
+    factory<GetPlaylistByIdUseCase> {
+        GetPlaylistByIdUseCaseImpl(get())
+    }
+
+    factory<GetTracksFromPlaylistUseCase> {
+        GetTracksFromPlaylistUseCaseImpl(get())
     }
 }

@@ -19,6 +19,10 @@ import com.example.playlistmaker.data.sharing.impl.ExternalNavigatorImpl
 import com.example.playlistmaker.domain.favorites.FavoriteTracksRepository
 import com.example.playlistmaker.domain.mediateca.playlists.PlaylistsRepository
 import com.example.playlistmaker.domain.player.MediaPlayerRepository
+import com.example.playlistmaker.domain.playlistDetails.impl.GetPlaylistByIdUseCaseImpl
+import com.example.playlistmaker.domain.playlistDetails.impl.GetTracksFromPlaylistUseCaseImpl
+import com.example.playlistmaker.domain.playlistDetails.interfaces.GetPlaylistByIdUseCase
+import com.example.playlistmaker.domain.playlistDetails.interfaces.GetTracksFromPlaylistUseCase
 import com.example.playlistmaker.domain.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.domain.sharing.ExternalNavigator

@@ -16,4 +16,7 @@ interface PlaylistsDAO {
 
     @Update(entity = PlaylistEntity::class)
     fun updatePlaylist(playlistEntity: PlaylistEntity)
+
+    @Query("SELECT * FROM playlists WHERE id = :playlistId")
+    fun getPlaylist(playlistId: Int) : PlaylistEntity
 }

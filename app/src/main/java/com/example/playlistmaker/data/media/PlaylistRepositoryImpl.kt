@@ -44,4 +44,18 @@ class PlaylistsRepositoryImpl(
             DbConverter.convertTrackToPlaylistTrackEntity(track)
         )
     }
+
+    override suspend fun getPlaylistById(playlistId: Int): Playlist {
+        return DbConverter.convertPlaylistEntityToPlaylist(
+            appDB.playlistsDAO().getPlaylist(playlistId)
+        )
+    }
+
+    override fun getTracksFromPlaylist(tracksId: List<String>): Flow<List<TrackData>> = flow {
+        val tracks = appDB.playlistTracksDao().getPlaylistsTracks().map {
+            DbConverter.convertTrackEntityToTrack(it)
+        }.filter { tracksId.contains(it.trackId)  }
+
+        emit(tracks)
+    }
 }

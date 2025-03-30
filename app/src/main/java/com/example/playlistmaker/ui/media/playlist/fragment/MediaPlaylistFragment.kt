@@ -1,6 +1,8 @@
 package com.example.playlistmaker.ui.media.playlist.fragment
 
 import android.os.Bundle
+import android.text.Layout.Directions
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +14,12 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentMediaPlaylistBinding
 import com.example.playlistmaker.domain.mediateca.playlists.model.Playlist
 import com.example.playlistmaker.domain.playlist.model.PlaylistStatus
+import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.presentation.media.playlist.PlaylistAdapter
 import com.example.playlistmaker.ui.media.playlist.view_model.MediaPlaylistViewModel
+import com.example.playlistmaker.ui.player.fragment.PlayerFragment
+import com.example.playlistmaker.ui.playlistDetails.fragment.DetailPlaylistFragment
+import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MediaPlaylistFragment : Fragment() {
@@ -42,11 +48,17 @@ class MediaPlaylistFragment : Fragment() {
             )
         }
 
-        viewModel.showPlaylists()
-
         _adapter = PlaylistAdapter(viewModel.playlistLiveData.value!!)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+
+        adapter.listener = {
+            Log.d("PLAYLIST_ID_IN-------------", "${it.id}")
+            findNavController().navigate(
+                R.id.action_playListMediaFragment_to_playlistDetail,
+                DetailPlaylistFragment.createArgs(it.id)
+            )
+        }
 
         viewModel.playlistStatusLiveData.observe(viewLifecycleOwner) {
             renderResult(it)
