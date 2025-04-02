@@ -26,6 +26,7 @@ class RootActivity : AppCompatActivity() {
                     R.id.newPlaylistFragment -> false
                     R.id.playerFragment -> false
                     R.id.playlistDetailFragment -> false
+                    R.id.playlistEditFragment -> false
                     else -> true
                 }
             }

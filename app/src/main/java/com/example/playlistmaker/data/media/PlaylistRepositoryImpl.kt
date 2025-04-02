@@ -1,5 +1,6 @@
 package com.example.playlistmaker.data.mediateca
 
+import androidx.core.net.toUri
 import com.example.playlistmaker.data.convertes.DbConverter
 import com.example.playlistmaker.data.db.AppDB
 import com.example.playlistmaker.domain.mediateca.playlists.PlaylistsRepository
@@ -7,6 +8,7 @@ import com.example.playlistmaker.domain.mediateca.playlists.model.Playlist
 import com.example.playlistmaker.domain.search.model.TrackData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import java.io.File
 
 class PlaylistsRepositoryImpl(
     private val appDB: AppDB
@@ -29,6 +31,12 @@ class PlaylistsRepositoryImpl(
         )
         appDB.playlistsDAO().updatePlaylist(
             DbConverter.convertPlaylistToPlaylistEntity(playlistWithUpdatedTracksId)
+        )
+    }
+
+    override suspend fun updatePlaylist(newPlaylist: Playlist) {
+        appDB.playlistsDAO().updatePlaylist(
+            DbConverter.convertPlaylistToPlaylistEntity(newPlaylist)
         )
     }
 
@@ -81,6 +89,18 @@ class PlaylistsRepositoryImpl(
 
         if (!somePlaylistsContainTrack) {
             appDB.playlistTracksDao().deleteTrackFromDB(trackId)
+        }
+    }
+
+    override suspend fun deletePlaylist(playlist: Playlist) {
+        appDB.playlistsDAO().deletePlaylist(
+            DbConverter.convertPlaylistToPlaylistEntity(playlist)
+        )
+        playlist.tracksId.forEach {
+            deleteTrackFromPlaylistsTracks(it, playlist)
+        }
+        playlist.coverUri?.let {
+            it.toString().toUri().path?.let { File(it).delete() }
         }
     }
 }

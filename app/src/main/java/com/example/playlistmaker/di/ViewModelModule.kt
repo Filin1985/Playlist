@@ -4,6 +4,7 @@ import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.ui.media.favourite.view_model.MediaFavouriteViewModel
 import com.example.playlistmaker.ui.media.playlist.view_model.MediaNewPlaylistViewModel
 import com.example.playlistmaker.ui.media.playlist.view_model.MediaPlaylistViewModel
+import com.example.playlistmaker.ui.media.playlist.view_model.PlaylistEditViewModel
 import com.example.playlistmaker.ui.player.view_model.PlayerVewModel
 import com.example.playlistmaker.ui.playlistDetails.view_model.DetailPlaylistViewModel
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
@@ -64,6 +65,15 @@ val viewModuleModule = module {
             getTracksFromPlaylistUseCase = get(),
             deleteTrackFromPlaylistUseCase = get(),
             sharePlaylistUseCase = get(),
+            deletePlaylistUseCase = get(),
+        )
+    }
+
+    viewModel<PlaylistEditViewModel>() { (playlistId: Int) ->
+        PlaylistEditViewModel(
+            playlistId = playlistId,
+            getPlaylistByIdUseCase = get(),
+            updatePlaylistUseCase = get(),
         )
     }
 }

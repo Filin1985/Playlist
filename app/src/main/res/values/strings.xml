@@ -62,4 +62,11 @@
     <string name="no">Нет</string>
     <string name="playlist_detail_no_tracks">В этом плейлисте нет списка треков, которым можно поделиться</string>
     <string name="track_detail_message">%1$d. %2$s - %3$s (%4$s)</string>
+    <string name="playlist_detail_more_share">Поделиться</string>
+    <string name="playlist_detail_more_edit">Редактировать информацию</string>
+    <string name="playlist_detail_more_delete">Удалить плейлист</string>
+    <string name="want_to_delete_playlist">Хотите удалить плейлист?</string>
+
+    <string name="save_edit_playlist">Сохранить</string>
+    <string name="edit_playlist">Редактировать</string>
 </resources>

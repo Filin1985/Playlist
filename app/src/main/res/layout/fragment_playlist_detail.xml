@@ -124,7 +124,7 @@
         android:id="@+id/overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black_day_white_night"
+        android:background="@color/transparent_black"
         android:visibility="gone" />
 
     <LinearLayout
@@ -205,10 +205,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/ys_display_regular"
+            android:layout_marginTop="20dp"
             android:paddingHorizontal="@dimen/detail_playlist_image_padding_hor"
             android:paddingVertical="@dimen/detail_playlist_image_padding_ver"
-            android:text="@string/share"
-            android:textColor="?attr/colorOnPrimary"
+            android:text="@string/playlist_detail_more_share"
+            android:textColor="@color/black_day_white_night"
             android:textSize="@dimen/detail_playlist_text_less" />
 
         <TextView
@@ -218,7 +219,7 @@
             android:fontFamily="@font/ys_display_regular"
             android:paddingHorizontal="@dimen/detail_playlist_image_padding_hor"
             android:paddingVertical="@dimen/detail_playlist_image_padding_ver"
-            android:text="@string/playlist_detail_delete"
+            android:text="@string/playlist_detail_more_edit"
             android:textColor="@color/black_day_white_night"
             android:textSize="@dimen/detail_playlist_text_less" />
 
@@ -229,7 +230,7 @@
             android:fontFamily="@font/ys_display_regular"
             android:paddingHorizontal="@dimen/detail_playlist_image_padding_hor"
             android:paddingVertical="@dimen/detail_playlist_image_padding_ver"
-            android:text="@string/playlist_detail_delete"
+            android:text="@string/playlist_detail_more_delete"
             android:textColor="@color/black_day_white_night"
             android:textSize="@dimen/detail_playlist_text_less" />
 

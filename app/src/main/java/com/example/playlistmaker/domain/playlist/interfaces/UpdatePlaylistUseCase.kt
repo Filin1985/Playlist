@@ -5,4 +5,6 @@ import com.example.playlistmaker.domain.search.model.TrackData
 
 interface UpdatePlaylistUseCase {
     suspend fun execute(playlist: Playlist, track: TrackData)
+
+    suspend fun execute(playlist: Playlist)
 }

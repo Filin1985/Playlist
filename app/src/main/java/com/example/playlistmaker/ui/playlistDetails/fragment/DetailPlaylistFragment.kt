@@ -89,6 +89,27 @@ class DetailPlaylistFragment : Fragment() {
             sendPlaylistMessage()
         }
 
+        binding.menuBtn.setOnClickListener {
+            menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            binding.menuBottomSheet.visibility = View.VISIBLE
+        }
+
+        binding.shareMenuBottomSheet.setOnClickListener {
+            sendPlaylistMessage()
+        }
+
+        binding.deleteMenuBottomSheet.setOnClickListener {
+            val deletePlaylistDialog = createRemovePlaylistDialog()
+            deletePlaylistDialog.show()
+        }
+
+        binding.editMenuBottomSheet.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_playlistFragment_to_playlistEditFragment,
+                createArgs(playlistId)
+            )
+        }
+
         setBottomSheets()
     }
 
@@ -235,6 +256,22 @@ class DetailPlaylistFragment : Fragment() {
         }
 
         return message.toString()
+    }
+
+    private fun createRemovePlaylistDialog(): MaterialAlertDialogBuilder {
+        val dialogListener = DialogInterface.OnClickListener { _, which ->
+            when (which) {
+                DialogInterface.BUTTON_POSITIVE -> {
+                    viewModel.deletePlaylist()
+                    findNavController().navigateUp()
+                }
+            }
+        }
+        return MaterialAlertDialogBuilder(requireContext(), R.style.ModalStyle)
+            .setTitle(resources.getString(R.string.playlist_detail_more_delete))
+            .setMessage(resources.getString(R.string.want_to_delete_playlist))
+            .setPositiveButton(resources.getString(R.string.yes), dialogListener)
+            .setNegativeButton(resources.getString(R.string.no), dialogListener)
     }
 
     override fun onResume() {
