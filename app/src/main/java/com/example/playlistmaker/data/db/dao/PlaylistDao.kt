@@ -19,4 +19,7 @@ interface PlaylistsDAO {
 
     @Query("SELECT * FROM playlists WHERE id = :playlistId")
     fun getPlaylist(playlistId: Int) : PlaylistEntity
+
+    @Query("SELECT * FROM playlists")
+    fun getPlaylistsInstantaneously(): List<PlaylistEntity>
 }

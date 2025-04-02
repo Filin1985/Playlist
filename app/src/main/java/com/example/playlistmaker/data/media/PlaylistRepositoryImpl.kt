@@ -58,4 +58,29 @@ class PlaylistsRepositoryImpl(
 
         emit(tracks)
     }
+
+    override suspend fun deleteTrackFromPlaylist(track: TrackData, playlist: Playlist) {
+        deleteTrackFromPlaylists(track, playlist)
+        updatePlaylist(playlist, track)
+    }
+
+    private suspend fun deleteTrackFromPlaylists(track: TrackData, playlistWithDeletedTrack: Playlist) {
+        deleteTrackFromPlaylistsTracks(track.trackId, playlistWithDeletedTrack)
+    }
+
+    private suspend fun deleteTrackFromPlaylistsTracks(trackId: String, playlistWithDeletedTrack: Playlist) {
+
+        val playlists = appDB.playlistsDAO().getPlaylistsInstantaneously().map { DbConverter.convertPlaylistEntityToPlaylist(it) }
+        var somePlaylistsContainTrack = false
+
+        playlists.forEach {
+            if (it.tracksId.contains(trackId) && it.id != playlistWithDeletedTrack.id) {
+                somePlaylistsContainTrack = true
+            }
+        }
+
+        if (!somePlaylistsContainTrack) {
+            appDB.playlistTracksDao().deleteTrackFromDB(trackId)
+        }
+    }
 }

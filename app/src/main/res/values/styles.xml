@@ -240,6 +240,8 @@
 
     <style name="ModalStyle" parent="MaterialAlertDialog.Material3">
         <item name="colorPrimary">@color/yp_blue</item>
+        <item name="colorSurface">@color/yp_white</item>
+        <item name="colorOnSurface">@color/black_day_black_night</item>
     </style>
 
     <style name="PlaylistItem">

@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.playlistDetails.fragment
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -27,6 +28,7 @@ import com.example.playlistmaker.ui.player.fragment.PlayerFragment
 import com.example.playlistmaker.ui.player.fragment.PlayerFragment.Companion.TRACK
 import com.example.playlistmaker.ui.playlistDetails.view_model.DetailPlaylistViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import kotlinx.serialization.json.Json
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -61,10 +63,10 @@ class DetailPlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("PLAYLIST_ID_OUT-------------", "${playlistId}")
 
         _adapter = TrackAdapter(playlistTracks)
-        adapter.eventListener = createAdapterListener()
+        adapter.eventListener = addAdapterListener()
+        adapter.longClickListener = addLongClickListener()
 
         binding.tracksRecycler.adapter = adapter
         binding.tracksRecycler.layoutManager = LinearLayoutManager(
@@ -85,7 +87,7 @@ class DetailPlaylistFragment : Fragment() {
         setBottomSheets()
     }
 
-    private fun createAdapterListener(): (TrackData) -> Unit {
+    private fun addAdapterListener(): (TrackData) -> Unit {
         return { track: TrackData ->
             if (viewModel.isClickOnTrackAllowedLiveData.value!!) {
                 viewModel.clickOnTrackDebounce()
@@ -177,6 +179,27 @@ class DetailPlaylistFragment : Fragment() {
             title.text = playlist.title
             size.text = resources.getQuantityString(R.plurals.playlist_plurals, playlist.size, playlist.size)
         }
+    }
+
+    private fun addLongClickListener(): (TrackData) -> Unit {
+        return { trackRepresentation: TrackData ->
+            val deleteTrackDialog = confirmDeleteTrackDialog(trackRepresentation)
+            deleteTrackDialog.show()
+        }
+    }
+
+    private fun confirmDeleteTrackDialog(track: TrackData): MaterialAlertDialogBuilder {
+        val dialogListener = DialogInterface.OnClickListener { _, which ->
+            when (which) {
+                DialogInterface.BUTTON_POSITIVE -> {
+                    viewModel.deleteTrack(track)
+                }
+            }
+        }
+        return MaterialAlertDialogBuilder(requireContext(), R.style.ModalStyle)
+            .setTitle(resources.getString(R.string.want_to_delete_track))
+            .setPositiveButton(resources.getString(R.string.yes), dialogListener)
+            .setNegativeButton(resources.getString(R.string.no), dialogListener)
     }
 
     override fun onResume() {

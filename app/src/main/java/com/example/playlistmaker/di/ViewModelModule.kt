@@ -62,6 +62,7 @@ val viewModuleModule = module {
             playlistId = playlistId,
             getPlaylistByIdUseCase = get(),
             getTracksFromPlaylistUseCase = get(),
+            deleteTrackFromPlaylistUseCase = get(),
         )
     }
 }

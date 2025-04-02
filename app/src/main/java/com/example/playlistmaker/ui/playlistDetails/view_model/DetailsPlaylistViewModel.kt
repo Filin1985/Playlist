@@ -5,22 +5,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.domain.playlistDetails.interfaces.DeleteTrackFromPlaylistUseCase
 import com.example.playlistmaker.domain.playlistDetails.interfaces.GetPlaylistByIdUseCase
 import com.example.playlistmaker.domain.playlistDetails.interfaces.GetTracksFromPlaylistUseCase
 import com.example.playlistmaker.domain.playlistDetails.model.PlaylistDetails
+import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.ui.mapper.TrackMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
 class DetailPlaylistViewModel(
     private val playlistId: Int,
     private val getPlaylistByIdUseCase: GetPlaylistByIdUseCase,
     private val getTracksFromPlaylistUseCase: GetTracksFromPlaylistUseCase,
+    private val deleteTrackFromPlaylistUseCase: DeleteTrackFromPlaylistUseCase
 ) : ViewModel() {
 
     private val playlistDataMutableLive = MutableLiveData<PlaylistDetails>()
@@ -63,6 +63,16 @@ class DetailPlaylistViewModel(
                 delay(CLICK_DEBOUNCE_DELAY)
                 dataIsClickOnTrackAllowedMutableLive.value = true
             }
+        }
+    }
+
+    fun deleteTrack(track: TrackData) {
+        viewModelScope.launch(Dispatchers.IO) {
+            deleteTrackFromPlaylistUseCase.execute(
+                track = track,
+                playlist = playlistLiveData.value?.playlist!!
+            )
+            getPlaylistInfo()
         }
     }
 
