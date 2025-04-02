@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.playlistDetails.interfaces.DeleteTrackFromPlaylistUseCase
 import com.example.playlistmaker.domain.playlistDetails.interfaces.GetPlaylistByIdUseCase
 import com.example.playlistmaker.domain.playlistDetails.interfaces.GetTracksFromPlaylistUseCase
+import com.example.playlistmaker.domain.playlistDetails.interfaces.SharePlaylistUseCase
 import com.example.playlistmaker.domain.playlistDetails.model.PlaylistDetails
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.ui.mapper.TrackMapper
@@ -20,7 +21,8 @@ class DetailPlaylistViewModel(
     private val playlistId: Int,
     private val getPlaylistByIdUseCase: GetPlaylistByIdUseCase,
     private val getTracksFromPlaylistUseCase: GetTracksFromPlaylistUseCase,
-    private val deleteTrackFromPlaylistUseCase: DeleteTrackFromPlaylistUseCase
+    private val deleteTrackFromPlaylistUseCase: DeleteTrackFromPlaylistUseCase,
+    private val sharePlaylistUseCase: SharePlaylistUseCase
 ) : ViewModel() {
 
     private val playlistDataMutableLive = MutableLiveData<PlaylistDetails>()
@@ -74,6 +76,10 @@ class DetailPlaylistViewModel(
             )
             getPlaylistInfo()
         }
+    }
+
+    fun sharePlaylist(playlistMessage: String) {
+        sharePlaylistUseCase.execute(playlistMessage)
     }
 
     companion object {

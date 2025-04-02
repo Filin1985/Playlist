@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -82,6 +83,10 @@ class DetailPlaylistFragment : Fragment() {
         viewModel.playlistLiveData.observe(viewLifecycleOwner) {
             render(it)
             showPlaylistTracksBottomSheet(it)
+        }
+
+        binding.iconShare.setOnClickListener {
+            sendPlaylistMessage()
         }
 
         setBottomSheets()
@@ -200,6 +205,36 @@ class DetailPlaylistFragment : Fragment() {
             .setTitle(resources.getString(R.string.want_to_delete_track))
             .setPositiveButton(resources.getString(R.string.yes), dialogListener)
             .setNegativeButton(resources.getString(R.string.no), dialogListener)
+    }
+
+    private fun sendPlaylistMessage() {
+        viewModel.playlistLiveData.value?.let {
+            if (it.tracks.isEmpty()) {
+                Toast.makeText(requireContext(), R.string.playlist_detail_no_tracks, Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.sharePlaylist(
+                    formMessage(it)
+                )
+            }
+        }
+    }
+
+    private fun formMessage(playlistInfo: PlaylistDetails): String {
+        val playlist = playlistInfo.playlist
+        val message = StringBuilder().apply {
+            appendLine(playlist.title)
+            if (playlist.description?.isNotBlank() == true) appendLine(playlist.description)
+            appendLine(resources.getQuantityString(R.plurals.playlist_plurals, playlist.size, playlist.size))
+        }
+
+        playlistInfo.tracks.forEach {
+            message.appendLine(
+                resources.getString(R.string.track_detail_message)
+                    .format(playlistInfo.tracks.indexOf(it) + 1, it.artistName, it.trackName, it.trackTimeMillis)
+            )
+        }
+
+        return message.toString()
     }
 
     override fun onResume() {

@@ -35,9 +35,11 @@ import com.example.playlistmaker.domain.playlist.interfaces.UpdatePlaylistUseCas
 import com.example.playlistmaker.domain.playlistDetails.impl.DeleteTrackFromPlaylistUseCaseImpl
 import com.example.playlistmaker.domain.playlistDetails.impl.GetPlaylistByIdUseCaseImpl
 import com.example.playlistmaker.domain.playlistDetails.impl.GetTracksFromPlaylistUseCaseImpl
+import com.example.playlistmaker.domain.playlistDetails.impl.SharePlaylistUseCaseImpl
 import com.example.playlistmaker.domain.playlistDetails.interfaces.DeleteTrackFromPlaylistUseCase
 import com.example.playlistmaker.domain.playlistDetails.interfaces.GetPlaylistByIdUseCase
 import com.example.playlistmaker.domain.playlistDetails.interfaces.GetTracksFromPlaylistUseCase
+import com.example.playlistmaker.domain.playlistDetails.interfaces.SharePlaylistUseCase
 import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.impl.AddTracksToHistoryListImlp
 import com.example.playlistmaker.domain.search.impl.ClearTracksHistoryListImpl
@@ -175,5 +177,9 @@ val domainModule = module {
 
     factory<DeleteTrackFromPlaylistUseCase> {
         DeleteTrackFromPlaylistUseCaseImpl(get())
+    }
+
+    factory<SharePlaylistUseCase> {
+        SharePlaylistUseCaseImpl(get())
     }
 }
