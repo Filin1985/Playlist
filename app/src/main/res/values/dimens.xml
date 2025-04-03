@@ -30,4 +30,11 @@
     <dimen name="playlist_button_margin_top">24dp</dimen>
     <dimen name="recycler_horizontal_margin">12dp</dimen>
     <dimen name="recycler_top_margin">16dp</dimen>
+
+    <dimen name="detail_playlist_text">18sp</dimen>
+    <dimen name="detail_playlist_text_less">16sp</dimen>
+    <dimen name="detail_playlist_text_margin_top">8dp</dimen>
+    <dimen name="detail_playlist_image_margin_top">16dp</dimen>
+    <dimen name="detail_playlist_image_padding_hor">16dp</dimen>
+    <dimen name="detail_playlist_image_padding_ver">20dp</dimen>
 </resources>

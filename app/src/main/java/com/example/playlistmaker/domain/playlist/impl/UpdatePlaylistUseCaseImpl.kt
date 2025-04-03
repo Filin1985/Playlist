@@ -9,4 +9,8 @@ class UpdatePlaylistUseCaseImpl(private val playlistsRepository: PlaylistsReposi
     override suspend fun execute(playlist: Playlist, track: TrackData) {
         playlistsRepository.updatePlaylist(playlist, track)
     }
+
+    override suspend fun execute(newPlaylist: Playlist) {
+        playlistsRepository.updatePlaylist(newPlaylist)
+    }
 }
