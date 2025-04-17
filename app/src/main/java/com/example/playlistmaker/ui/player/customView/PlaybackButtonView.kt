@@ -22,7 +22,11 @@ class PlaybackButtonView @JvmOverloads constructor(
 
     private val playImageBitmap: Bitmap?
     private val pauseImageBitmap: Bitmap?
-    private var playButtonState = PlayButtonState.STATE_PLAY
+    var playButtonState: PlayButtonState = PlayButtonState.STATE_PLAY
+        set(value) {
+            field = value
+            invalidate()
+        }
     private var imageRect = RectF(0f, 0f, 0f, 0f)
 
     init {

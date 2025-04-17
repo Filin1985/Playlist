@@ -94,7 +94,7 @@
                 app:layout_constraintTop_toBottomOf="@id/player_song_name" />
 
             <com.example.playlistmaker.ui.player.customView.PlaybackButtonView
-                android:id="@+id/customProgressView"
+                android:id="@+id/customButtonView"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="30dp"
@@ -104,15 +104,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/player_band" />
-
-            <ImageView
-                android:id="@+id/player_play"
-                style="@style/PlayerPlayButtonStyle"
-                android:contentDescription="@string/play_icon"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/player_band"
-                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/add_to_playlist"
@@ -141,7 +132,7 @@
                 android:textSize="@dimen/player_text_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/customProgressView" />
+                app:layout_constraintTop_toBottomOf="@+id/customButtonView" />
 
             <TextView
                 android:id="@+id/player_duration_text"
