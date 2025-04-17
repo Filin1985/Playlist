@@ -18,6 +18,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.domain.mediateca.playlists.model.Playlist
 import com.example.playlistmaker.domain.player.model.MediaPlayerState
+import com.example.playlistmaker.domain.player.model.PlayButtonState
 import com.example.playlistmaker.domain.player.model.TrackPlaylistState
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.ui.player.activity.PlayerBottomSheetAdapter
@@ -99,6 +100,7 @@ class PlayerFragment : Fragment() {
 
         viewModel.stateLiveData.observe(viewLifecycleOwner) {
             stateRender(it)
+            updatePlaybackButton(it)
         }
 
         viewModel.playTrackProgressLiveData.observe(viewLifecycleOwner) {
@@ -131,7 +133,7 @@ class PlayerFragment : Fragment() {
         binding.playerGenreData.text = trackData.primaryGenreName
         binding.playerCountryData.text = trackData.country
 
-        binding.playerPlay.setOnClickListener {
+        binding.customButtonView.setOnClickListener {
             viewModel.playControl()
             viewModel.startTimer()
         }
@@ -152,11 +154,10 @@ class PlayerFragment : Fragment() {
 
     private fun stateRender(playerState: MediaPlayerState) {
         when (playerState) {
-            MediaPlayerState.STATE_PLAYING -> binding.playerPlay.setImageResource(R.drawable.ic_player_pause)
-            MediaPlayerState.STATE_PAUSED -> binding.playerPlay.setImageResource(R.drawable.ic_player_play)
+            MediaPlayerState.STATE_PLAYING -> {}
+            MediaPlayerState.STATE_PAUSED -> {}
             MediaPlayerState.STATE_PREPARED -> {
                 binding.playerTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(0)
-                binding.playerPlay.setImageResource(R.drawable.ic_player_play)
             }
 
             MediaPlayerState.STATE_DEFAULT -> {}
@@ -202,6 +203,16 @@ class PlayerFragment : Fragment() {
             ).show()
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
+    }
+
+    private fun updatePlaybackButton(playerState: MediaPlayerState) {
+        binding.customButtonView.playButtonState = when (playerState) {
+            MediaPlayerState.STATE_PLAYING -> PlayButtonState.STATE_PAUSE
+            MediaPlayerState.STATE_PAUSED,
+            MediaPlayerState.STATE_PREPARED -> PlayButtonState.STATE_PLAY
+            MediaPlayerState.STATE_DEFAULT -> PlayButtonState.STATE_PLAY
+        }
+        binding.customButtonView.invalidate()
     }
 
     companion object {
