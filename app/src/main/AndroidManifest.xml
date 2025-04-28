@@ -6,6 +6,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
     <application
         android:name=".App"
@@ -16,9 +19,15 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="portrait"
+        android:enableOnBackInvokedCallback="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+
         tools:targetApi="35">
+        <service
+            android:name=".ui.service.PlayerService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
         <activity
             android:name=".ui.media.playlist.fragment.MediaNewPlaylistFragment"
             android:exported="false"

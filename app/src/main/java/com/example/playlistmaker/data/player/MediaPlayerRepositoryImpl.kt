@@ -10,6 +10,7 @@ class MediaPlayerRepositoryImpl(private var mediaPlayer: MediaPlayer) : MediaPla
     private var state = MediaPlayerState.STATE_DEFAULT
 
     override fun play() {
+        Log.d("PLAY_MEDIA_PLA_IMPL----", "${state}")
         if (state == MediaPlayerState.STATE_PREPARED || state == MediaPlayerState.STATE_PAUSED) {
             mediaPlayer.start()
             state = MediaPlayerState.STATE_PLAYING
@@ -17,6 +18,7 @@ class MediaPlayerRepositoryImpl(private var mediaPlayer: MediaPlayer) : MediaPla
     }
 
     override fun pause() {
+        Log.d("PAUSE_MEDIA_PLA_IMPL----", "${state}")
         if (state == MediaPlayerState.STATE_PLAYING) {
             mediaPlayer.pause()
             state = MediaPlayerState.STATE_PAUSED

@@ -1,15 +1,26 @@
 package com.example.playlistmaker.ui.player.fragment
 
+import android.Manifest
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -17,14 +28,19 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.domain.mediateca.playlists.model.Playlist
+import com.example.playlistmaker.domain.player.PlayerControl
 import com.example.playlistmaker.domain.player.model.MediaPlayerState
 import com.example.playlistmaker.domain.player.model.PlayButtonState
 import com.example.playlistmaker.domain.player.model.TrackPlaylistState
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.ui.player.activity.PlayerBottomSheetAdapter
 import com.example.playlistmaker.ui.player.view_model.PlayerVewModel
+import com.example.playlistmaker.ui.search.fragment.SearchFragment
+import com.example.playlistmaker.ui.service.PlayerService
+import com.example.playlistmaker.utils.Utils
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
@@ -39,6 +55,37 @@ class PlayerFragment : Fragment() {
     private val viewModel: PlayerVewModel by viewModel { parametersOf(track) }
     private lateinit var adapter: PlayerBottomSheetAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+
+    private var playerControl: PlayerControl? = null
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as PlayerService.PlayerServiceBinder
+            playerControl = binder.getService()
+            viewModel.playerControlManager(binder.getService())
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            viewModel.removePlayerControl()
+        }
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            bindMusicService()
+        } else {
+            Utils.showSnackbar(binding.root, getString(R.string.no_permission), requireContext())
+        }
+    }
+
+    private fun bindMusicService() {
+        val intent = Intent(requireContext(), PlayerService::class.java).putExtra(
+            SearchFragment.TRACK,
+            track
+        )
+        requireContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -98,13 +145,20 @@ class PlayerFragment : Fragment() {
             }
         }
 
-        viewModel.stateLiveData.observe(viewLifecycleOwner) {
-            stateRender(it)
-            updatePlaybackButton(it)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        } else {
+            bindMusicService()
         }
 
-        viewModel.playTrackProgressLiveData.observe(viewLifecycleOwner) {
-            playTimeRender(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.playerState.collect { state ->
+                stateRender(state)
+            }
+        }
+
+        viewModel.timeProgress.observe(viewLifecycleOwner) {
+            binding.playerTime.text = it
         }
 
         viewModel.isTrackInFavoriteLiveData.observe(viewLifecycleOwner) {
@@ -134,7 +188,7 @@ class PlayerFragment : Fragment() {
         binding.playerCountryData.text = trackData.country
 
         binding.customButtonView.setOnClickListener {
-            viewModel.playControl()
+            viewModel.playbackControl()
             viewModel.startTimer()
         }
 
@@ -149,7 +203,6 @@ class PlayerFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        viewModel.pausePlayer()
     }
 
     private fun stateRender(playerState: MediaPlayerState) {
@@ -165,7 +218,7 @@ class PlayerFragment : Fragment() {
     }
 
     private fun playTimeRender(time: Int) {
-        when (viewModel.stateLiveData.value) {
+        when (viewModel.playerState.value) {
             MediaPlayerState.STATE_PLAYING, MediaPlayerState.STATE_PAUSED -> {
                 binding.playerTime.text =
                     SimpleDateFormat("mm:ss", Locale.getDefault()).format(time)
@@ -205,14 +258,10 @@ class PlayerFragment : Fragment() {
         }
     }
 
-    private fun updatePlaybackButton(playerState: MediaPlayerState) {
-        binding.customButtonView.playButtonState = when (playerState) {
-            MediaPlayerState.STATE_PLAYING -> PlayButtonState.STATE_PAUSE
-            MediaPlayerState.STATE_PAUSED,
-            MediaPlayerState.STATE_PREPARED -> PlayButtonState.STATE_PLAY
-            MediaPlayerState.STATE_DEFAULT -> PlayButtonState.STATE_PLAY
-        }
-        binding.customButtonView.invalidate()
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.pausePlayer()
+        requireContext().unbindService(serviceConnection)
     }
 
     companion object {

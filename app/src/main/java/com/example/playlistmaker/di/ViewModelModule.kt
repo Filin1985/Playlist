@@ -29,14 +29,8 @@ val viewModuleModule = module {
     viewModel<PlayerVewModel> { (track: String) ->
         PlayerVewModel(
             track = track,
-            preparePlayer = get(),
-            destroyPlayer = get(),
-            pausePlayer = get(),
-            playbackPlayer = get(),
-            playTrackPlayer = get(),
             getPlayerTime = get(),
             getPlayerState = get(),
-            setCompletionPlayer = get(),
             deleteTrackFromFavorite = get(),
             insertTrackToFavorite = get(),
             getTrackIdsFromDb = get(),
