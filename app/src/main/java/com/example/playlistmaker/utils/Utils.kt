@@ -17,12 +17,12 @@ object Utils {
         context: Context
     ) {
         val snackbar = Snackbar.make(view, message, Snackbar.LENGTH_SHORT)
-        val snackTextColor = ContextCompat.getColor(context, R.color.yp_white)
         val backgroundColor = ContextCompat.getColor(context, R.color.black_day_white_night)
+        val snackTextColor = ContextCompat.getColor(context, R.color.yp_white)
         val textView =
             snackbar.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-        textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
         textView.textSize = 16f
+        textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
         textView.setTextColor(snackTextColor)
         snackbar.view.setBackgroundColor(backgroundColor)
         snackbar.show()

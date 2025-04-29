@@ -13,8 +13,12 @@ interface PlayerControl {
 
     fun getCurrentTime(): Int
 
+    fun showNotification()
+
+    fun hideNotification()
+
     companion object {
-        const val NOTIFICATION_CHANNEL_ID = "player_service"
-        const val SERVICE_NOTIFICATION_ID = 100
+        const val CHANNEL_ID = "player_service"
+        const val SERVICE_ID = 100
     }
 }

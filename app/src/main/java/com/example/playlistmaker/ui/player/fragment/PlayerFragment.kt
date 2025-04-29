@@ -18,9 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -30,7 +28,6 @@ import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.domain.mediateca.playlists.model.Playlist
 import com.example.playlistmaker.domain.player.PlayerControl
 import com.example.playlistmaker.domain.player.model.MediaPlayerState
-import com.example.playlistmaker.domain.player.model.PlayButtonState
 import com.example.playlistmaker.domain.player.model.TrackPlaylistState
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.ui.player.activity.PlayerBottomSheetAdapter
@@ -261,7 +258,13 @@ class PlayerFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         viewModel.pausePlayer()
+        viewModel.hideNotification()
         requireContext().unbindService(serviceConnection)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.showNotification()
     }
 
     companion object {

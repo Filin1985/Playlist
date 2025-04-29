@@ -206,6 +206,14 @@ class PlayerVewModel(
         playerControl = null
     }
 
+    fun showNotification() {
+        playerControl?.showNotification()
+    }
+
+    fun hideNotification() {
+        playerControl?.hideNotification()
+    }
+
     companion object {
         private const val DELAY_MILLIS = 150L
         private const val CURRENT_TIME = "00:00"

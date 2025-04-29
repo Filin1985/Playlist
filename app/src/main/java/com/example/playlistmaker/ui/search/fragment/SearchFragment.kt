@@ -200,7 +200,6 @@ class SearchFragment: Fragment() {
         return { track: TrackData ->
             if (viewModel.isClickAllowedLiveData.value!!) {
                 viewModel.clickOnTrackDebounce(track)
-                Log.d("TRACK DATA--------------", Gson().toJson(track))
                 findNavController().navigate(
                     R.id.action_searchFragment_to_playerActivity,
                     PlayerFragment.createArgs(Gson().toJson(track))

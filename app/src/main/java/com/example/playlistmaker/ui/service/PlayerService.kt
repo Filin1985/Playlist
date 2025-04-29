@@ -1,6 +1,11 @@
 package com.example.playlistmaker.ui.service
 
+import android.annotation.SuppressLint
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.media.MediaPlayer
@@ -8,6 +13,10 @@ import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
+import androidx.core.app.NotificationCompat
+import androidx.core.app.ServiceCompat
+import androidx.core.graphics.drawable.toBitmap
+import com.example.playlistmaker.R
 import com.example.playlistmaker.data.player.MediaPlayerRepositoryImpl
 import com.example.playlistmaker.domain.player.MediaPlayerRepository
 import com.example.playlistmaker.domain.player.PlayerControl
@@ -42,11 +51,33 @@ class PlayerService : Service(), PlayerControl {
                         _mediaPlayerState.value = MediaPlayerState.STATE_PREPARED
                     }
                 } catch (e: Exception) {
-                    Log.e("TRACK_PARSE", "Error parsing track data", e)
+                    Log.e("PARSE_TRACK", "Error while getting TrackData", e)
                 }
             }
         }
         return binder
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        createNotificationChannel()
+    }
+
+    @SuppressLint("ObsoleteSdkInt")
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            return
+        }
+        val channel = NotificationChannel(
+            PlayerControl.CHANNEL_ID,
+            this.resources.getString(R.string.app_name),
+            NotificationManager.IMPORTANCE_MIN
+        )
+        channel.description = "Media player service"
+
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 
     override fun pause() {
@@ -84,6 +115,30 @@ class PlayerService : Service(), PlayerControl {
         } else {
             0
         }
+    }
+
+    private fun createNotification(): Notification {
+        return NotificationCompat.Builder(this, PlayerControl.CHANNEL_ID)
+            .setContentTitle(getString(R.string.app_name))
+            .setContentText("${track?.artistName} - ${track?.trackName}")
+            .setSmallIcon(R.drawable.ic_media)
+            .setLargeIcon(getDrawable(R.drawable.ic_media)?.toBitmap())
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_SERVICE)
+            .build()
+    }
+
+    override fun showNotification() {
+        ServiceCompat.startForeground(
+            this,
+            PlayerControl.SERVICE_ID,
+            createNotification(),
+            getForegroundServiceTypeConstant()
+        )
+    }
+
+    override fun hideNotification() {
+        ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
     }
 
     inner class PlayerServiceBinder : Binder() {
