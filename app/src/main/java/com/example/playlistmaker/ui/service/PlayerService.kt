@@ -48,7 +48,7 @@ class PlayerService : Service(), PlayerControl {
                 player.preparePlayer(newTrack) {
                     pause()
                     player.setCompletionState {
-                        _mediaPlayerState.value = MediaPlayerState.STATE_DEFAULT
+                        _mediaPlayerState.value = MediaPlayerState.STATE_PREPARED
                         hideNotification()
                     }
                 }

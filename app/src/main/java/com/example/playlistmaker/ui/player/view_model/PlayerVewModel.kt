@@ -81,6 +81,7 @@ class PlayerVewModel(
     init {
         setCompletionPlayer.execute {
             _playerState.value = MediaPlayerState.STATE_PREPARED
+            _timer.value = CURRENT_TIME
         }
         setIsTrackInFavorite()
     }
@@ -107,7 +108,10 @@ class PlayerVewModel(
     fun playbackControl() {
         when (playerState.value) {
             MediaPlayerState.STATE_PLAYING -> pausePlayer()
-            MediaPlayerState.STATE_PREPARED, MediaPlayerState.STATE_PAUSED -> startPlayer()
+            MediaPlayerState.STATE_PREPARED, MediaPlayerState.STATE_PAUSED -> {
+                startPlayer()
+                startTimer()
+            }
             else -> Unit
         }
         updateTimer()

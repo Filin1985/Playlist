@@ -97,11 +97,9 @@ class PlayerFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // Only unbind service when fragment is being destroyed
         try {
             requireContext().unbindService(serviceConnection)
         } catch (e: IllegalArgumentException) {
-            // Service was not bound, ignore
         }
     }
 
