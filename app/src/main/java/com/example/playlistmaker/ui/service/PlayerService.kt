@@ -40,19 +40,19 @@ class PlayerService : Service(), PlayerControl {
 
     override fun onBind(intent: Intent?): IBinder {
         if (intent?.getStringExtra(SearchFragment.TRACK) != null) {
-            intent.getStringExtra(SearchFragment.TRACK)?.let { jsonString ->
-                try {
-                    track = Gson().fromJson(jsonString, TrackData::class.java)
+            val newTrackJson = intent.getStringExtra(SearchFragment.TRACK)
+            val newTrack = Gson().fromJson(newTrackJson, TrackData::class.java)
 
-                    track?.let {
-                        player.preparePlayer(it) {
-                            pause()
-                        }
-                        _mediaPlayerState.value = MediaPlayerState.STATE_PREPARED
+            if (track == null || track?.trackId != newTrack.trackId) {
+                track = newTrack
+                player.preparePlayer(newTrack) {
+                    pause()
+                    player.setCompletionState {
+                        _mediaPlayerState.value = MediaPlayerState.STATE_DEFAULT
+                        hideNotification()
                     }
-                } catch (e: Exception) {
-                    Log.e("PARSE_TRACK", "Error while getting TrackData", e)
                 }
+                _mediaPlayerState.value = MediaPlayerState.STATE_PREPARED
             }
         }
         return binder
@@ -99,7 +99,6 @@ class PlayerService : Service(), PlayerControl {
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
-        stopSelf()
         destroy()
         return super.onUnbind(intent)
     }

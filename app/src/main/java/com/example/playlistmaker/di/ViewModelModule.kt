@@ -33,6 +33,7 @@ val viewModuleModule = module {
             getPlayerState = get(),
             deleteTrackFromFavorite = get(),
             insertTrackToFavorite = get(),
+            setCompletionPlayer = get(),
             getTrackIdsFromDb = get(),
             showPlaylistsUseCase = get(),
             addTrackToPlaylistUseCase = get(),

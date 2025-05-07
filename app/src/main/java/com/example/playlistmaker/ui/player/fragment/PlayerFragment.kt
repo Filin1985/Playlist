@@ -8,6 +8,7 @@ import android.content.ServiceConnection
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +29,7 @@ import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.domain.mediateca.playlists.model.Playlist
 import com.example.playlistmaker.domain.player.PlayerControl
 import com.example.playlistmaker.domain.player.model.MediaPlayerState
+import com.example.playlistmaker.domain.player.model.PlayButtonState
 import com.example.playlistmaker.domain.player.model.TrackPlaylistState
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.ui.player.activity.PlayerBottomSheetAdapter
@@ -76,12 +78,43 @@ class PlayerFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        } else {
+            bindMusicService()
+        }
+        viewModel.hideNotification() // Hide notification when fragment is visible
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (viewModel.playerState.value == MediaPlayerState.STATE_PLAYING) {
+            viewModel.showNotification()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Only unbind service when fragment is being destroyed
+        try {
+            requireContext().unbindService(serviceConnection)
+        } catch (e: IllegalArgumentException) {
+            // Service was not bound, ignore
+        }
+    }
+
     private fun bindMusicService() {
         val intent = Intent(requireContext(), PlayerService::class.java).putExtra(
             SearchFragment.TRACK,
             track
         )
-        requireContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        try {
+            requireContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        } catch (e: Exception) {
+            Log.e("PlayerFragment", "Error binding to service", e)
+        }
     }
 
     override fun onCreateView(
@@ -151,6 +184,7 @@ class PlayerFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.playerState.collect { state ->
                 stateRender(state)
+                updatePlaybackButton(state)
             }
         }
 
@@ -198,34 +232,22 @@ class PlayerFragment : Fragment() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onResume() {
+        super.onResume()
+        viewModel.hideNotification()
     }
 
     private fun stateRender(playerState: MediaPlayerState) {
         when (playerState) {
-            MediaPlayerState.STATE_PLAYING -> {}
-            MediaPlayerState.STATE_PAUSED -> {}
+            MediaPlayerState.STATE_PLAYING, MediaPlayerState.STATE_PAUSED -> {
+                viewModel.hideNotification()
+            }
+
             MediaPlayerState.STATE_PREPARED -> {
                 binding.playerTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(0)
             }
 
             MediaPlayerState.STATE_DEFAULT -> {}
-        }
-    }
-
-    private fun playTimeRender(time: Int) {
-        when (viewModel.playerState.value) {
-            MediaPlayerState.STATE_PLAYING, MediaPlayerState.STATE_PAUSED -> {
-                binding.playerTime.text =
-                    SimpleDateFormat("mm:ss", Locale.getDefault()).format(time)
-            }
-
-            MediaPlayerState.STATE_PREPARED -> {
-                binding.playerTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(0)
-            }
-
-            MediaPlayerState.STATE_DEFAULT, null -> {}
         }
     }
 
@@ -255,16 +277,15 @@ class PlayerFragment : Fragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.pausePlayer()
-        viewModel.hideNotification()
-        requireContext().unbindService(serviceConnection)
-    }
+    private fun updatePlaybackButton(playerState: MediaPlayerState) {
+        binding.customButtonView.playButtonState = when (playerState) {
+            MediaPlayerState.STATE_PLAYING -> PlayButtonState.STATE_PAUSE
+            MediaPlayerState.STATE_PAUSED,
+            MediaPlayerState.STATE_PREPARED -> PlayButtonState.STATE_PLAY
 
-    override fun onStop() {
-        super.onStop()
-        viewModel.showNotification()
+            MediaPlayerState.STATE_DEFAULT -> PlayButtonState.STATE_PLAY
+        }
+        binding.customButtonView.invalidate()
     }
 
     companion object {

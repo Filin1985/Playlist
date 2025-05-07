@@ -41,6 +41,7 @@ class PlayerVewModel(
     private val track: String,
     private val getPlayerTime: GetCurrentPlayerTrackTimeUseCase,
     private val getPlayerState: GetPlayerStateUseCase,
+    private val setCompletionPlayer: CompletionUseCase,
     private val deleteTrackFromFavorite: DeleteFavoriteTrackUseCase,
     private val insertTrackToFavorite: InsertFavoriteTrackUseCase,
     private val getTrackIdsFromDb: GetFavoriteTracksIdsUseCase,
@@ -78,18 +79,17 @@ class PlayerVewModel(
     private var playerControl: PlayerControl? = null
 
     init {
+        setCompletionPlayer.execute {
+            _playerState.value = MediaPlayerState.STATE_PREPARED
+        }
         setIsTrackInFavorite()
     }
 
     fun playerControlManager(playerControl: PlayerControl) {
         this.playerControl = playerControl
         viewModelScope.launch {
-            playerControl.getPlayerState().collect { state ->
-                _playerState.value = state
-                // Update progress when playing
-                if (state == MediaPlayerState.STATE_PLAYING) {
-                    startTimer()
-                }
+            playerControl.getPlayerState().collect {
+                    _playerState.value = it
             }
         }
     }
@@ -199,7 +199,8 @@ class PlayerVewModel(
 
     override fun onCleared() {
         super.onCleared()
-        timerJob = null
+        timerJob?.cancel()
+        playerControl = null
     }
 
     fun removePlayerControl() {
