@@ -10,6 +10,7 @@ import com.example.playlistmaker.domain.favorites.interfaces.DeleteFavoriteTrack
 import com.example.playlistmaker.domain.favorites.interfaces.GetFavoriteTracksIdsUseCase
 import com.example.playlistmaker.domain.favorites.interfaces.InsertFavoriteTrackUseCase
 import com.example.playlistmaker.domain.mediateca.playlists.model.Playlist
+import com.example.playlistmaker.domain.player.PlayerControl
 import com.example.playlistmaker.domain.player.interfaces.CompletionUseCase
 import com.example.playlistmaker.domain.player.interfaces.DestroyPlayerUseCase
 import com.example.playlistmaker.domain.player.interfaces.GetCurrentPlayerTrackTimeUseCase
@@ -30,15 +31,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class PlayerVewModel(
     private val track: String,
-    private val preparePlayer: PreparePlayerUseCase,
-    private val destroyPlayer: DestroyPlayerUseCase,
-    private val pausePlayer: PauseTrackUseCase,
-    private val playbackPlayer: PlaybackTrackUseCase,
-    private val playTrackPlayer: PlayTrackUseCase,
     private val getPlayerTime: GetCurrentPlayerTrackTimeUseCase,
     private val getPlayerState: GetPlayerStateUseCase,
     private val setCompletionPlayer: CompletionUseCase,
@@ -50,10 +50,8 @@ class PlayerVewModel(
     private val updatePlaylistUseCase: UpdatePlaylistUseCase
 ) : ViewModel() {
 
-    private val stateMutableLiveData = MutableLiveData<MediaPlayerState>().also {
-        it.value = getPlayerState.execute()
-    }
-    val stateLiveData: LiveData<MediaPlayerState> = stateMutableLiveData
+    private val _playerState = MutableStateFlow(MediaPlayerState.STATE_DEFAULT)
+    val playerState: StateFlow<MediaPlayerState> get() = _playerState
     val trackData = Gson().fromJson(track, TrackData::class.java)
 
     private val playTrackProgressMutableLiveData = MutableLiveData<Int>().also {
@@ -65,36 +63,58 @@ class PlayerVewModel(
     val isTrackInFavoriteLiveData: LiveData<Boolean> = isTrackInFavoriteMutableData
 
     private var timerJob: Job? = null
+    private val _timer = MutableLiveData(CURRENT_TIME)
+    val timeProgress: LiveData<String>
+        get() = _timer
 
     private val playlists = mutableListOf<Playlist>()
 
     private val playlistMutableLiveData = MutableLiveData<List<Playlist>>(playlists)
     val playlistLiveData: LiveData<List<Playlist>> = playlistMutableLiveData
 
-    private val playlistStateMutableLiveData = MutableLiveData<TrackPlaylistState>(TrackPlaylistState.TRACK_IS_ADDED_UNKNOWN)
+    private val playlistStateMutableLiveData =
+        MutableLiveData<TrackPlaylistState>(TrackPlaylistState.TRACK_IS_ADDED_UNKNOWN)
     val playlistStateLiveData: LiveData<TrackPlaylistState> = playlistStateMutableLiveData
 
-    init {
-        preparePlayer.execute(trackData) {
-            stateMutableLiveData.postValue(MediaPlayerState.STATE_PREPARED)
-        }
-        setCompletionPlayer.execute {
-            stateMutableLiveData.postValue(MediaPlayerState.STATE_PREPARED)
-        }
+    private var playerControl: PlayerControl? = null
 
+    init {
+        setCompletionPlayer.execute {
+            _playerState.value = MediaPlayerState.STATE_PREPARED
+            _timer.value = CURRENT_TIME
+        }
         setIsTrackInFavorite()
     }
 
-    fun pausePlayer() {
-        timerJob?.cancel()
-        stateMutableLiveData.postValue(pausePlayer.execute { })
+    fun playerControlManager(playerControl: PlayerControl) {
+        this.playerControl = playerControl
+        viewModelScope.launch {
+            playerControl.getPlayerState().collect {
+                    _playerState.value = it
+            }
+        }
     }
 
-    fun playControl() {
-        Log.d("PLAY_CONTROL", "$track")
-        stateMutableLiveData.postValue(playbackPlayer.execute(
-            actionPause = { }, actionPlaying = { }
-        ))
+
+    fun pausePlayer() {
+        timerJob?.cancel()
+        playerControl?.pause()
+    }
+
+    fun startPlayer() {
+        playerControl?.play()
+    }
+
+    fun playbackControl() {
+        when (playerState.value) {
+            MediaPlayerState.STATE_PLAYING -> pausePlayer()
+            MediaPlayerState.STATE_PREPARED, MediaPlayerState.STATE_PAUSED -> {
+                startPlayer()
+                startTimer()
+            }
+            else -> Unit
+        }
+        updateTimer()
     }
 
     fun startTimer() {
@@ -106,9 +126,33 @@ class PlayerVewModel(
         }
     }
 
+    private fun updateTimer() {
+        timerJob?.cancel()
+        when (playerState.value) {
+            MediaPlayerState.STATE_PLAYING -> {
+                timerJob = viewModelScope.launch {
+                    while (true) {
+                        _timer.value = getTimerPosition()
+                        delay(DELAY_MILLIS)
+                    }
+                }
+            }
+
+            MediaPlayerState.STATE_PAUSED -> timerJob?.cancel()
+            else -> _timer.value = CURRENT_TIME
+        }
+    }
+
+    private fun getTimerPosition(): String {
+        return SimpleDateFormat(
+            "mm:ss",
+            Locale.getDefault()
+        ).format(playerControl?.getCurrentTime())
+    }
+
     fun toggleTrackFavoriteState() {
         viewModelScope.launch(Dispatchers.IO) {
-            if(isTrackInFavoriteMutableData.value == true) {
+            if (isTrackInFavoriteMutableData.value == true) {
                 isTrackInFavoriteMutableData.postValue(false)
                 deleteTrackFromFavorite.execute(trackData)
             } else {
@@ -158,11 +202,25 @@ class PlayerVewModel(
     }
 
     override fun onCleared() {
-        destroyPlayer.execute()
         super.onCleared()
+        timerJob?.cancel()
+        playerControl = null
+    }
+
+    fun removePlayerControl() {
+        playerControl = null
+    }
+
+    fun showNotification() {
+        playerControl?.showNotification()
+    }
+
+    fun hideNotification() {
+        playerControl?.hideNotification()
     }
 
     companion object {
-        private const val DELAY_MILLIS = 300L
+        private const val DELAY_MILLIS = 150L
+        private const val CURRENT_TIME = "00:00"
     }
 }

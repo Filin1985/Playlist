@@ -19,16 +19,14 @@ import com.example.playlistmaker.data.sharing.impl.ExternalNavigatorImpl
 import com.example.playlistmaker.domain.favorites.FavoriteTracksRepository
 import com.example.playlistmaker.domain.mediateca.playlists.PlaylistsRepository
 import com.example.playlistmaker.domain.player.MediaPlayerRepository
-import com.example.playlistmaker.domain.playlistDetails.impl.GetPlaylistByIdUseCaseImpl
-import com.example.playlistmaker.domain.playlistDetails.impl.GetTracksFromPlaylistUseCaseImpl
-import com.example.playlistmaker.domain.playlistDetails.interfaces.GetPlaylistByIdUseCase
-import com.example.playlistmaker.domain.playlistDetails.interfaces.GetTracksFromPlaylistUseCase
 import com.example.playlistmaker.domain.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.domain.sharing.ExternalNavigator
 import com.example.playlistmaker.domain.sharing.SharedPrefRepository
 import com.example.playlistmaker.domain.sharing.ThemeRepository
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -79,6 +77,8 @@ val repositoryModule = module {
     factory {
         MediaPlayer()
     }
+
+    factoryOf(::MediaPlayerRepositoryImpl) {bind<MediaPlayerRepository>()}
 
     single<MediaPlayerRepository> {
         MediaPlayerRepositoryImpl(get())

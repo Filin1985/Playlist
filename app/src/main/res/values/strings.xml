@@ -69,4 +69,6 @@
 
     <string name="save_edit_playlist">Сохранить</string>
     <string name="edit_playlist">Редактировать</string>
+
+    <string name="no_permission">Отсутствует разрешение. Предоставьте соответствующее разрешения на уведомления в настройках</string>
 </resources>
