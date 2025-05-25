@@ -1,6 +1,7 @@
 package com.example.playlistmaker.data.search.impl
 
 import android.content.SharedPreferences
+import android.util.Log
 import com.example.playlistmaker.domain.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.google.gson.Gson
@@ -26,13 +27,14 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferenc
         trackList.remove(track)
         trackList.add(0, track)
         if (trackList.size > 10) {
-            trackList.removeLast()
+            trackList.removeAt(trackList.size - 1)
         }
         saveTrackList(trackList)
     }
 
     override fun clearTrackList() {
         sharedPreferences.edit().remove(SEARCH_HISTORY).apply()
+        Log.d("SearchRepo", "SharedPreferences cleared")
     }
 
     private fun saveTrackList(trackList: ArrayList<TrackData>) {

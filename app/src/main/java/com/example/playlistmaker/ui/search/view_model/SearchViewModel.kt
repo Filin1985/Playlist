@@ -1,9 +1,13 @@
 package com.example.playlistmaker.ui.search.view_model
 
+import android.util.Log
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.interfaces.AddTracksHistoryListUseCase
 import com.example.playlistmaker.domain.search.interfaces.ClearTracksHistoryListUseCase
@@ -13,6 +17,9 @@ import com.example.playlistmaker.domain.search.model.SearchState
 import com.example.playlistmaker.domain.search.model.TrackData
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Collections
 
@@ -23,47 +30,52 @@ class SearchViewModel(
     private val clearTrackHistoryUseCase: ClearTracksHistoryListUseCase
 ) : ViewModel() {
 
-    private val searchTrackList = mutableListOf<TrackData>()
-    private val searchTrackListMutableData = MutableLiveData(searchTrackList)
-    val searchTrackListLiveData: LiveData<MutableList<TrackData>> = searchTrackListMutableData
+    private val _searchTrackList = MutableStateFlow<List<TrackData>>(emptyList())
+    val searchTrackListLiveData: StateFlow<List<TrackData>> = _searchTrackList
 
-    private val searchTrackState = MutableLiveData<SearchState>()
-    val liveDataState: LiveData<SearchState> = searchTrackState
+    private val searchTrackState = MutableStateFlow<SearchState>(SearchState.HISTORY_LIST)
+    val liveDataState: StateFlow<SearchState> = searchTrackState
 
     private val searchHistoryTrackList =
         getHistoryTrackListToStorageUseCase.execute()
     private val historyTrackListMutableData =
-        MutableLiveData<MutableList<TrackData>>(searchHistoryTrackList)
-    val searchHistoryTrackListLiveData: LiveData<MutableList<TrackData>> =
+        MutableStateFlow<MutableList<TrackData>>(searchHistoryTrackList)
+    val searchHistoryTrackListLiveData: StateFlow<MutableList<TrackData>> =
         historyTrackListMutableData
 
-    private val searchRequestMutableData = MutableLiveData<String>()
-    val searchRequestLiveData: LiveData<String> = searchRequestMutableData
+    private val _searchRequestMutableData = MutableStateFlow("")
+    val searchRequestLiveData: StateFlow<String> = _searchRequestMutableData.asStateFlow()
 
-    private val isClickAllowedMutableLiveData = MutableLiveData(true)
-    val isClickAllowedLiveData: LiveData<Boolean> = isClickAllowedMutableLiveData
+    private val isClickAllowedMutableLiveData = MutableStateFlow(true)
+    val isClickAllowedLiveData: StateFlow<Boolean> = isClickAllowedMutableLiveData
 
     private var searchJob: Job? = null
+    private var lastClickTime = 0L
 
     init {
-        if (searchHistoryTrackList.isNotEmpty()) searchTrackState.value = SearchState.HISTORY_LIST
+        searchTrackState.value = if (searchHistoryTrackList.isNotEmpty()) {
+            SearchState.HISTORY_LIST
+        } else {
+            SearchState.EMPTY_DATA
+        }
     }
 
-    private fun searchTrackList(data: ResponseData<List<TrackData>>) {
+    fun searchTrackList(data: ResponseData<List<TrackData>>) {
+        Log.d("SEARCH_VIEW_MODEL---------", "$data")
         when (data) {
             is ResponseData.Success -> {
-                searchTrackList.clear()
-                searchTrackList.addAll(data.data)
+                _searchTrackList.value = emptyList()
+                _searchTrackList.value = data.data
                 searchTrackState.value = SearchState.SUCCESS
             }
 
             is ResponseData.EmptyResponse -> {
-                searchTrackList.clear()
+                _searchTrackList.value = emptyList()
                 searchTrackState.value = SearchState.NOT_FOUND
             }
 
             is ResponseData.Error -> {
-                searchTrackList.clear()
+                _searchTrackList.value = emptyList()
                 searchTrackState.value = SearchState.CONNECTION_ERROR
             }
         }
@@ -82,18 +94,19 @@ class SearchViewModel(
 
     fun startImmediateSearch(searchRequest: String) {
         if (searchRequest.isBlank()) {
-            searchTrackList.clear()
+            _searchTrackList.value = emptyList()
             searchTrackState.value = SearchState.EMPTY_DATA
         } else {
             searchJob?.cancel()
+            searchTrackState.value = SearchState.SEARCH_PROGRESS
             startTrackSearch(searchRequest)
         }
-        searchRequestMutableData.value = searchRequest
+        _searchRequestMutableData.value = searchRequest
     }
 
     fun startDebounceSearch(searchRequest: String) {
         if (searchRequest.isBlank()) {
-            searchTrackList.clear()
+            _searchTrackList.value = emptyList()
             searchTrackState.value = SearchState.EMPTY_DATA
         } else {
             searchJob?.cancel()
@@ -103,17 +116,15 @@ class SearchViewModel(
             }
             searchTrackState.value = SearchState.SEARCH_PROGRESS
         }
-        searchRequestMutableData.value = searchRequest
+        _searchRequestMutableData.value = searchRequest
     }
 
     fun clickOnTrackDebounce(track: TrackData) {
-        if (isClickAllowedLiveData.value!!) {
-            isClickAllowedMutableLiveData.value = false
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - lastClickTime >= CLICK_DEBOUNCE_DELAY) {
+            lastClickTime = currentTime
+            writeTrackToList(track)
             saveHistoryToStorage(track)
-            viewModelScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY)
-                isClickAllowedMutableLiveData.value = true
-            }
         }
     }
 
@@ -131,16 +142,32 @@ class SearchViewModel(
             }
             searchHistoryTrackList.add(track)
         }
+        historyTrackListMutableData.value = searchHistoryTrackList.toMutableList()
+        updateSearchState()
+    }
+
+    fun onSearchRequestChange(text: String) {
+        _searchRequestMutableData.value = text
     }
 
     fun clearHistory() {
+        Log.d("HISTORY-------------------", "CLICKED")
         searchHistoryTrackList.clear()
-        searchHistoryTrackListLiveData.value!!.clear()
+        historyTrackListMutableData.value = mutableListOf()
         clearTrackHistoryUseCase.execute()
+        updateSearchState()
+    }
+
+    private fun updateSearchState() {
+        searchTrackState.value = when {
+            searchHistoryTrackList.isNotEmpty() -> SearchState.HISTORY_LIST
+            _searchRequestMutableData.value.isNotEmpty() -> SearchState.EMPTY_DATA
+            else -> SearchState.EMPTY_DATA
+        }
     }
 
     fun clear() {
-        searchTrackList.clear()
+        _searchTrackList.value = emptyList()
         searchTrackState.value = SearchState.HISTORY_LIST
     }
 
