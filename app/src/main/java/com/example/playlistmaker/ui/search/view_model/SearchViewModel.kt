@@ -1,13 +1,7 @@
 package com.example.playlistmaker.ui.search.view_model
 
-import android.util.Log
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.interfaces.AddTracksHistoryListUseCase
 import com.example.playlistmaker.domain.search.interfaces.ClearTracksHistoryListUseCase
@@ -61,7 +55,6 @@ class SearchViewModel(
     }
 
     fun searchTrackList(data: ResponseData<List<TrackData>>) {
-        Log.d("SEARCH_VIEW_MODEL---------", "$data")
         when (data) {
             is ResponseData.Success -> {
                 _searchTrackList.value = emptyList()
@@ -151,7 +144,6 @@ class SearchViewModel(
     }
 
     fun clearHistory() {
-        Log.d("HISTORY-------------------", "CLICKED")
         searchHistoryTrackList.clear()
         historyTrackListMutableData.value = mutableListOf()
         clearTrackHistoryUseCase.execute()

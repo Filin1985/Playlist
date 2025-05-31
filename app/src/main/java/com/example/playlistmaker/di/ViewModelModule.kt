@@ -2,8 +2,10 @@ package com.example.playlistmaker.di
 
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.ui.media.favourite.view_model.MediaFavouriteViewModel
+import com.example.playlistmaker.ui.media.favourite.view_model.MediaFavouriteViewModelStateFlow
 import com.example.playlistmaker.ui.media.playlist.view_model.MediaNewPlaylistViewModel
 import com.example.playlistmaker.ui.media.playlist.view_model.MediaPlaylistViewModel
+import com.example.playlistmaker.ui.media.playlist.view_model.MediaPlaylistViewModelStateFlow
 import com.example.playlistmaker.ui.media.playlist.view_model.PlaylistEditViewModel
 import com.example.playlistmaker.ui.player.view_model.PlayerVewModel
 import com.example.playlistmaker.ui.playlistDetails.view_model.DetailPlaylistViewModel
@@ -52,6 +54,15 @@ val viewModuleModule = module {
     viewModel<MediaNewPlaylistViewModel> {
         MediaNewPlaylistViewModel(createNewPlaylistUseCase = get())
     }
+
+    viewModel<MediaFavouriteViewModelStateFlow> {
+        MediaFavouriteViewModelStateFlow(get())
+    }
+
+    viewModel<MediaPlaylistViewModelStateFlow> {
+        MediaPlaylistViewModelStateFlow(showPlaylistsUseCase = get())
+    }
+
 
     viewModel<DetailPlaylistViewModel>() { (playlistId: Int) ->
         DetailPlaylistViewModel(

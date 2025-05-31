@@ -18,10 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.playlistmaker.ui.search.view_model.SearchViewModel
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.search.model.SearchState
 import com.example.playlistmaker.domain.search.model.TrackData
+import com.example.playlistmaker.ui.search.view_model.SearchViewModel
 
 @Composable
 fun SearchScreen(

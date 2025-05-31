@@ -55,7 +55,7 @@ class PlaylistsRepositoryImpl(
 
     override suspend fun getPlaylistById(playlistId: Int): Playlist {
         return DbConverter.convertPlaylistEntityToPlaylist(
-            appDB.playlistsDAO().getPlaylist(playlistId)
+            appDB.playlistsDAO().getPlaylist(playlistId.toInt())
         )
     }
 
