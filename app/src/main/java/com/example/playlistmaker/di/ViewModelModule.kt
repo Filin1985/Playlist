@@ -12,6 +12,7 @@ import com.example.playlistmaker.ui.playlistDetails.view_model.DetailPlaylistVie
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
 import com.example.playlistmaker.ui.settings.view_model.SettingsViewModel
 import com.example.playlistmaker.ui.settings.view_model.ThemeViewModel
+import com.example.playlistmaker.ui.settings.view_model.ThemeViewModelWithStateFLow
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -22,6 +23,10 @@ val viewModuleModule = module {
 
     viewModel<SettingsViewModel> {
         SettingsViewModel(get(), get(), get())
+    }
+
+    viewModel<ThemeViewModelWithStateFLow> {
+        ThemeViewModelWithStateFLow(get(), get(), get())
     }
 
     viewModel<SearchViewModel> {
