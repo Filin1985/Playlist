@@ -17,7 +17,7 @@ fun FavoriteScreen(viewModel: MediaFavouriteViewModelStateFlow, onTrackClick: (T
     val isClickAllowed by viewModel.isClickAllowed.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        when (uiState) {
+        when (val state = uiState) {
             is MediaFavouriteViewModelStateFlow.UiState.Loading -> {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
@@ -27,7 +27,7 @@ fun FavoriteScreen(viewModel: MediaFavouriteViewModelStateFlow, onTrackClick: (T
             }
 
             is MediaFavouriteViewModelStateFlow.UiState.Success -> {
-                val successState = uiState as MediaFavouriteViewModelStateFlow.UiState.Success
+                val successState = state
                 TrackListContent(
                     tracks = successState.tracks,
                     isClickAllowed = isClickAllowed,

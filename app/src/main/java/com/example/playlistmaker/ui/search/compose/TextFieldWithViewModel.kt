@@ -87,7 +87,7 @@ fun TextFieldWithViewModel(viewModel: SearchViewModel) {
                 .align(Alignment.CenterStart)
                 .padding(start = 10.dp)
                 .size(18.dp),
-            tint = colorResource(R.color.yp_text_gray)
+            tint = colorResource(R.color.grey2_day_black_night)
         )
 
         // Clear icon

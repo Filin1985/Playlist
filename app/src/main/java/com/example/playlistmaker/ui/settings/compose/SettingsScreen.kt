@@ -33,16 +33,11 @@ fun SettingsScreen(
     settingsViewModel: SettingsViewModel,
 ) {
     val themeState by themeViewModel.themeState.collectAsState()
-    val shareLink = stringResource(R.string.share_link)
-    val supportEmail = stringResource(R.string.support_email)
-    val supportSubject = stringResource(R.string.support_subject)
-    val supportText = stringResource(R.string.support_text)
-    val agreementLink = stringResource(R.string.agreement_link)
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(R.color.white_day_black_night))
+            .background(colorResource(R.color.white_day_black_night)).padding(top = 16.dp)
     ) {
         Text(
             text = stringResource(R.string.settings),
@@ -64,12 +59,16 @@ fun SettingsScreen(
             }
         )
 
+        val shareLink = stringResource(R.string.share_link)
         SettingItem(
             title = stringResource(R.string.share),
             icon = ImageVector.vectorResource(id = R.drawable.ic_share),
             onClick = { settingsViewModel.shareApp(shareLink) }
         )
 
+        val supportEmail = stringResource(R.string.support_email)
+        val supportSubject = stringResource(R.string.support_subject)
+        val supportText = stringResource(R.string.support_text)
         SettingItem(
             title = stringResource(R.string.support),
             icon = ImageVector.vectorResource(id = R.drawable.ic_support),
@@ -84,6 +83,7 @@ fun SettingsScreen(
             }
         )
 
+        val agreementLink = stringResource(R.string.agreement_link)
         SettingItem(
             title = stringResource(R.string.agreement),
             icon = ImageVector.vectorResource(id = R.drawable.ic_agreement),

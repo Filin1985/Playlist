@@ -16,6 +16,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -67,7 +68,7 @@ fun PlaylistItem(
             )
 
             Text(
-                text = getTrackText(playlist.size),
+                text = pluralStringResource(R.plurals.playlist_plurals, playlist.size, playlist.size),
                 style = TextStyle(
                     color = colorResource(R.color.black_day_white_night),
                     fontSize = 16.sp,
@@ -78,14 +79,5 @@ fun PlaylistItem(
 
         }
 
-    }
-}
-
-fun getTrackText(count: Int): String {
-    return when {
-        count % 100 in 11..14 -> "$count треков"
-        count % 10 == 1 -> "$count трек"
-        count % 10 in 2..4 -> "$count трека"
-        else -> "$count треков"
     }
 }
