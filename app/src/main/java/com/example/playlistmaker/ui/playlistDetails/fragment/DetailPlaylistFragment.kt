@@ -2,18 +2,15 @@ package com.example.playlistmaker.ui.playlistDetails.fragment
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -26,12 +23,10 @@ import com.example.playlistmaker.domain.playlistDetails.model.PlaylistDetails
 import com.example.playlistmaker.domain.search.model.TrackData
 import com.example.playlistmaker.presentation.search.TrackAdapter
 import com.example.playlistmaker.ui.player.fragment.PlayerFragment
-import com.example.playlistmaker.ui.player.fragment.PlayerFragment.Companion.TRACK
 import com.example.playlistmaker.ui.playlistDetails.view_model.DetailPlaylistViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
-import kotlinx.serialization.json.Json
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import kotlin.math.abs

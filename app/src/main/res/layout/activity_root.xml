@@ -23,8 +23,6 @@
         android:layout_height="wrap_content"
         app:itemTextColor="@drawable/menu_selector"
         app:itemIconTint="@drawable/menu_selector"
-        app:itemTextAppearanceActive="@style/BottomNavigationView"
-        app:itemTextAppearanceInactive="@style/BottomNavigationView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

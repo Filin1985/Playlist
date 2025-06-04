@@ -44,9 +44,10 @@ class SearchFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        trackAdapter = TrackAdapter(viewModel.searchTrackListLiveData.value!!)
+//        trackAdapter = TrackAdapter(viewModel.searchTrackListLiveData.value!!)
         val historyTrackList = viewModel.searchHistoryTrackListLiveData.value!!
         historyTrackListAdapter = TrackAdapter(historyTrackList)
+        trackAdapter = TrackAdapter(historyTrackList)
 
         binding.trackSearchRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -56,9 +57,9 @@ class SearchFragment: Fragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         historyTrackListAdapter.eventListener = clickOnTrackListener()
 
-        viewModel.liveDataState.observe(viewLifecycleOwner) {
-            showResultNotification(it)
-        }
+//        viewModel.liveDataState.observe(viewLifecycleOwner) {
+//            showResultNotification(it)
+//        }
 
         binding.trackSearchRecyclerView.adapter = trackAdapter
         binding.trackSearchHistoryRecyclerView.adapter = historyTrackListAdapter

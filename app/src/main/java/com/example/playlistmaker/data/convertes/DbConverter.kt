@@ -1,5 +1,6 @@
 package com.example.playlistmaker.data.convertes
 
+import android.util.Log
 import androidx.core.net.toUri
 import com.example.playlistmaker.data.db.entities.PlaylistEntity
 import com.example.playlistmaker.data.db.entities.PlaylistTrackEntity
@@ -83,6 +84,7 @@ object DbConverter {
     }
 
     fun convertPlaylistEntityToPlaylist(playlistEntity: PlaylistEntity): Playlist {
+        Log.d("PlaylistEntity---------", "${playlistEntity}")
         return Playlist(
             id = playlistEntity.id,
             title = playlistEntity.title,
